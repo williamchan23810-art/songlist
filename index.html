@@ -4,7 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>William H Chan Music Studio</title>
+
+    <meta property="og:title" content="William H Chan Music Studio">
+    <meta property="og:description" content="Explore our Studio Song Library and Karaoke List.">
+    <meta property="og:image" content="https://williamchan23810-art.github.io/songlist/turntable-Icon.jpg">
+    <meta property="og:url" content="https://williamchan23810-art.github.io/songlist/">
+    <meta property="og:type" content="website">
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+    
     <style>
         :root { 
             --primary: #e63946; 
@@ -22,49 +30,48 @@
             padding: 20px; 
         }
 
-        /* --- TURNTABLE ANIMATION CODE --- */
+        /* --- SPINNING TURNTABLE LOGO --- */
         @keyframes slowSpin {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
 
         .logo { 
-            width: 120px; 
-            height: 120px; 
-            object-fit: cover; /* Ensures image isn't stretched */
-            border-radius: 50%; /* Makes it a perfect circle */
-            border: 4px solid #333; /* Optional: adds a 'vinyl edge' */
+            width: 90px; 
+            height: 90px; 
+            object-fit: cover; 
+            border-radius: 50%; 
+            border: 3px solid #333; 
             margin-bottom: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            
-            /* Set to 5s for that slow, elegant rotation */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
             animation: slowSpin 5s linear infinite; 
         }
 
         .logo:hover {
-            animation-play-state: paused; /* Fun interactive feature */
+            animation-play-state: paused;
             cursor: pointer;
         }
-        /* -------------------------------- */
 
         header { 
             text-align: center; 
-            margin-bottom: 25px; 
+            margin-bottom: 30px; 
             border-bottom: 3px solid var(--secondary); 
             padding-bottom: 20px; 
         }
 
+        /* --- SEARCH BOX --- */
         #search-box { 
             width: 100%; 
             padding: 15px; 
             font-size: 18px; 
             border: 2px solid #ddd; 
             border-radius: 12px; 
-            margin-bottom: 20px; 
+            margin-bottom: 25px; 
             box-sizing: border-box; 
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+            outline: none;
         }
 
+        /* --- SONG CARDS --- */
         .song-card { 
             background: white; 
             margin-bottom: 12px; 
@@ -73,34 +80,16 @@
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06); 
-            transition: 0.2s; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05); 
+            transition: transform 0.2s;
         }
-
-        .song-card:hover { 
-            transform: translateY(-2px); 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
-        }
+        .song-card:hover { transform: translateY(-2px); }
 
         .details { flex: 1; margin-right: 15px; }
-
-        .artist { 
-            font-size: 0.8rem; 
-            font-weight: bold; 
-            color: var(--secondary); 
-            text-transform: uppercase; 
-            display: block; 
-            letter-spacing: 0.5px; 
-        }
-
-        .song-name { 
-            font-size: 1.15rem; 
-            font-weight: 600; 
-            color: #333; 
-        }
+        .artist { font-size: 0.8rem; font-weight: bold; color: var(--secondary); text-transform: uppercase; display: block; }
+        .song-name { font-size: 1.15rem; font-weight: 600; color: #333; }
 
         .actions { display: flex; gap: 10px; }
-
         .btn { 
             text-decoration: none; 
             padding: 10px 18px; 
@@ -108,20 +97,27 @@
             font-size: 14px; 
             font-weight: bold; 
             color: white; 
-            min-width: 90px; 
-            text-align: center; 
-            transition: opacity 0.2s;
+            text-align: center;
+            min-width: 90px;
         }
-
-        .btn:hover { opacity: 0.8; }
         .btn-orig { background-color: #3498db; }
         .btn-kara { background-color: #e63946; }
 
         #loading { text-align: center; font-style: italic; color: #888; margin-top: 50px; }
 
+        /* --- SPOTIFY PLAYER SECTION --- */
+        .spotify-container {
+            margin-top: 50px;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
         @media (max-width: 600px) {
             .song-card { flex-direction: column; align-items: flex-start; gap: 15px; }
-            .actions { width: 100%; justify-content: space-between; }
+            .actions { width: 100%; }
             .btn { flex: 1; }
         }
     </style>
@@ -129,18 +125,23 @@
 <body>
 
     <header>
-    <img src="turntable-Icon.jpg" alt="William H Chan Music Studio Logo" class="logo">
-    
-    <h1>English Song List</h1>
-    <p>William H Chan Music Studio</p>
-</header>
+        <img src="turntable-Icon.jpg" alt="William H Chan Music Studio Logo" class="logo">
+        <h1>English Song List</h1>
+        <p>William H Chan Music Studio</p>
+    </header>
 
-    <input type="text" id="search-box" placeholder="Search by singer or song title..." onkeyup="filterSongs()">
+    <input type="text" id="search-box" placeholder="Search singer or song title..." onkeyup="filterSongs()">
 
-    <div id="loading">Syncing with Studio Library...</div>
+    <div id="loading">Syncing Studio Library...</div>
     <div id="song-list-container"></div>
 
+    <div class="spotify-container">
+        <p style="font-size: 0.85rem; color: #888; margin-bottom: 12px; font-weight: bold; letter-spacing: 1px;">NOW SPINNING IN THE STUDIO</p>
+        <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/1Z87uS6uU59YPV989SUn9v?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    </div>
+
     <script>
+        // Your Google Sheet CSV URL
         const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRURv3BhrTaAjayuts-7v61qTznVRxe-0hyvgevw8wIj3OHTvQLnGiLOc8TdwD0CvKNrRS_U3qj2o33/pub?output=csv';
 
         Papa.parse(CSV_URL, {
@@ -155,9 +156,6 @@
                     const song = row['SONG'];
                     if (!song) return;
 
-                    const origLink = row['ORIGINAL LINK'];
-                    const karaLink = row['KARAOKE LINK'];
-
                     const div = document.createElement('div');
                     div.className = 'song-card';
                     div.innerHTML = `
@@ -166,8 +164,8 @@
                             <span class="song-name">${song}</span>
                         </div>
                         <div class="actions">
-                            ${origLink ? `<a href="${origLink}" target="_blank" class="btn btn-orig">Original</a>` : ''}
-                            ${karaLink ? `<a href="${karaLink}" target="_blank" class="btn btn-kara">Karaoke</a>` : ''}
+                            ${row['ORIGINAL LINK'] ? `<a href="${row['ORIGINAL LINK']}" target="_blank" class="btn btn-orig">Original</a>` : ''}
+                            ${row['KARAOKE LINK'] ? `<a href="${row['KARAOKE LINK']}" target="_blank" class="btn btn-kara">Karaoke</a>` : ''}
                         </div>
                     `;
                     container.appendChild(div);
@@ -180,6 +178,12 @@
             const term = document.getElementById('search-box').value.toLowerCase();
             const cards = document.getElementsByClassName('song-card');
             Array.from(cards).forEach(card => {
+                card.style.display = card.innerText.toLowerCase().includes(term) ? 'flex' : 'none';
+            });
+        }
+    </script>
+</body>
+</html>
                 card.style.display = card.innerText.toLowerCase().includes(term) ? 'flex' : 'none';
             });
         }
