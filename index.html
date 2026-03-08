@@ -1,53 +1,81 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>William H Chan Music Studio - Song Library</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>William H Chan Music Studio</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <style>
-        body { font-family: 'PingFang HK', 'Microsoft JhengHei', sans-serif; background: #fdfdfd; padding: 20px; max-width: 800px; margin: 0 auto; }
-        .header { text-align: center; border-bottom: 3px solid #e63946; padding-bottom: 10px; margin-bottom: 20px; }
-        #search { width: 100%; padding: 15px; border-radius: 30px; border: 1px solid #ccc; font-size: 1.1rem; box-sizing: border-box; margin-bottom: 20px; }
-        .song-item { display: flex; align-items: center; justify-content: space-between; background: #fff; border: 1px solid #eee; margin-bottom: 10px; padding: 15px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .info { flex-grow: 1; }
-        .artist { font-size: 0.8rem; color: #777; font-weight: bold; }
-        .title { font-size: 1.1rem; color: #222; display: block; }
-        .links { display: flex; gap: 8px; }
-        .btn { text-decoration: none; padding: 8px 12px; border-radius: 5px; font-size: 0.85rem; font-weight: bold; color: white; }
-        .orig { background: #3498db; }
-        .kara { background: #e63946; }
+        :root { --primary: #e63946; --secondary: #457b9d; --bg: #f8f9fa; --text: #1d3557; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); max-width: 800px; margin: 0 auto; padding: 20px; }
+        header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid var(--secondary); }
+        #search-box { width: 100%; padding: 15px; font-size: 18px; border: 2px solid #ddd; border-radius: 10px; margin-bottom: 20px; box-sizing: border-box; }
+        .song-card { background: white; margin-bottom: 10px; padding: 15px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .details { flex: 1; }
+        .artist { font-size: 0.8rem; font-weight: bold; color: var(--secondary); text-transform: uppercase; display: block; }
+        .song-name { font-size: 1.1rem; font-weight: 600; }
+        .actions { display: flex; gap: 8px; }
+        .btn { text-decoration: none; padding: 8px 15px; border-radius: 6px; font-size: 13px; font-weight: bold; color: white; transition: 0.2s; min-width: 80px; text-align: center; }
+        .btn-orig { background-color: #3498db; }
+        .btn-kara { background-color: #e63946; }
+        .btn:hover { opacity: 0.8; }
+        #loading { text-align: center; padding: 20px; }
     </style>
 </head>
 <body>
-    <div class="header"><h1>William H Chan Music Library</h1></div>
-    <input type="text" id="search" placeholder="Search song or artist... / 搜尋歌曲或歌手..." onkeyup="filter()">
-    <div id="list">Loading songs...</div>
+
+    <header>
+        <h1>English Song List</h1>
+    </header>
+
+    <input type="text" id="search-box" placeholder="Search song or artist..." onkeyup="filterSongs()">
+
+    <div id="loading">Updating library from Google Sheets...</div>
+    <div id="song-list-container"></div>
 
     <script>
-        const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRURv3BhrTaAjayuts-7v61qTznVRxe-0hyvgevw8wIj3OHTvQLnGiLOc8TdwD0CvKNrRS_U3qj2o33/pub?output=csv';
-        function load() {
-            Papa.parse(url, { download: true, header: true, complete: results => {
-                let html = '';
+        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRURv3BhrTaAjayuts-7v61qTznVRxe-0hyvgevw8wIj3OHTvQLnGiLOc8TdwD0CvKNrRS_U3qj2o33/pub?output=csv';
+
+        Papa.parse(CSV_URL, {
+            download: true,
+            header: true,
+            complete: function(results) {
+                const container = document.getElementById('song-list-container');
+                container.innerHTML = '';
                 results.data.forEach(row => {
-                    if(!row.SONG) return;
-                    html += `<div class="song-item">
-                        <div class="info"><span class="artist">${row.ARTIST}</span><span class="title">${row.SONG}</span></div>
-                        <div class="links">
-                            ${row['ORIGINAL SONG'] ? `<a href="${row['ORIGINAL SONG']}" class="btn orig" target="_blank">Original</a>` : ''}
-                            ${row['KARAOKE'] ? `<a href="${row['KARAOKE']}" class="btn kara" target="_blank">Karaoke</a>` : ''}
+                    const song = row['SONG'];
+                    if (!song) return;
+
+                    // Matching your specific column names exactly
+                    const origLink = row['ORIGINAL LINK'];
+                    const karaLink = row['KARAOKE LINK'];
+
+                    const div = document.createElement('div');
+                    div.className = 'song-card';
+                    div.innerHTML = `
+                        <div class="details">
+                            <span class="artist">${row['ARTIST'] || ''}</span>
+                            <span class="song-name">${song}</span>
                         </div>
-                    </div>`;
+                        <div class="actions">
+                            ${origLink ? `<a href="${origLink}" target="_blank" class="btn btn-orig">Original</a>` : ''}
+                            ${karaLink ? `<a href="${karaLink}" target="_blank" class="btn btn-kara">Karaoke</a>` : ''}
+                        </div>
+                    `;
+                    container.appendChild(div);
                 });
-                document.getElementById('list').innerHTML = html;
-            }});
-        }
-        function filter() {
-            let val = document.getElementById('search').value.toLowerCase();
-            document.querySelectorAll('.song-item').forEach(el => {
-                el.style.display = el.innerText.toLowerCase().includes(val) ? 'flex' : 'none';
+                document.getElementById('loading').style.display = 'none';
+            }
+        });
+
+        function filterSongs() {
+            const term = document.getElementById('search-box').value.toLowerCase();
+            const cards = document.getElementsByClassName('song-card');
+            Array.from(cards).forEach(card => {
+                card.style.display = card.innerText.toLowerCase().includes(term) ? 'flex' : 'none';
             });
         }
-        load();
     </script>
 </body>
+</html>
 </html>
