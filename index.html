@@ -25,25 +25,25 @@
             font-family: 'Segoe UI', system-ui, sans-serif; 
             background: var(--bg); 
             color: var(--text); 
-            max-width: 850px; 
+            max-width: 800px; 
             margin: 0 auto; 
-            padding: 20px; 
+            padding: 10px; /* Reduced body padding */
         }
 
-        /* --- SPINNING TURNTABLE LOGO --- */
+        /* --- CONDENSED SPINNING LOGO --- */
         @keyframes slowSpin {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
 
         .logo { 
-            width: 90px; 
-            height: 90px; 
+            width: 70px; /* Reduced from 90px */
+            height: 70px; 
             object-fit: cover; 
             border-radius: 50%; 
-            border: 3px solid #333; 
-            margin-bottom: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            border: 2px solid #333; 
+            margin-bottom: 5px; /* Reduced from 15px */
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
             animation: slowSpin 5s linear infinite; 
         }
 
@@ -54,139 +54,74 @@
 
         header { 
             text-align: center; 
-            margin-bottom: 30px; 
-            border-bottom: 3px solid var(--secondary); 
-            padding-bottom: 20px; 
+            margin-bottom: 15px; /* Reduced from 30px */
+            border-bottom: 2px solid var(--secondary); 
+            padding-bottom: 10px; /* Reduced from 20px */
         }
+
+        header h1 { font-size: 1.5rem; margin: 5px 0; } /* Smaller title */
+        header p { font-size: 0.9rem; margin-top: 0; }
 
         /* --- SEARCH BOX --- */
         #search-box { 
             width: 100%; 
-            padding: 15px; 
-            font-size: 18px; 
-            border: 2px solid #ddd; 
-            border-radius: 12px; 
-            margin-bottom: 25px; 
+            padding: 12px; /* Thinner box */
+            font-size: 16px; 
+            border: 1px solid #ddd; 
+            border-radius: 8px; 
+            margin-bottom: 15px; /* Reduced from 25px */
             box-sizing: border-box; 
             outline: none;
         }
 
-        /* --- SONG CARDS --- */
+        /* --- CONDENSED SONG CARDS --- */
         .song-card { 
             background: white; 
-            margin-bottom: 12px; 
-            padding: 18px; 
-            border-radius: 12px; 
+            margin-bottom: 6px; /* 50% less gap between songs */
+            padding: 10px 15px; /* Thinner padding */
+            border-radius: 8px; 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05); 
-            transition: transform 0.2s;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05); 
         }
-        .song-card:hover { transform: translateY(-2px); }
 
-        .details { flex: 1; margin-right: 15px; }
-        .artist { font-size: 0.8rem; font-weight: bold; color: var(--secondary); text-transform: uppercase; display: block; }
-        .song-name { font-size: 1.15rem; font-weight: 600; color: #333; }
+        .details { flex: 1; margin-right: 10px; }
+        .artist { font-size: 0.75rem; font-weight: bold; color: var(--secondary); text-transform: uppercase; display: block; }
+        .song-name { font-size: 1rem; font-weight: 600; color: #333; }
 
-        .actions { display: flex; gap: 10px; }
+        .actions { display: flex; gap: 8px; }
         .btn { 
             text-decoration: none; 
-            padding: 10px 18px; 
-            border-radius: 8px; 
-            font-size: 14px; 
+            padding: 6px 12px; /* Smaller buttons */
+            border-radius: 6px; 
+            font-size: 12px; 
             font-weight: bold; 
             color: white; 
             text-align: center;
-            min-width: 90px;
+            min-width: 75px;
         }
         .btn-orig { background-color: #3498db; }
         .btn-kara { background-color: #e63946; }
 
-        #loading { text-align: center; font-style: italic; color: #888; margin-top: 50px; }
-
-        /* --- SPOTIFY PLAYER SECTION --- */
+        /* --- COMPACT SPOTIFY PLAYER --- */
         .spotify-container {
-            margin-top: 50px;
-            padding: 20px;
+            margin-top: 25px; /* Reduced from 50px */
+            padding: 10px;
             background: #ffffff;
-            border-radius: 16px;
+            border-radius: 12px;
             text-align: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
 
         @media (max-width: 600px) {
-            .song-card { flex-direction: column; align-items: flex-start; gap: 15px; }
-            .actions { width: 100%; }
-            .btn { flex: 1; }
+            .song-card { flex-direction: row; align-items: center; } /* Keeps it clean on mobile */
+            .btn { min-width: 65px; padding: 5px 8px; }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <img src="turntable-Icon.jpg" alt="William H Chan Music Studio Logo" class="logo">
-        <h1>English Song List</h1>
-        <p>William H Chan Music Studio</p>
-    </header>
-
-    <input type="text" id="search-box" placeholder="Search singer or song title..." onkeyup="filterSongs()">
-
-    <div id="loading">Syncing Studio Library...</div>
-    <div id="song-list-container"></div>
-
-    <div class="spotify-container">
-        <p style="font-size: 0.85rem; color: #888; margin-bottom: 12px; font-weight: bold; letter-spacing: 1px;">NOW SPINNING IN THE STUDIO</p>
-        <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/1Z87uS6uU59YPV989SUn9v?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-    </div>
-
-    <script>
-        // Your Google Sheet CSV URL
-        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRURv3BhrTaAjayuts-7v61qTznVRxe-0hyvgevw8wIj3OHTvQLnGiLOc8TdwD0CvKNrRS_U3qj2o33/pub?output=csv';
-
-        Papa.parse(CSV_URL, {
-            download: true,
-            header: true,
-            skipEmptyLines: true,
-            complete: function(results) {
-                const container = document.getElementById('song-list-container');
-                container.innerHTML = '';
-                
-                results.data.forEach(row => {
-                    const song = row['SONG'];
-                    if (!song) return;
-
-                    const div = document.createElement('div');
-                    div.className = 'song-card';
-                    div.innerHTML = `
-                        <div class="details">
-                            <span class="artist">${row['ARTIST'] || 'UNKNOWN'}</span>
-                            <span class="song-name">${song}</span>
-                        </div>
-                        <div class="actions">
-                            ${row['ORIGINAL LINK'] ? `<a href="${row['ORIGINAL LINK']}" target="_blank" class="btn btn-orig">Original</a>` : ''}
-                            ${row['KARAOKE LINK'] ? `<a href="${row['KARAOKE LINK']}" target="_blank" class="btn btn-kara">Karaoke</a>` : ''}
-                        </div>
-                    `;
-                    container.appendChild(div);
-                });
-                document.getElementById('loading').style.display = 'none';
-            }
-        });
-
-        function filterSongs() {
-            const term = document.getElementById('search-box').value.toLowerCase();
-            const cards = document.getElementsByClassName('song-card');
-            Array.from(cards).forEach(card => {
-                card.style.display = card.innerText.toLowerCase().includes(term) ? 'flex' : 'none';
-            });
-        }
-    </script>
-</body>
-</html>
-                card.style.display = card.innerText.toLowerCase().includes(term) ? 'flex' : 'none';
-            });
-        }
-    </script>
-</body>
+        <img src="turntable-
 </html>
