@@ -22,7 +22,7 @@
         }
 
         body { 
-            font-family: 'Segoe UI', system-ui, sans-serif; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             background: var(--bg); 
             color: var(--text); 
             max-width: 800px; 
@@ -30,7 +30,7 @@
             padding: 10px; 
         }
 
-        /* --- CONDENSED SPINNING LOGO --- */
+        /* --- SPINNING LOGO --- */
         @keyframes slowSpin {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
@@ -43,13 +43,7 @@
             border-radius: 50%; 
             border: 2px solid #333; 
             margin-bottom: 5px; 
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
             animation: slowSpin 5s linear infinite; 
-        }
-
-        .logo:hover {
-            animation-play-state: paused;
-            cursor: pointer;
         }
 
         header { 
@@ -60,7 +54,6 @@
         }
 
         header h1 { font-size: 1.4rem; margin: 5px 0; }
-        header p { font-size: 0.85rem; margin-top: 0; color: #666; }
 
         /* --- SEARCH BOX --- */
         #search-box { 
@@ -71,7 +64,6 @@
             border-radius: 8px; 
             margin-bottom: 15px; 
             box-sizing: border-box; 
-            outline: none;
         }
 
         /* --- CONDENSED SONG CARDS --- */
@@ -115,11 +107,6 @@
             text-align: center;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
-
-        @media (max-width: 600px) {
-            .song-card { padding: 10px; }
-            .btn { min-width: 60px; }
-        }
     </style>
 </head>
 <body>
@@ -132,57 +119,63 @@
 
     <input type="text" id="search-box" placeholder="Search singer or song..." onkeyup="filterSongs()">
 
-    <div id="loading">Updating Library...</div>
+    <div id="loading">Loading Studio Library...</div>
     <div id="song-list-container"></div>
 
     <div class="spotify-container">
-        <p style="font-size: 0.65rem; color: #999; margin-bottom: 8px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase;">Now Spinning</p>
-        <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/1By978YOfN8YOnfG9S90S4?utm_source=generator&theme=0" width="100%" height="80" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+        <p style="font-size: 0.65rem; color: #999; margin-bottom: 8px; font-weight: bold; text-transform: uppercase;">Now Spinning</p>
+        <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/546p0v3mDAsidX0G794mS9?utm_source=generator&theme=0" width="100%" height="80" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
     </div>
 
     <script>
         const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRURv3BhrTaAjayuts-7v61qTznVRxe-0hyvgevw8wIj3OHTvQLnGiLOc8TdwD0CvKNrRS_U3qj2o33/pub?output=csv';
 
+        // Load the data
         Papa.parse(CSV_URL, {
             download: true,
             header: true,
             skipEmptyLines: true,
             complete: function(results) {
                 const container = document.getElementById('song-list-container');
-                container.innerHTML = '';
+                const loading = document.getElementById('loading');
                 
-                results.data.forEach(row => {
-                    const song = row['SONG'];
-                    if (!song) return;
+                if (results.data && results.data.length > 0) {
+                    container.innerHTML = '';
+                    results.data.forEach(row => {
+                        if (!row['SONG']) return;
 
-                    const div = document.createElement('div');
-                    div.className = 'song-card';
-                    div.innerHTML = `
-                        <div class="details">
-                            <span class="artist">${row['ARTIST'] || 'UNKNOWN'}</span>
-                            <span class="song-name">${song}</span>
-                        </div>
-                        <div class="actions">
-                            ${row['ORIGINAL LINK'] ? `<a href="${row['ORIGINAL LINK']}" target="_blank" class="btn btn-orig">Original</a>` : ''}
-                            ${row['KARAOKE LINK'] ? `<a href="${row['KARAOKE LINK']}" target="_blank" class="btn btn-kara">Karaoke</a>` : ''}
-                        </div>
-                    `;
-                    container.appendChild(div);
-                });
-                document.getElementById('loading').style.display = 'none';
+                        const div = document.createElement('div');
+                        div.className = 'song-card';
+                        div.innerHTML = `
+                            <div class="details">
+                                <span class="artist">${row['ARTIST'] || 'UNKNOWN'}</span>
+                                <span class="song-name">${row['SONG']}</span>
+                            </div>
+                            <div class="actions">
+                                ${row['ORIGINAL LINK'] ? `<a href="${row['ORIGINAL LINK']}" target="_blank" class="btn btn-orig">Original</a>` : ''}
+                                ${row['KARAOKE LINK'] ? `<a href="${row['KARAOKE LINK']}" target="_blank" class="btn btn-kara">Karaoke</a>` : ''}
+                            </div>
+                        `;
+                        container.appendChild(div);
+                    });
+                    loading.style.display = 'none';
+                } else {
+                    loading.innerText = "No songs found in the library.";
+                }
+            },
+            error: function() {
+                document.getElementById('loading').innerText = "Error loading library. Please refresh.";
             }
         });
 
         function filterSongs() {
             const term = document.getElementById('search-box').value.toLowerCase();
             const cards = document.getElementsByClassName('song-card');
-            Array.from(cards).forEach(card => {
-                card.style.display = card.innerText.toLowerCase().includes(term) ? 'flex' : 'none';
-            });
+            for (let i = 0; i < cards.length; i++) {
+                const content = cards[i].textContent.toLowerCase();
+                cards[i].style.display = content.includes(term) ? 'flex' : 'none';
+            }
         }
     </script>
 </body>
-</html>
-    <header>
-        <img src="turntable-
 </html>
