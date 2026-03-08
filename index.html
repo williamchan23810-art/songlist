@@ -6,28 +6,119 @@
     <title>William H Chan Music Studio</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <style>
-        :root { --primary: #e63946; --secondary: #457b9d; --bg: #f8f9fa; --text: #1d3557; }
-        body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); max-width: 850px; margin: 0 auto; padding: 20px; }
-        
-        /* Style for your new logo */
-        .logo { 
-            width: 80px; /* Adjust size here */
-            height: auto;
-            margin-bottom: 10px;
+        :root { 
+            --primary: #e63946; 
+            --secondary: #457b9d; 
+            --bg: #f8f9fa; 
+            --text: #1d3557; 
         }
 
-        header { text-align: center; margin-bottom: 25px; border-bottom: 3px solid var(--secondary); padding-bottom: 10px; }
-        #search-box { width: 100%; padding: 15px; font-size: 18px; border: 2px solid #ddd; border-radius: 12px; margin-bottom: 20px; box-sizing: border-box; }
-        .song-card { background: white; margin-bottom: 12px; padding: 18px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.06); transition: 0.2s; }
-        .song-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        body { 
+            font-family: 'Segoe UI', system-ui, sans-serif; 
+            background: var(--bg); 
+            color: var(--text); 
+            max-width: 850px; 
+            margin: 0 auto; 
+            padding: 20px; 
+        }
+
+        /* --- TURNTABLE ANIMATION CODE --- */
+        @keyframes slowSpin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .logo { 
+            width: 120px; 
+            height: 120px; 
+            object-fit: cover; /* Ensures image isn't stretched */
+            border-radius: 50%; /* Makes it a perfect circle */
+            border: 4px solid #333; /* Optional: adds a 'vinyl edge' */
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            
+            /* Set to 5s for that slow, elegant rotation */
+            animation: slowSpin 5s linear infinite; 
+        }
+
+        .logo:hover {
+            animation-play-state: paused; /* Fun interactive feature */
+            cursor: pointer;
+        }
+        /* -------------------------------- */
+
+        header { 
+            text-align: center; 
+            margin-bottom: 25px; 
+            border-bottom: 3px solid var(--secondary); 
+            padding-bottom: 20px; 
+        }
+
+        #search-box { 
+            width: 100%; 
+            padding: 15px; 
+            font-size: 18px; 
+            border: 2px solid #ddd; 
+            border-radius: 12px; 
+            margin-bottom: 20px; 
+            box-sizing: border-box; 
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .song-card { 
+            background: white; 
+            margin-bottom: 12px; 
+            padding: 18px; 
+            border-radius: 12px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06); 
+            transition: 0.2s; 
+        }
+
+        .song-card:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+        }
+
         .details { flex: 1; margin-right: 15px; }
-        .artist { font-size: 0.8rem; font-weight: bold; color: var(--secondary); text-transform: uppercase; display: block; letter-spacing: 0.5px; }
-        .song-name { font-size: 1.15rem; font-weight: 600; color: #333; }
+
+        .artist { 
+            font-size: 0.8rem; 
+            font-weight: bold; 
+            color: var(--secondary); 
+            text-transform: uppercase; 
+            display: block; 
+            letter-spacing: 0.5px; 
+        }
+
+        .song-name { 
+            font-size: 1.15rem; 
+            font-weight: 600; 
+            color: #333; 
+        }
+
         .actions { display: flex; gap: 10px; }
-        .btn { text-decoration: none; padding: 10px 18px; border-radius: 8px; font-size: 14px; font-weight: bold; color: white; min-width: 90px; text-align: center; }
+
+        .btn { 
+            text-decoration: none; 
+            padding: 10px 18px; 
+            border-radius: 8px; 
+            font-size: 14px; 
+            font-weight: bold; 
+            color: white; 
+            min-width: 90px; 
+            text-align: center; 
+            transition: opacity 0.2s;
+        }
+
+        .btn:hover { opacity: 0.8; }
         .btn-orig { background-color: #3498db; }
         .btn-kara { background-color: #e63946; }
+
         #loading { text-align: center; font-style: italic; color: #888; margin-top: 50px; }
+
         @media (max-width: 600px) {
             .song-card { flex-direction: column; align-items: flex-start; gap: 15px; }
             .actions { width: 100%; justify-content: space-between; }
@@ -38,14 +129,14 @@
 <body>
 
     <header>
-        <img src="turntable-Icon.jpg" alt="Music Studio Logo" class="logo">
+        <img src="turntable-Icon.jpg" alt="William H Chan Music Studio Logo" class="logo">
         <h1>English Song List</h1>
         <p>William H Chan Music Studio</p>
     </header>
 
     <input type="text" id="search-box" placeholder="Search by singer or song title..." onkeyup="filterSongs()">
 
-    <div id="loading">Syncing with Google Sheets...</div>
+    <div id="loading">Syncing with Studio Library...</div>
     <div id="song-list-container"></div>
 
     <script>
