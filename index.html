@@ -27,7 +27,7 @@
             color: var(--text); 
             max-width: 800px; 
             margin: 0 auto; 
-            padding: 10px; /* Reduced body padding */
+            padding: 10px; 
         }
 
         /* --- CONDENSED SPINNING LOGO --- */
@@ -37,12 +37,12 @@
         }
 
         .logo { 
-            width: 70px; /* Reduced from 90px */
-            height: 70px; 
+            width: 75px; 
+            height: 75px; 
             object-fit: cover; 
             border-radius: 50%; 
             border: 2px solid #333; 
-            margin-bottom: 5px; /* Reduced from 15px */
+            margin-bottom: 5px; 
             box-shadow: 0 3px 10px rgba(0,0,0,0.1);
             animation: slowSpin 5s linear infinite; 
         }
@@ -54,22 +54,22 @@
 
         header { 
             text-align: center; 
-            margin-bottom: 15px; /* Reduced from 30px */
+            margin-bottom: 15px; 
             border-bottom: 2px solid var(--secondary); 
-            padding-bottom: 10px; /* Reduced from 20px */
+            padding-bottom: 10px; 
         }
 
-        header h1 { font-size: 1.5rem; margin: 5px 0; } /* Smaller title */
-        header p { font-size: 0.9rem; margin-top: 0; }
+        header h1 { font-size: 1.4rem; margin: 5px 0; }
+        header p { font-size: 0.85rem; margin-top: 0; color: #666; }
 
         /* --- SEARCH BOX --- */
         #search-box { 
             width: 100%; 
-            padding: 12px; /* Thinner box */
+            padding: 10px; 
             font-size: 16px; 
             border: 1px solid #ddd; 
             border-radius: 8px; 
-            margin-bottom: 15px; /* Reduced from 25px */
+            margin-bottom: 15px; 
             box-sizing: border-box; 
             outline: none;
         }
@@ -77,51 +77,112 @@
         /* --- CONDENSED SONG CARDS --- */
         .song-card { 
             background: white; 
-            margin-bottom: 6px; /* 50% less gap between songs */
-            padding: 10px 15px; /* Thinner padding */
+            margin-bottom: 6px; 
+            padding: 8px 15px; 
             border-radius: 8px; 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            box-shadow: 0 1px 4px rgba(0,0,0,0.05); 
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05); 
         }
 
         .details { flex: 1; margin-right: 10px; }
-        .artist { font-size: 0.75rem; font-weight: bold; color: var(--secondary); text-transform: uppercase; display: block; }
-        .song-name { font-size: 1rem; font-weight: 600; color: #333; }
+        .artist { font-size: 0.7rem; font-weight: bold; color: var(--secondary); text-transform: uppercase; display: block; }
+        .song-name { font-size: 0.95rem; font-weight: 600; color: #333; }
 
-        .actions { display: flex; gap: 8px; }
+        .actions { display: flex; gap: 6px; }
         .btn { 
             text-decoration: none; 
-            padding: 6px 12px; /* Smaller buttons */
+            padding: 6px 10px; 
             border-radius: 6px; 
-            font-size: 12px; 
+            font-size: 11px; 
             font-weight: bold; 
             color: white; 
             text-align: center;
-            min-width: 75px;
+            min-width: 70px;
         }
         .btn-orig { background-color: #3498db; }
         .btn-kara { background-color: #e63946; }
 
+        #loading { text-align: center; font-style: italic; color: #888; margin: 20px 0; }
+
         /* --- COMPACT SPOTIFY PLAYER --- */
         .spotify-container {
-            margin-top: 25px; /* Reduced from 50px */
+            margin-top: 20px;
             padding: 10px;
-            background: #ffffff;
+            background: #fff;
             border-radius: 12px;
             text-align: center;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
 
         @media (max-width: 600px) {
-            .song-card { flex-direction: row; align-items: center; } /* Keeps it clean on mobile */
-            .btn { min-width: 65px; padding: 5px 8px; }
+            .song-card { padding: 10px; }
+            .btn { min-width: 60px; }
         }
     </style>
 </head>
 <body>
 
+    <header>
+        <img src="turntable-Icon.jpg" alt="Studio Logo" class="logo">
+        <h1>English Song List</h1>
+        <p>William H Chan Music Studio</p>
+    </header>
+
+    <input type="text" id="search-box" placeholder="Search singer or song..." onkeyup="filterSongs()">
+
+    <div id="loading">Updating Library...</div>
+    <div id="song-list-container"></div>
+
+    <div class="spotify-container">
+        <p style="font-size: 0.65rem; color: #999; margin-bottom: 8px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase;">Now Spinning</p>
+        <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/1By978YOfN8YOnfG9S90S4?utm_source=generator&theme=0" width="100%" height="80" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    </div>
+
+    <script>
+        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRURv3BhrTaAjayuts-7v61qTznVRxe-0hyvgevw8wIj3OHTvQLnGiLOc8TdwD0CvKNrRS_U3qj2o33/pub?output=csv';
+
+        Papa.parse(CSV_URL, {
+            download: true,
+            header: true,
+            skipEmptyLines: true,
+            complete: function(results) {
+                const container = document.getElementById('song-list-container');
+                container.innerHTML = '';
+                
+                results.data.forEach(row => {
+                    const song = row['SONG'];
+                    if (!song) return;
+
+                    const div = document.createElement('div');
+                    div.className = 'song-card';
+                    div.innerHTML = `
+                        <div class="details">
+                            <span class="artist">${row['ARTIST'] || 'UNKNOWN'}</span>
+                            <span class="song-name">${song}</span>
+                        </div>
+                        <div class="actions">
+                            ${row['ORIGINAL LINK'] ? `<a href="${row['ORIGINAL LINK']}" target="_blank" class="btn btn-orig">Original</a>` : ''}
+                            ${row['KARAOKE LINK'] ? `<a href="${row['KARAOKE LINK']}" target="_blank" class="btn btn-kara">Karaoke</a>` : ''}
+                        </div>
+                    `;
+                    container.appendChild(div);
+                });
+                document.getElementById('loading').style.display = 'none';
+            }
+        });
+
+        function filterSongs() {
+            const term = document.getElementById('search-box').value.toLowerCase();
+            const cards = document.getElementsByClassName('song-card');
+            Array.from(cards).forEach(card => {
+                card.style.display = card.innerText.toLowerCase().includes(term) ? 'flex' : 'none';
+            });
+        }
+    </script>
+</body>
+</html>
     <header>
         <img src="turntable-
 </html>
