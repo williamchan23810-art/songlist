@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>William H Chan Music Studio - Song Library</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+    <style>
+        body { font-family: 'PingFang HK', 'Microsoft JhengHei', sans-serif; background: #fdfdfd; padding: 20px; max-width: 800px; margin: 0 auto; }
+        .header { text-align: center; border-bottom: 3px solid #e63946; padding-bottom: 10px; margin-bottom: 20px; }
+        #search { width: 100%; padding: 15px; border-radius: 30px; border: 1px solid #ccc; font-size: 1.1rem; box-sizing: border-box; margin-bottom: 20px; }
+        .song-item { display: flex; align-items: center; justify-content: space-between; background: #fff; border: 1px solid #eee; margin-bottom: 10px; padding: 15px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .info { flex-grow: 1; }
+        .artist { font-size: 0.8rem; color: #777; font-weight: bold; }
+        .title { font-size: 1.1rem; color: #222; display: block; }
+        .links { display: flex; gap: 8px; }
+        .btn { text-decoration: none; padding: 8px 12px; border-radius: 5px; font-size: 0.85rem; font-weight: bold; color: white; }
+        .orig { background: #3498db; }
+        .kara { background: #e63946; }
+    </style>
+</head>
+<body>
+    <div class="header"><h1>William H Chan Music Library</h1></div>
+    <input type="text" id="search" placeholder="Search song or artist... / 搜尋歌曲或歌手..." onkeyup="filter()">
+    <div id="list">Loading songs...</div>
+
+    <script>
+        const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRURv3BhrTaAjayuts-7v61qTznVRxe-0hyvgevw8wIj3OHTvQLnGiLOc8TdwD0CvKNrRS_U3qj2o33/pub?output=csv';
+        function load() {
+            Papa.parse(url, { download: true, header: true, complete: results => {
+                let html = '';
+                results.data.forEach(row => {
+                    if(!row.SONG) return;
+                    html += `<div class="song-item">
+                        <div class="info"><span class="artist">${row.ARTIST}</span><span class="title">${row.SONG}</span></div>
+                        <div class="links">
+                            ${row['ORIGINAL SONG'] ? `<a href="${row['ORIGINAL SONG']}" class="btn orig" target="_blank">Original</a>` : ''}
+                            ${row['KARAOKE'] ? `<a href="${row['KARAOKE']}" class="btn kara" target="_blank">Karaoke</a>` : ''}
+                        </div>
+                    </div>`;
+                });
+                document.getElementById('list').innerHTML = html;
+            }});
+        }
+        function filter() {
+            let val = document.getElementById('search').value.toLowerCase();
+            document.querySelectorAll('.song-item').forEach(el => {
+                el.style.display = el.innerText.toLowerCase().includes(val) ? 'flex' : 'none';
+            });
+        }
+        load();
+    </script>
+</body>
+</html>
