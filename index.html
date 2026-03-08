@@ -7,30 +7,36 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <style>
         :root { --primary: #e63946; --secondary: #457b9d; --bg: #f8f9fa; --text: #1d3557; }
-        body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); max-width: 800px; margin: 0 auto; padding: 20px; }
-        header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid var(--secondary); }
-        #search-box { width: 100%; padding: 15px; font-size: 18px; border: 2px solid #ddd; border-radius: 10px; margin-bottom: 20px; box-sizing: border-box; }
-        .song-card { background: white; margin-bottom: 10px; padding: 15px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .details { flex: 1; }
-        .artist { font-size: 0.8rem; font-weight: bold; color: var(--secondary); text-transform: uppercase; display: block; }
-        .song-name { font-size: 1.1rem; font-weight: 600; }
-        .actions { display: flex; gap: 8px; }
-        .btn { text-decoration: none; padding: 8px 15px; border-radius: 6px; font-size: 13px; font-weight: bold; color: white; transition: 0.2s; min-width: 80px; text-align: center; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); max-width: 850px; margin: 0 auto; padding: 20px; }
+        header { text-align: center; margin-bottom: 25px; border-bottom: 3px solid var(--secondary); padding-bottom: 10px; }
+        #search-box { width: 100%; padding: 15px; font-size: 18px; border: 2px solid #ddd; border-radius: 12px; margin-bottom: 20px; box-sizing: border-box; }
+        .song-card { background: white; margin-bottom: 12px; padding: 18px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.06); transition: 0.2s; }
+        .song-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .details { flex: 1; margin-right: 15px; }
+        .artist { font-size: 0.8rem; font-weight: bold; color: var(--secondary); text-transform: uppercase; display: block; letter-spacing: 0.5px; }
+        .song-name { font-size: 1.15rem; font-weight: 600; color: #333; }
+        .actions { display: flex; gap: 10px; }
+        .btn { text-decoration: none; padding: 10px 18px; border-radius: 8px; font-size: 14px; font-weight: bold; color: white; min-width: 90px; text-align: center; }
         .btn-orig { background-color: #3498db; }
         .btn-kara { background-color: #e63946; }
-        .btn:hover { opacity: 0.8; }
-        #loading { text-align: center; padding: 20px; }
+        #loading { text-align: center; font-style: italic; color: #888; margin-top: 50px; }
+        @media (max-width: 600px) {
+            .song-card { flex-direction: column; align-items: flex-start; gap: 15px; }
+            .actions { width: 100%; justify-content: space-between; }
+            .btn { flex: 1; }
+        }
     </style>
 </head>
 <body>
 
     <header>
         <h1>English Song List</h1>
+        <p>William H Chan Music Studio</p>
     </header>
 
-    <input type="text" id="search-box" placeholder="Search song or artist..." onkeyup="filterSongs()">
+    <input type="text" id="search-box" placeholder="Search by singer or song title..." onkeyup="filterSongs()">
 
-    <div id="loading">Updating library from Google Sheets...</div>
+    <div id="loading">Syncing with Google Sheets...</div>
     <div id="song-list-container"></div>
 
     <script>
@@ -39,14 +45,16 @@
         Papa.parse(CSV_URL, {
             download: true,
             header: true,
+            skipEmptyLines: true,
             complete: function(results) {
                 const container = document.getElementById('song-list-container');
                 container.innerHTML = '';
+                
                 results.data.forEach(row => {
                     const song = row['SONG'];
                     if (!song) return;
 
-                    // Matching your specific column names exactly
+                    // UPDATED TO MATCH YOUR COLUMNS
                     const origLink = row['ORIGINAL LINK'];
                     const karaLink = row['KARAOKE LINK'];
 
@@ -54,7 +62,7 @@
                     div.className = 'song-card';
                     div.innerHTML = `
                         <div class="details">
-                            <span class="artist">${row['ARTIST'] || ''}</span>
+                            <span class="artist">${row['ARTIST'] || 'UNKNOWN'}</span>
                             <span class="song-name">${song}</span>
                         </div>
                         <div class="actions">
@@ -77,5 +85,4 @@
         }
     </script>
 </body>
-</html>
 </html>
