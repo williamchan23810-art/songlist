@@ -8,6 +8,14 @@
     <style>
         :root { --primary: #e63946; --secondary: #457b9d; --bg: #f8f9fa; --text: #1d3557; }
         body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); max-width: 850px; margin: 0 auto; padding: 20px; }
+        
+        /* Style for your new logo */
+        .logo { 
+            width: 80px; /* Adjust size here */
+            height: auto;
+            margin-bottom: 10px;
+        }
+
         header { text-align: center; margin-bottom: 25px; border-bottom: 3px solid var(--secondary); padding-bottom: 10px; }
         #search-box { width: 100%; padding: 15px; font-size: 18px; border: 2px solid #ddd; border-radius: 12px; margin-bottom: 20px; box-sizing: border-box; }
         .song-card { background: white; margin-bottom: 12px; padding: 18px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.06); transition: 0.2s; }
@@ -30,6 +38,7 @@
 <body>
 
     <header>
+        <img src="turntable-Icon.jpg" alt="Music Studio Logo" class="logo">
         <h1>English Song List</h1>
         <p>William H Chan Music Studio</p>
     </header>
@@ -54,7 +63,6 @@
                     const song = row['SONG'];
                     if (!song) return;
 
-                    // UPDATED TO MATCH YOUR COLUMNS
                     const origLink = row['ORIGINAL LINK'];
                     const karaLink = row['KARAOKE LINK'];
 
