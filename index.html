@@ -5,99 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Sound Capsule | Music Library</title>
     <style>
-        :root {
-            --bg: #0f0f0f;
-            --glass: rgba(255, 255, 255, 0.05);
-            --english-accent: #64b5f6;
-            --chinese-accent: #ff4b2b;
-        }
+        :root { --bg: #0f0f0f; --glass: rgba(255, 255, 255, 0.05); --english-accent: #64b5f6; --chinese-accent: #ff4b2b; }
+        body { margin: 0; background: var(--bg); color: white; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+        header { text-align: center; padding: 50px 20px; }
+        .main-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; width: 90%; max-width: 1000px; }
+        .hub-box { background: var(--glass); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 30px; display: flex; flex-direction: column; }
+        
+        /* English Side - NO CHINESE */
+        .box-english { border-color: rgba(100, 181, 246, 0.2); }
+        .btn-eng { background: var(--english-accent); color: white; text-decoration: none; padding: 15px; border-radius: 12px; text-align: center; font-weight: bold; margin-top: 30px; }
 
-        body {
-            margin: 0; padding: 0; background: var(--bg); color: white;
-            font-family: 'Inter', 'PingFang HK', sans-serif;
-            display: flex; flex-direction: column; align-items: center; min-height: 100vh;
-        }
-
-        header { text-align: center; padding: 50px 20px 30px; }
-        h1 { margin: 0; letter-spacing: 3px; font-size: 2.2em; }
-        .subtitle { color: #888; font-size: 0.9em; margin-top: 10px; }
-
-        .main-container {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 30px; width: 90%; max-width: 1000px; margin-bottom: 50px;
-        }
-
-        .hub-box {
-            background: var(--glass); backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px; padding: 30px; display: flex; flex-direction: column;
-            transition: 0.3s ease;
-        }
-
-        /* English Side - NO CHINESE TEXT */
-        .box-english:hover { transform: translateY(-5px); border-color: var(--english-accent); }
-        .btn-direct {
-            background: var(--english-accent); color: white; text-decoration: none;
-            padding: 15px; border-radius: 12px; text-align: center; font-weight: bold;
-            margin-top: 30px;
-        }
-
-        /* Chinese Side - WITH CHINESE TEXT */
-        .box-chinese { border-color: rgba(255, 75, 43, 0.2); }
-        .category-list { margin-top: 20px; display: flex; flex-direction: column; gap: 12px; }
-        .sub-link {
-            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
-            color: white; text-decoration: none; padding: 15px; border-radius: 10px;
-            display: flex; justify-content: space-between; align-items: center; transition: 0.2s;
-        }
-        .sub-link:hover { background: rgba(255, 75, 43, 0.15); border-color: var(--chinese-accent); padding-left: 20px; }
+        /* Chinese Side - WITH CHINESE */
+        .sub-link { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); color: white; text-decoration: none; padding: 15px; border-radius: 10px; margin-top: 10px; display: flex; justify-content: space-between; align-items: center; }
         .label-zh { font-size: 1.1em; font-weight: bold; display: block; }
         .label-en { font-size: 0.75em; opacity: 0.6; }
-
-        .disabled { opacity: 0.4; pointer-events: none; }
-        .icon-header { font-size: 2.5em; margin-bottom: 10px; }
     </style>
 </head>
 <body>
-
-    <header>
-        <h1>THE SOUND CAPSULE</h1>
-        <div class="subtitle">MUSIC LIBRARY | 音樂庫</div>
-    </header>
-
+    <header><h1>THE SOUND CAPSULE</h1></header>
     <main class="main-container">
-        
         <div class="hub-box box-english">
-            <div class="icon-header">🎸</div>
-            <h2 style="color: var(--english-accent); margin-bottom: 5px;">English Songs</h2>
-            <p style="color: #aaa; font-size: 0.9em;">Browse our collection of Western Pop, Rock, and Karaoke classics.</p>
-            <a href="english.html" class="btn-direct">VIEW SONG LIST →</a>
+            <h2 style="color: var(--english-accent);">English Songs</h2>
+            <p style="color: #aaa;">Full collection of Western Pop, Rock, and Karaoke tracks.</p>
+            <a href="english.html" class="btn-eng">VIEW SONG LIST →</a>
         </div>
-
-        <div class="hub-box box-chinese">
-            <div class="icon-header">🏮</div>
-            <h2 style="color: var(--chinese-accent); margin-bottom: 5px;">中文歌曲</h2>
-            <p style="color: #aaa; font-size: 0.9em;">國語及廣東話精選 KTV</p>
-            
-            <div class="category-list">
-                <a href="chinese-men.html" class="sub-link">
-                    <div>
-                        <span class="label-zh">男聲歌曲 (Men)</span>
-                        <span class="label-en">280+ 經典及流行曲目</span>
-                    </div>
-                    <span style="color: var(--chinese-accent);">›</span>
-                </a>
-                <a href="#" class="sub-link disabled">
-                    <div>
-                        <span class="label-zh">女聲歌曲 (Lady)</span>
-                        <span class="label-en">Coming Soon</span>
-                    </div>
-                    <span>›</span>
-                </a>
+        <div class="hub-box">
+            <h2 style="color: var(--chinese-accent);">中文歌曲</h2>
+            <div class="sub-link" onclick="location.href='chinese-men.html'" style="cursor:pointer">
+                <div><span class="label-zh">男聲歌曲 (Men)</span><span class="label-en">280+ 經典及流行曲目</span></div>
+                <span style="color: var(--chinese-accent);">›</span>
             </div>
         </div>
-
     </main>
-
 </body>
 </html>
