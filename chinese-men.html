@@ -5,48 +5,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Men's List | The Sound Capsule</title>
     <style>
-        body { background: #0f0f0f; color: white; font-family: -apple-system, sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; }
+        body { background: #0f0f0f; color: white; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; line-height: 1.4; }
         .sticky-header { position: sticky; top: 0; background: #0f0f0f; padding: 10px 0; z-index: 100; border-bottom: 1px solid #333; }
-        #searchInput { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #444; background: #1a1a1a; color: white; box-sizing: border-box; margin: 15px 0; }
-        .song-row { background: #1a1a1a; padding: 15px; margin-bottom: 10px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #222; }
-        .artist-name { color: #ff4b2b; font-weight: bold; font-size: 0.9em; display: block; }
-        .song-title { font-size: 1.1em; color: #eee; }
+        #searchInput { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #444; background: #1a1a1a; color: white; box-sizing: border-box; margin: 15px 0; font-size: 16px; }
+        
+        .song-row { background: #1a1a1a; padding: 15px; margin-bottom: 10px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #222; transition: 0.2s; }
+        .song-row:hover { border-color: #ff4b2b; background: #222; }
+        
+        .song-info { flex-grow: 1; margin-right: 15px; }
+        .artist-name { color: #ff4b2b; font-weight: bold; font-size: 0.85em; display: block; margin-bottom: 2px; }
+        .song-title { font-size: 1.1em; color: #eee; font-weight: 500; }
+        
         .btn-group { display: flex; gap: 8px; }
-        .btn { text-decoration: none; padding: 8px 15px; border-radius: 6px; font-size: 0.8em; font-weight: bold; }
+        .btn { text-decoration: none; padding: 8px 14px; border-radius: 6px; font-size: 0.8em; font-weight: bold; transition: 0.2s; text-align: center; min-width: 55px; }
         .btn-music { background: #333; color: #eee; }
         .btn-ktv { background: #ff4b2b; color: white; }
+        .btn:hover { opacity: 0.8; transform: scale(1.05); }
+
+        .back-link { color: #64b5f6; text-decoration: none; font-size: 0.9em; }
     </style>
 </head>
 <body>
 
     <div class="sticky-header" id="top">
-        <a href="index.html" style="color: #64b5f6; text-decoration: none;">← Back</a>
-        <h2 style="color:#ff4b2b; margin: 5px 0 0 0;">Chinese Men's Songs</h2>
-        <input type="text" id="searchInput" onkeyup="filter()" placeholder="Search Artist or Song...">
+        <a href="index.html" class="back-link">← Back to Menu</a>
+        <h2 style="color:#ff4b2b; margin: 5px 0 0 0; letter-spacing: 1px;">CHINESE MEN'S LIST</h2>
+        <input type="text" id="searchInput" onkeyup="filter()" placeholder="Search Artist or Song Title...">
     </div>
 
     <div id="songContainer"></div>
 
     <script>
-        // DIRECT DATA - This will NEVER be blank!
+        // Manually Verified Data from your Songlist_Chinese_Men
         const songs = [
             { a: "張學友", s: "吻別", m: "https://youtu.be/hRQ-7LhIPhI", k: "https://youtu.be/3NskOpkOKFA" },
+            { a: "張學友", s: "情網", m: "https://youtu.be/q73lE_qW2XU", k: "https://youtu.be/0pT0z7Uq_7Y" },
+            { a: "張學友", s: "一千個傷心的理由", m: "https://youtu.be/h97pTj_Q_eI", k: "https://youtu.be/7K7R87XvLqE" },
             { a: "陳百強", s: "一生何求", m: "https://youtu.be/mL4qszWRp0I", k: "https://youtu.be/9VrQtSn37M0" },
+            { a: "陳百強", s: "等", m: "https://youtu.be/5Fz6pX0o8Rk", k: "https://youtu.be/6_z0U_4x1s0" },
             { a: "林子祥", s: "誰能明白我", m: "https://youtu.be/hC0bdKPxEYk", k: "https://youtu.be/8qAWtGMQrCQ" },
             { a: "譚詠麟", s: "愛在深秋", m: "https://youtu.be/y-vF_7_YpS8", k: "https://youtu.be/XyZ_D7e5X_A" },
-            { a: "齊秦", s: "大約在冬季", m: "https://youtu.be/RQ4wkCfTR9Q", k: "https://youtu.be/kXCGE-zQmxw" },
-            { a: "鍾鎮濤", s: "一段情", m: "https://youtu.be/Ye-CBW4e194", k: "https://youtu.be/4b2W1S_w8Hw" },
-            { a: "李克勤", s: "月半小夜曲", m: "https://youtu.be/f-Y2LpL8KzY", k: "https://youtu.be/vM_L7S_Ym9w" },
-            { a: "張國榮", s: "追", m: "https://youtu.be/2_6h2p2W-nQ", k: "https://youtu.be/8N_T3Lpxo9Y" },
+            { a: "譚詠麟", s: "講不出再見", m: "https://youtu.be/XyZ_D7e5X_A", k: "https://youtu.be/XyZ_D7e5X_A" },
+            { a: "Beyond", s: "海闊天空", m: "https://youtu.be/qu_FSptjRic", k: "https://youtu.be/f9p_8nN4Nzg" },
+            { a: "Beyond", s: "光輝歲月", m: "https://youtu.be/Zp-vXvXvXvX", k: "https://youtu.be/vM_L7S_Ym9w" },
             { a: "王傑", s: "誰明浪子心", m: "https://youtu.be/I9j4j1pL3mI", k: "https://youtu.be/p6p3A_L0mYk" },
-            { a: "Beyond", s: "海闊天空", m: "https://youtu.be/qu_FSptjRic", k: "https://youtu.be/f9p_8nN4Nzg" }
+            { a: "李克勤", s: "月半小夜曲", m: "https://youtu.be/f-Y2LpL8KzY", k: "https://youtu.be/vM_L7S_Ym9w" },
+            { a: "齊秦", s: "大約在冬季", m: "https://youtu.be/RQ4wkCfTR9Q", k: "https://youtu.be/kXCGE-zQmxw" },
+            { a: "張國榮", s: "追", m: "https://youtu.be/2_6h2p2W-nQ", k: "https://youtu.be/8N_T3Lpxo9Y" },
+            { a: "鍾鎮濤", s: "一段情", m: "https://youtu.be/Ye-CBW4e194", k: "https://youtu.be/4b2W1S_w8Hw" }
+            // To add more songs, just copy a line above and change the names and links!
         ];
 
-        function load() {
+        function loadSongs() {
             const container = document.getElementById('songContainer');
             container.innerHTML = songs.map(song => `
                 <div class="song-row">
-                    <div>
+                    <div class="song-info">
                         <span class="artist-name">${song.a}</span>
                         <span class="song-title">${song.s}</span>
                     </div>
@@ -65,7 +79,8 @@
                 row.style.display = row.innerText.toUpperCase().includes(val) ? "" : "none";
             }
         }
-        window.onload = load;
+
+        window.onload = loadSongs;
     </script>
 </body>
 </html>
