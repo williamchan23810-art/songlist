@@ -1,33 +1,95 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Sound Capsule | Music Library</title>
+    <title>Chinese Collection | The Sound Capsule</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a2e 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            width: 90%;
+            max-width: 1000px;
+            margin-top: 40px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 40px 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #ff4b2b;
+            box-shadow: 0 10px 30px rgba(255, 75, 43, 0.3);
+        }
+
+        .card h2 { margin: 10px 0; font-size: 1.8em; }
+        .card p { color: #aaa; font-size: 0.9em; }
+        .icon-circle {
+            width: 70px;
+            height: 70px;
+            background: rgba(255, 75, 43, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 2em;
+        }
+
+        .disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(1); }
+        .back-btn { margin-top: 30px; color: #888; text-decoration: none; }
+    </style>
 </head>
 <body>
-    <header>
-        <h1>Welcome to The Sound Capsule</h1>
-        <p>Curating Tomorrow's Sounds. Discover More.</p>
+
+    <header style="text-align: center; margin-top: 50px;">
+        <h1 style="letter-spacing: 2px;">CHINESE COLLECTION</h1>
+        <p style="color: #ff4b2b; font-weight: bold;">SELECT YOUR VIBE</p>
     </header>
 
-    <main class="hub-container">
-        <div class="hub-card">
-            <button onclick="location.href='english.html'" class="btn-main english">
-                <span class="hub-icon">🎤</span>
-                <h2>English Songs & Karaoke</h2>
-                <p>Browse Men, Lady, and Duet English tracks.</p>
-            </button>
+    <div class="category-grid">
+        <div class="card" onclick="location.href='chinese-men.html'">
+            <div class="icon-circle">👨</div>
+            <h2>Men (男聲)</h2>
+            <p>280+ Classics & Modern Hits</p>
         </div>
 
-        <div class="hub-card">
-            <button onclick="location.href='chinese.html'" class="btn-main chinese">
-                <span class="hub-icon">🏮</span>
-                <h2>Chinese Songs & Karaoke</h2>
-                <p>國語 & 廣東話: Men, Lady, and Duet collections.</p>
-            </button>
+        <div class="card disabled">
+            <div class="icon-circle">👩</div>
+            <h2>Lady (女聲)</h2>
+            <p>Coming Soon</p>
         </div>
-    </main>
+
+        <div class="card disabled">
+            <div class="icon-circle">👫</div>
+            <h2>Duet (合唱)</h2>
+            <p>Coming Soon</p>
+        </div>
+    </div>
+
+    <a href="index.html" class="back-btn">← Return to Main Hub</a>
+
 </body>
 </html>
