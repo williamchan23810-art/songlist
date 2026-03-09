@@ -35,7 +35,6 @@
         }
 
         th { background-color: #27ae60; color: white; text-align: left; padding: 8px 4px; }
-        th:nth-child(3), th:nth-child(4) { text-align: center; }
 
         .link-btn {
             display: inline-block;
@@ -85,12 +84,16 @@
                 const headers = rows[0].split(',').map(h => h.replace(/"/g, '').trim());
                 const headerRow = document.getElementById('tableHeader');
                 
-                headers.forEach(h => {
+                headers.forEach((h, index) => {
                     const th = document.createElement('th');
                     let title = h;
                     if (h.toLowerCase().includes("song name") || h.toLowerCase() === "song") title = "TITLE";
-                    if (h.toLowerCase().includes("original")) title = "SONG";
-                    if (h.toLowerCase().includes("karaoke")) title = "KARAOKE";
+                    
+                    // Clear headers for Column C and D
+                    if (index === 2 || index === 3) {
+                        title = ""; 
+                    }
+
                     th.innerText = title;
                     headerRow.appendChild(th);
                 });
