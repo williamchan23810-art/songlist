@@ -19,18 +19,21 @@
             white-space: nowrap;
         }
 
-        /* Column B (Artist): Very tight right side */
-        td:nth-child(2) {
-            padding-right: 2px;
-            width: 1%;
-        }
+        /* Column B (Artist): Tight right side */
+        td:nth-child(2) { padding-right: 4px; width: 1%; }
 
-        /* THE FIX: Rigidly narrow C & D with zero padding */
-        td:nth-child(3), td:nth-child(4) {
-            width: 56px;
+        /* THE FIX: Rigidly narrow C & D with exact 2px gap */
+        td:nth-child(3) {
+            width: 75px;
             padding-left: 0px; 
+            padding-right: 1px; /* 1px here */
+            text-align: right;
+        }
+        td:nth-child(4) {
+            width: 75px;
+            padding-left: 1px; /* 1px here = 2px total gap */
             padding-right: 0px;
-            text-align: center;
+            text-align: left;
         }
 
         th { background-color: #d81b60; color: white; text-align: left; padding: 8px 4px; }
@@ -38,15 +41,14 @@
 
         .link-btn {
             display: inline-block;
-            padding: 5px 0;
-            border-radius: 3px;
+            padding: 6px 0;
+            border-radius: 4px;
             text-decoration: none !important;
             color: white !important;
             font-weight: bold;
-            font-size: 10px;
+            font-size: 9.5px; /* Smallest size to fit the full word */
             text-align: center;
-            width: 54px; 
-            margin: 0 1px; /* 1px margin on each side = 2px gap between buttons */
+            width: 72px; 
         }
         .btn-orig { background-color: #e74c3c; } 
         .btn-kara { background-color: #3498db; } 
@@ -89,7 +91,7 @@
                     const th = document.createElement('th');
                     let title = h;
                     if (h.toLowerCase().includes("original")) title = "SONG";
-                    if (h.toLowerCase().includes("karaoke")) title = "KARA";
+                    if (h.toLowerCase().includes("karaoke")) title = "KARAOKE";
                     th.innerText = title;
                     headerRow.appendChild(th);
                 });
@@ -108,10 +110,10 @@
                             btn.target = "_blank";
                             btn.className = 'link-btn';
                             if (headers[index].toLowerCase().includes("original")) {
-                                btn.innerText = "Orig";
+                                btn.innerText = "Original";
                                 btn.classList.add('btn-orig');
                             } else {
-                                btn.innerText = "Kara";
+                                btn.innerText = "Karaoke";
                                 btn.classList.add('btn-kara');
                             }
                             td.appendChild(btn);
