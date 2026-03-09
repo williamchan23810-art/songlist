@@ -6,49 +6,43 @@
     <title>Chinese Lady Songlist - William H Chan Music Studio</title>
     <style>
         body { font-family: Arial, sans-serif; background-color: #f4f4f9; padding: 5px; margin: 0; }
-        h1 { text-align: center; color: #d81b60; margin-top: 10px; font-size: 1.3rem; }
+        h1 { text-align: center; color: #d81b60; margin-top: 10px; font-size: 1.2rem; }
         .search-container { text-align: center; margin-bottom: 10px; }
         input[type="text"] { padding: 8px; width: 95%; max-width: 400px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px; }
         
-        .table-wrapper { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-        table { width: 100%; border-collapse: collapse; background: white; font-size: 12px; table-layout: auto; }
+        .table-wrapper { width: 100%; overflow-x: auto; }
+        table { border-collapse: collapse; background: white; font-size: 11.5px; margin: 0 auto; }
         
-        /* Column A & B: Shrink-wrap to eliminate gaps */
-        th:nth-child(1), td:nth-child(1),
-        th:nth-child(2), td:nth-child(2) { 
-            width: 1%; 
+        /* Column A & B: Minimum width */
+        td:nth-child(1), td:nth-child(2) { 
             white-space: nowrap; 
-            padding-right: 8px; 
+            padding: 8px 5px;
+            border-bottom: 1px solid #ddd;
         }
 
-        th, td { 
-            padding: 8px 4px; 
-            border-bottom: 1px solid #ddd; 
-            text-align: left;
-        }
-
-        /* THE FIX: Remove gaps between C and D */
+        /* THE FIX: Rigidly narrow Column C & D */
         th:nth-child(3), td:nth-child(3),
         th:nth-child(4), td:nth-child(4) {
-            width: 64px;
+            width: 55px; /* Extremely narrow */
+            min-width: 55px;
+            max-width: 55px;
             text-align: center;
-            padding-left: 0px;  /* No left gap */
-            padding-right: 0px; /* No right gap */
+            padding: 8px 1px; /* 1px on each side = 2px gap */
+            border-bottom: 1px solid #ddd;
         }
 
-        th { background-color: #d81b60; color: white; }
-        th:nth-child(3), th:nth-child(4) { text-align: center; }
+        th { background-color: #d81b60; color: white; padding: 8px 4px; }
 
         .link-btn {
             display: inline-block;
-            padding: 6px 0;
-            border-radius: 4px;
+            padding: 5px 0;
+            border-radius: 3px;
             text-decoration: none !important;
             color: white !important;
             font-weight: bold;
             font-size: 10px;
             text-align: center;
-            width: 62px; /* Button takes up almost the full narrow cell */
+            width: 52px; /* Fits inside the 55px cell */
         }
         .btn-orig { background-color: #e74c3c; } 
         .btn-kara { background-color: #3498db; } 
@@ -91,7 +85,7 @@
                     const th = document.createElement('th');
                     let title = h;
                     if (h.toLowerCase().includes("original")) title = "SONG";
-                    if (h.toLowerCase().includes("karaoke")) title = "KARAOKE";
+                    if (h.toLowerCase().includes("karaoke")) title = "KARA";
                     th.innerText = title;
                     headerRow.appendChild(th);
                 });
@@ -110,10 +104,10 @@
                             btn.target = "_blank";
                             btn.className = 'link-btn';
                             if (headers[index].toLowerCase().includes("original")) {
-                                btn.innerText = "Original";
+                                btn.innerText = "Orig"; // Shortened
                                 btn.classList.add('btn-orig');
                             } else {
-                                btn.innerText = "Karaoke";
+                                btn.innerText = "Kara"; // Shortened
                                 btn.classList.add('btn-kara');
                             }
                             td.appendChild(btn);
