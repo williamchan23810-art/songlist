@@ -36,58 +36,54 @@
     </div>
     <script>
         const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSeK0hJoqyYLa5BQLl42QIAHMlbT_0tAa0FxhoBBebSUqV98bwac7ACwQc1y2yA6SLOd1nGvJYD-zLB/pub?gid=0&single=true&output=csv';
+        
         async function loadData() {
             try {
                 const response = await fetch(sheetUrl);
-                const csvData = await response.text();
-                const rows = csvData.split(/\r?\n/);
-                if (rows.length === 0) return;
-                const headers = rows[0].split(',').map(h => h.replace(/"/g, '').trim());
-                const headerRow = document.getElementById('tableHeader');
-                headers.forEach((h, index) => {
-                    const th = document.createElement('th');
-                    let title = h;
-                    if (index === 0) title = "ARTIST";
-                    if (index === 1) title = "TITLE";
-                    if (index === 2 || index === 3) title = "";
-                    th.innerText = title;
-                    headerRow.appendChild(th);
-                });
+                const data = await response.text();
+                const rows = data.split(/\r?\n/);
+                const tableHeader = document.getElementById('tableHeader');
                 const tableBody = document.getElementById('tableBody');
-                for (let i = 1; i < rows.length; i++) {
-                    const columns = rows[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                    if (columns.join('').trim() === "") continue;
+
+                const displayHeaders = ["ARTIST", "TITLE", "", ""];
+                displayHeaders.forEach(h => {
+                    const th = document.createElement('th');
+                    th.innerText = h;
+                    tableHeader.appendChild(th);
+                });
+
+                rows.forEach((row, i) => {
+                    if (i === 0 || row.trim() === "") return;
+                    const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                     const tr = document.createElement('tr');
-                    columns.forEach((cell, index) => {
+                    
+                    cols.forEach((cell, index) => {
+                        if (index > 3) return;
                         const td = document.createElement('td');
-                        let cleanCell = cell.replace(/"/g, '').trim();
-                        if (cleanCell.toLowerCase().startsWith('http')) {
-                            const btn = document.createElement('a');
-                            btn.href = cleanCell;
-                            btn.target = "_blank";
-                            btn.className = 'link-btn';
-                            if (index === 2) {
-                                btn.innerText = "Original";
-                                btn.classList.add('btn-orig');
-                            } else {
-                                btn.innerText = "Karaoke";
-                                btn.classList.add('btn-kara');
-                            }
-                            td.appendChild(btn);
+                        let clean = cell.replace(/"/g, '').trim();
+                        
+                        if (clean.toLowerCase().startsWith('http')) {
+                            const a = document.createElement('a');
+                            a.href = clean;
+                            a.target = "_blank";
+                            a.className = 'link-btn ' + (index === 2 ? 'btn-orig' : 'btn-kara');
+                            a.innerText = (index === 2 ? 'Original' : 'Karaoke');
+                            td.appendChild(a);
                         } else {
-                            td.innerText = cleanCell;
+                            td.innerText = clean;
                         }
                         tr.appendChild(td);
                     });
                     tableBody.appendChild(tr);
-                }
-            } catch (e) { console.error(e); }
+                });
+            } catch (err) { console.error("Error loading CSV:", err); }
         }
+
         function filterTable() {
-            let input = document.getElementById("searchInput").value.toUpperCase();
+            let val = document.getElementById("searchInput").value.toUpperCase();
             let rows = document.getElementById("tableBody").getElementsByTagName("tr");
             for (let i = 0; i < rows.length; i++) {
-                rows[i].style.display = rows[i].innerText.toUpperCase().includes(input) ? "" : "none";
+                rows[i].style.display = rows[i].innerText.toUpperCase().includes(val) ? "" : "none";
             }
         }
         loadData();
