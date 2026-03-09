@@ -1,89 +1,54 @@
-<!DOCTYPE html>
-<html lang="zh-Hant">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Men's Collection | The Sound Capsule</title>
-    <style>
-        :root { --primary: #ff4b2b; --glass: rgba(255, 255, 255, 0.05); }
-        body { background: #0f0f0f; color: white; font-family: 'Inter', sans-serif; margin: 0; padding-bottom: 50px; }
-        
-        /* Floating Header */
-        .sticky-nav { position: sticky; top: 0; background: rgba(15, 15, 15, 0.9); backdrop-filter: blur(10px); padding: 15px; z-index: 100; border-bottom: 1px solid #333; text-align: center; }
-        .back-link { position: absolute; left: 15px; top: 20px; color: var(--primary); text-decoration: none; font-size: 0.9em; }
-
-        /* Search Bar Styling */
-        .search-container { padding: 20px; text-align: center; }
-        #searchInput { width: 85%; max-width: 500px; padding: 12px 20px; border-radius: 30px; border: 1px solid #444; background: #1a1a1a; color: white; outline: none; transition: 0.3s; }
-        #searchInput:focus { border-color: var(--primary); box-shadow: 0 0 10px rgba(255, 75, 43, 0.3); }
-
-        /* Compact List View */
-        .song-list { width: 95%; max-width: 800px; margin: 0 auto; }
-        .song-row { display: flex; align-items: center; padding: 12px; margin-bottom: 8px; background: var(--glass); border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); transition: 0.2s; }
-        .song-row:hover { background: rgba(255,255,255,0.1); transform: scale(1.01); }
-
-        .song-info { flex-grow: 1; }
-        .artist { color: var(--primary); font-weight: bold; font-size: 0.9em; display: block; }
-        .title { font-size: 1.1em; margin-top: 2px; display: block; }
-        
-        .lang-badge { font-size: 0.7em; padding: 3px 8px; border-radius: 20px; border: 1px solid #666; color: #aaa; margin-right: 10px; }
-
-        .actions { display: flex; gap: 8px; }
-        .btn { text-decoration: none; padding: 8px 15px; border-radius: 8px; font-size: 0.8em; font-weight: bold; }
-        .btn-orig { background: #333; color: white; }
-        .btn-ktv { background: var(--primary); color: white; }
-
-        #loading { text-align: center; margin-top: 50px; color: #888; }
-    </style>
-</head>
-<body>
-
-    <div class="sticky-nav">
-        <a href="chinese.html" class="back-link">← BACK</a>
-        <h2 style="margin:0; font-size: 1.2em; letter-spacing: 1px;">CHINESE MEN'S LIST</h2>
-    </div>
-
-    <div class="search-container">
-        <input type="text" id="searchInput" onkeyup="filterSongs()" placeholder="Search artist or song name...">
-    </div>
-
-    <div id="loading">Syncing with Google Sheets...</div>
-    <div class="song-list" id="songContainer"></div>
-
-    <script>
-        // PASTE YOUR PUBLISHED CSV LINK HERE
-        const sheetUrl = 'YOUR_PUBLISHED_CSV_LINK_HERE';
+<script>
+        // Your specific published CSV link
+        const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSeK0hJoqyYLa5BQLl42QIAHMlbT_0tAa0FxhoBBebSUqV98bwac7ACwQc1y2yA6SLOd1nGvJYD-zLB/pub?gid=0&single=true&output=csv';
 
         async function fetchSongs() {
             try {
                 const response = await fetch(sheetUrl);
                 const data = await response.text();
-                const rows = data.split('\n').slice(1); // Skip header row
+                
+                // This handles the CSV rows properly even if there are commas in song titles
+                const rows = data.split('\n').slice(1); 
                 
                 const container = document.getElementById('songContainer');
                 document.getElementById('loading').style.display = 'none';
 
                 container.innerHTML = rows.map(row => {
-                    // Assuming columns: Artist, Song, OrigLink, KTVLink, Language
-                    const cols = row.split(','); 
+                    // Splitting by comma, but being careful with the data
+                    const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/); 
+                    
                     if (cols.length < 2) return ''; 
+
+                    // MAPPING TO YOUR SHEET COLUMNS:
+                    // cols[0] = Artist (A)
+                    // cols[1] = Song Title (B)
+                    // cols[5] = Language (F)
+                    // cols[6] = Music Link (G)
+                    // cols[7] = KTV Link (H)
+                    
+                    const artist = cols[0]?.replace(/"/g, "") || "Unknown";
+                    const title = cols[1]?.replace(/"/g, "") || "Unknown";
+                    const lang = cols[5]?.replace(/"/g, "") || "國語/廣東話";
+                    const musicLink = cols[6]?.replace(/"/g, "").trim();
+                    const ktvLink = cols[7]?.replace(/"/g, "").trim();
 
                     return `
                         <div class="song-row">
                             <div class="song-info">
-                                <span class="artist">${cols[0]}</span>
-                                <span class="title">${cols[1]}</span>
+                                <span class="artist">${artist}</span>
+                                <span class="title">${title}</span>
                             </div>
-                            <span class="lang-badge">${cols[4] || '國/粵'}</span>
+                            <span class="lang-badge">${lang}</span>
                             <div class="actions">
-                                <a href="${cols[2]}" target="_blank" class="btn btn-orig">MUSIC</a>
-                                <a href="${cols[3]}" target="_blank" class="btn btn-ktv">KTV</a>
+                                ${musicLink ? `<a href="${musicLink}" target="_blank" class="btn btn-orig">MUSIC</a>` : ''}
+                                ${ktvLink ? `<a href="${ktvLink}" target="_blank" class="btn btn-ktv">KTV</a>` : ''}
                             </div>
                         </div>
                     `;
                 }).join('');
             } catch (error) {
-                document.getElementById('loading').innerHTML = "Error loading data. Check CSV link.";
+                console.error(error);
+                document.getElementById('loading').innerHTML = "Error syncing data. Please refresh.";
             }
         }
 
