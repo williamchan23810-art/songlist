@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,7 +17,7 @@
             padding: 0;
             background: var(--bg);
             color: white;
-            font-family: 'Inter', -apple-system, sans-serif;
+            font-family: 'PingFang HK', 'Microsoft JhengHei', sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -29,8 +29,8 @@
             padding: 50px 20px 30px;
         }
 
-        h1 { margin: 0; letter-spacing: 3px; font-size: 2em; }
-        .subtitle { color: #888; font-size: 0.9em; margin-top: 10px; }
+        h1 { margin: 0; letter-spacing: 3px; font-size: 2.2em; }
+        .subtitle { color: #888; font-size: 0.9em; margin-top: 10px; letter-spacing: 1px; }
 
         .main-container {
             display: grid;
@@ -52,7 +52,7 @@
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        /* English Side - Simple Button */
+        /* English Side */
         .box-english:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 30px rgba(100, 181, 246, 0.2);
@@ -67,14 +67,12 @@
             border-radius: 12px;
             text-align: center;
             font-weight: bold;
-            margin-top: auto;
-            transition: opacity 0.2s;
+            margin-top: 30px;
+            transition: 0.2s;
         }
 
-        /* Chinese Side - Nested Links */
-        .box-chinese {
-            border-color: rgba(255, 75, 43, 0.2);
-        }
+        /* Chinese Side */
+        .box-chinese { border-color: rgba(255, 75, 43, 0.2); }
 
         .category-list {
             margin-top: 20px;
@@ -88,7 +86,7 @@
             border: 1px solid rgba(255,255,255,0.1);
             color: white;
             text-decoration: none;
-            padding: 12px 15px;
+            padding: 15px;
             border-radius: 10px;
             display: flex;
             justify-content: space-between;
@@ -102,58 +100,69 @@
             padding-left: 20px;
         }
 
-        .sub-link span { font-size: 0.8em; opacity: 0.6; }
+        .sub-link .label-zh { font-size: 1.1em; font-weight: bold; }
+        .sub-link .label-en { font-size: 0.75em; opacity: 0.6; display: block; }
+        .arrow { color: var(--chinese-accent); font-weight: bold; }
 
-        .disabled { opacity: 0.4; pointer-events: none; }
-
+        .disabled { opacity: 0.4; pointer-events: none; filter: grayscale(1); }
         .icon-header { font-size: 2.5em; margin-bottom: 10px; }
 
-        @media (max-width: 600px) {
-            h1 { font-size: 1.5em; }
-        }
+        @media (max-width: 600px) { h1 { font-size: 1.7em; } }
     </style>
 </head>
 <body>
 
     <header>
         <h1>THE SOUND CAPSULE</h1>
-        <div class="subtitle">SELECT YOUR LANGUAGE & CATEGORY</div>
+        <div class="subtitle">音樂庫 | MUSIC LIBRARY</div>
     </header>
 
     <main class="main-container">
         
         <div class="hub-box box-english">
             <div class="icon-header">🎸</div>
-            <h2 style="color: var(--english-accent);">English Songs</h2>
-            <p>Full collection of Western hits, indie gems, and karaoke tracks.</p>
-            <a href="english.html" class="btn-direct">VIEW FULL LIST →</a>
+            <h2 style="color: var(--english-accent); margin-bottom: 5px;">English Songs</h2>
+            <p style="color: #aaa; font-size: 0.9em;">Western Pop, Rock & Indie Classics</p>
+            <a href="english.html" class="btn-direct">查看英文歌單 →</a>
         </div>
 
         <div class="hub-box box-chinese">
             <div class="icon-header">🏮</div>
-            <h2 style="color: var(--chinese-accent);">Chinese Songs</h2>
-            <p>國語 & 廣東話 Collections</p>
+            <h2 style="color: var(--chinese-accent); margin-bottom: 5px;">中文歌曲</h2>
+            <p style="color: #aaa; font-size: 0.9em;">國語及廣東話精選 KTV</p>
             
             <div class="category-list">
                 <a href="chinese-men.html" class="sub-link">
-                    <div><b>A. Men</b> (男聲)</div>
-                    <span>280+ Songs ›</span>
+                    <div>
+                        <span class="label-zh">男聲歌曲 (Men)</span>
+                        <span class="label-en">280+ 經典及流行曲目</span>
+                    </div>
+                    <span class="arrow">›</span>
                 </a>
+
                 <a href="#" class="sub-link disabled">
-                    <div><b>B. Lady</b> (女聲)</div>
-                    <span>Coming Soon</span>
+                    <div>
+                        <span class="label-zh">女聲歌曲 (Lady)</span>
+                        <span class="label-en">即將推出 | Coming Soon</span>
+                    </div>
+                    <span class="arrow">›</span>
                 </a>
+
                 <a href="#" class="sub-link disabled">
-                    <div><b>C. Duet</b> (合唱)</div>
-                    <span>Coming Soon</span>
+                    <div>
+                        <span class="label-zh">合唱歌曲 (Duet)</span>
+                        <span class="label-en">即將推出 | Coming Soon</span>
+                    </div>
+                    <span class="arrow">›</span>
                 </a>
             </div>
         </div>
 
     </main>
 
-    <footer style="color: #444; font-size: 0.7em; margin-top: auto; padding: 20px;">
-        &copy; 2026 The Sound Capsule Music Library
+    <footer style="color: #444; font-size: 0.75em; margin-top: auto; padding: 30px; text-align: center;">
+        &copy; 2026 The Sound Capsule <br>
+        <span style="font-size: 0.8em; opacity: 0.5;">最後更新: 2026年3月</span>
     </footer>
 
 </body>
