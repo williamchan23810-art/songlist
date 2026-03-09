@@ -5,39 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Men's List | The Sound Capsule</title>
     <style>
-        body { background: #0f0f0f; color: white; font-family: -apple-system, sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; }
+        body { background: #0f0f0f; color: white; font-family: sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; }
         .sticky-header { position: sticky; top: 0; background: #0f0f0f; padding: 10px 0; z-index: 100; border-bottom: 1px solid #333; }
         #searchInput { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #444; background: #1a1a1a; color: white; box-sizing: border-box; margin: 15px 0; }
-        
-        .song-row { background: #1a1a1a; padding: 15px; margin-bottom: 8px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #222; }
-        .song-info { flex-grow: 1; }
-        .artist-name { color: #ff4b2b; font-weight: bold; font-size: 0.9em; display: block; margin-bottom: 2px; }
+        .song-row { background: #1a1a1a; padding: 15px; margin-bottom: 10px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #222; }
+        .artist-name { color: #ff4b2b; font-weight: bold; font-size: 0.9em; display: block; }
         .song-title { font-size: 1.1em; color: #eee; }
-        
-        .btn-group { display: flex; gap: 8px; }
-        .btn { text-decoration: none; padding: 8px 15px; border-radius: 6px; font-size: 0.8em; font-weight: bold; transition: 0.2s; }
-        .btn-music { background: #333; color: #eee; }
-        .btn-ktv { background: #ff4b2b; color: white; }
-        
-        .footer-nav { text-align: center; margin-top: 30px; padding: 20px; }
-        .top-link { color: #64b5f6; text-decoration: none; font-size: 0.9em; cursor: pointer; }
+        .btn { text-decoration: none; padding: 8px 15px; border-radius: 6px; font-size: 0.8em; font-weight: bold; background: #ff4b2b; color: white; }
+        .btn-music { background: #333; color: #eee; margin-right: 8px; }
         #loading { text-align: center; padding: 40px; color: #666; }
     </style>
 </head>
 <body>
 
     <div class="sticky-header" id="top">
-        <a href="index.html" style="color: #64b5f6; text-decoration: none; font-size: 0.9em;">← Back to Menu</a>
+        <a href="index.html" style="color: #64b5f6; text-decoration: none;">← Back</a>
         <h2 style="color:#ff4b2b; margin: 5px 0 0 0;">Chinese Men's Songs</h2>
         <input type="text" id="searchInput" onkeyup="filter()" placeholder="Search Artist or Song...">
     </div>
 
-    <div id="loading">Syncing Songs...</div>
+    <div id="loading">Connecting to List...</div>
     <div id="songContainer"></div>
-
-    <div class="footer-nav">
-        <a href="#top" class="top-link">▲ Back to Top</a>
-    </div>
 
     <script>
         const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSeK0hJoqyYLa5BQLl42QIAHMlbT_0tAa0FxhoBBebSUqV98bwac7ACwQc1y2yA6SLOd1nGvJYD-zLB/pub?gid=0&single=true&output=csv';
@@ -46,41 +34,45 @@
             try {
                 const res = await fetch(sheetUrl);
                 const text = await res.text();
-                const lines = text.split(/\r?\n/).filter(line => line.trim() !== '');
-                const dataRows = lines.slice(1); 
+                const lines = text.split(/\r?\n/);
                 
                 let html = '';
-                dataRows.forEach(line => {
-                    // Split CSV correctly
-                    const cols = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                    
-                    if (cols.length >= 8) {
+                // Start from i = 1 to skip the "Artist, Song, Initial..." header row
+                for (let i = 1; i < lines.length; i++) {
+                    const row = lines[i];
+                    if (!row.trim()) continue;
+
+                    // Standard comma split
+                    const cols = row.split(',');
+
+                    if (cols.length >= 2) {
                         const artist = cols[0].replace(/"/g, "").trim();
                         const title = cols[1].replace(/"/g, "").trim();
-                        const music = cols[6] ? cols[6].replace(/"/g, "").trim() : ""; // Column G
-                        const ktv = cols[7] ? cols[7].replace(/"/g, "").trim() : "";   // Column H
+                        // Based on your sheet: G is index 6, H is index 7
+                        const music = cols[6] ? cols[6].replace(/"/g, "").trim() : "";
+                        const ktv = cols[7] ? cols[7].replace(/"/g, "").trim() : "";
 
-                        // Basic skip for empty rows or headers
-                        if (artist === "Artist" || !artist) return;
+                        // Final safety check: don't show the row if there's no artist or title
+                        if (artist === "" && title === "") continue;
 
                         html += `
                             <div class="song-row">
-                                <div class="song-info">
+                                <div>
                                     <span class="artist-name">${artist}</span>
                                     <span class="song-title">${title}</span>
                                 </div>
-                                <div class="btn-group">
-                                    ${music.startsWith('http') ? `<a href="${music}" target="_blank" class="btn btn-music">MUSIC</a>` : ''}
-                                    ${ktv.startsWith('http') ? `<a href="${ktv}" target="_blank" class="btn btn-ktv">KTV</a>` : ''}
+                                <div>
+                                    ${music.includes('http') ? `<a href="${music}" target="_blank" class="btn btn-music">MUSIC</a>` : ''}
+                                    ${ktv.includes('http') ? `<a href="${ktv}" target="_blank" class="btn">KTV</a>` : ''}
                                 </div>
                             </div>`;
                     }
-                });
+                }
 
                 document.getElementById('loading').style.display = 'none';
-                document.getElementById('songContainer').innerHTML = html;
+                document.getElementById('songContainer').innerHTML = html || "No songs found in the list.";
             } catch (err) {
-                document.getElementById('loading').innerHTML = "Sync Error. Please Refresh.";
+                document.getElementById('loading').innerHTML = "Sync Error. Please check your internet.";
             }
         }
 
