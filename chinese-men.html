@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>男聲歌曲庫 (Double Column)</title>
+    <title>男聲歌曲庫 (Double Column Fix)</title>
     <style>
         body { background-color: #000; color: #ccc; font-family: -apple-system, sans-serif; padding: 15px; margin: 0; font-size: 13px; }
-        h1 { color: #ff4500; font-size: 22px; margin: 0 0 5px 0; }
+        h1 { color: #ff4500; font-size: 22px; margin: 0; }
         #status { font-size: 12px; color: #666; display: block; margin-bottom: 12px; }
         
         #search { 
@@ -14,41 +14,38 @@
             background: #111; border: 1px solid #333; color: #fff; border-radius: 6px;
         }
 
-        /* The Magic: CSS Column-Count */
+        /* Standard Double Column Layout */
         #song-list {
             column-count: 2;
             column-gap: 40px;
-            /* This creates your 30px center double line spacing naturally */
-            column-rule: 3px double #444; 
+            column-rule: 3px double #444; /* The Double Line */
         }
 
-        /* Song Row Styling */
         .song-item {
             display: flex;
             align-items: center;
             border-bottom: 1px solid #1a1a1a;
             padding: 5px 0;
-            break-inside: avoid; /* Prevents a song from splitting between columns */
+            break-inside: avoid; /* Keeps songs from splitting across columns */
             overflow: hidden;
         }
 
         .artist { color: #fff; font-weight: bold; margin-right: 8px; flex-shrink: 0; }
         
-        /* The song title - limited width to keep links close */
-        .song { color: #888; margin-right: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 160px; }
+        /* The title stays close to the artist */
+        .song { color: #888; margin-right: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px; }
 
         .link-group { display: flex; gap: 4px; flex-shrink: 0; }
 
         .btn {
             width: 18px; height: 18px; line-height: 18px; text-align: center;
             text-decoration: none; font-size: 10px; font-weight: bold;
-            border-radius: 3px;
+            border-radius: 3px; display: inline-block;
         }
         .btn-o { background: #333; color: #aaa; } 
         .btn-k { background: #ff4500; color: #fff; }
         .btn:hover { background: #fff; color: #000; }
 
-        /* Mobile Adjustments */
         @media (max-width: 800px) {
             #song-list { column-count: 1; column-rule: none; }
             .song { max-width: none; }
@@ -58,9 +55,9 @@
 <body>
 
     <h1>男聲歌曲庫</h1>
-    <span id="status">Connecting to Database...</span>
+    <span id="status">Status: Initializing...</span>
     
-    <input type="text" id="search" placeholder="Search Artist or Song Title..." oninput="filterSongs()">
+    <input type="text" id="search" placeholder="Search Artist or Song..." oninput="filterSongs()">
 
     <div id="song-list">
         </div>
@@ -72,11 +69,65 @@
         async function loadSongs() {
             const statusEl = document.getElementById('status');
             try {
+                statusEl.innerText = "Status: Fetching from Google...";
                 const response = await fetch(SHEET_URL);
-                if (!response.ok) throw new Error("Could not reach Google Sheets");
+                
+                if (!response.ok) throw new Error("Could not fetch CSV");
                 
                 const csvText = await response.text();
-                const rows = csvText.split(/\r?\n/).filter(row => row.trim() !== "");
+                const lines = csvText.split(/\r?\n/).filter(line => line.trim() !== "");
                 
-                songData = rows.slice(1).map(row => {
-                    // Splits CSV while respecting
+                // Debugging: check if we actually got rows
+                if (lines.length <= 1) {
+                    statusEl.innerText = "Status: Connected, but Sheet looks empty.";
+                    return;
+                }
+
+                songData = lines.slice(1).map(row => {
+                    // Split columns safely
+                    const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/); 
+                    return {
+                        artist: cols[0]?.replace(/"/g, '').trim() || '',
+                        song: cols[1]?.replace(/"/g, '').trim() || '',
+                        orig: cols[2]?.replace(/"/g, '').trim() || '',
+                        kara: cols[3]?.replace(/"/g, '').trim() || ''
+                    };
+                }).filter(s => s.artist || s.song);
+
+                statusEl.innerText = `Status: ${songData.length} Songs Loaded Successfully`;
+                displaySongs(songData);
+            } catch (err) {
+                statusEl.innerText = "Status: Error - Check if Sheet is 'Published to Web' as CSV.";
+                console.error("Load Error:", err);
+            }
+        }
+
+        function displaySongs(songs) {
+            const list = document.getElementById('song-list');
+            if (songs.length === 0) {
+                list.innerHTML = "<div style='color:#666'>No matching songs found.</div>";
+                return;
+            }
+
+            list.innerHTML = songs.map(s => `
+                <div class="song-item">
+                    <span class="artist">${s.artist}</span>
+                    <span class="song">${s.song}</span>
+                    <div class="link-group">
+                        ${s.orig ? `<a href="${s.orig}" class="btn btn-o" target="_blank">O</a>` : ''}
+                        ${s.kara ? `<a href="${s.kara}" class="btn btn-kara" target="_blank">K</a>` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterSongs() {
+            const term = document.getElementById('search').value.toLowerCase();
+            const filtered = songData.filter(s => 
+                s.artist.toLowerCase().includes(term) || 
+                s.song.toLowerCase().includes(term)
+            );
+            displaySongs(filtered);
+        }
+
+        // Start the
