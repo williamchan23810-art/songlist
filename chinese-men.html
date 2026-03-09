@@ -5,43 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chinese Men Songlist - William H Chan Music Studio</title>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f4f9; padding: 20px; margin: 0; }
-        h1 { text-align: center; color: #27ae60; margin-top: 20px; } /* Green for Men's page */
-        .search-container { text-align: center; margin-bottom: 20px; }
-        input[type="text"] { padding: 12px; width: 80%; max-width: 500px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; }
+        body { font-family: Arial, sans-serif; background-color: #f4f4f9; padding: 10px; margin: 0; }
+        h1 { text-align: center; color: #27ae60; margin-top: 15px; font-size: 1.5rem; }
+        .search-container { text-align: center; margin-bottom: 15px; }
+        input[type="text"] { padding: 10px; width: 90%; max-width: 400px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; }
         
-        /* Table Styling */
-        .table-wrapper { overflow-x: auto; width: 100%; }
-        table { width: 100%; border-collapse: collapse; background: white; margin-top: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; white-space: nowrap; }
+        .table-wrapper { overflow-x: hidden; width: 100%; }
+        table { width: 100%; border-collapse: collapse; background: white; margin-top: 5px; font-size: 13px; }
+        th, td { padding: 8px 4px; text-align: left; border-bottom: 1px solid #ddd; }
         th { background-color: #27ae60; color: white; }
-        tr:hover { background-color: #f9f9f9; }
 
-        /* Button Styling */
         .link-btn {
             display: inline-block;
-            padding: 8px 16px;
-            border-radius: 6px;
+            padding: 6px 4px;
+            border-radius: 4px;
             text-decoration: none !important;
             color: white !important;
             font-weight: bold;
-            font-size: 13px;
+            font-size: 11px;
             text-align: center;
-            min-width: 110px;
+            width: 65px; 
         }
-        .btn-orig { background-color: #e74c3c; } /* Red */
-        .btn-kara { background-color: #3498db; } /* Blue */
+        .btn-orig { background-color: #e74c3c; } 
+        .btn-kara { background-color: #3498db; } 
 
-        .back-btn { display: inline-block; margin-bottom: 20px; text-decoration: none; color: #27ae60; font-weight: bold; font-size: 18px; }
+        .back-btn { display: inline-block; margin-bottom: 10px; text-decoration: none; color: #27ae60; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <a href="index.html" class="back-btn">← Back to Home</a>
+    <a href="index.html" class="back-btn">← Back</a>
     <h1>Chinese Men Songlist</h1>
 
     <div class="search-container">
-        <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="Search Song or Artist...">
+        <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="Search...">
     </div>
 
     <div class="table-wrapper">
@@ -49,8 +46,7 @@
             <thead>
                 <tr id="tableHeader"></tr>
             </thead>
-            <tbody id="tableBody">
-                </tbody>
+            <tbody id="tableBody"></tbody>
         </table>
     </div>
 
@@ -61,39 +57,36 @@
             try {
                 const response = await fetch(sheetUrl);
                 const csvData = await response.text();
-                
                 const rows = csvData.split(/\r?\n/);
                 if (rows.length === 0) return;
 
-                // Create Headers
                 const headers = rows[0].split(',').map(h => h.replace(/"/g, '').trim());
                 const headerRow = document.getElementById('tableHeader');
-                headers.forEach(headerText => {
+                
+                headers.forEach(h => {
                     const th = document.createElement('th');
-                    th.innerText = headerText;
+                    let title = h;
+                    if (h.toLowerCase().includes("original")) title = "SONG";
+                    if (h.toLowerCase().includes("karaoke")) title = "KARAOKE";
+                    th.innerText = title;
                     headerRow.appendChild(th);
                 });
 
-                // Create Rows
                 const tableBody = document.getElementById('tableBody');
                 for (let i = 1; i < rows.length; i++) {
                     const columns = rows[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                     if (columns.join('').trim() === "") continue;
-
                     const tr = document.createElement('tr');
                     columns.forEach((cell, index) => {
                         const td = document.createElement('td');
                         let cleanCell = cell.replace(/"/g, '').trim();
-
                         if (cleanCell.toLowerCase().startsWith('http')) {
                             const btn = document.createElement('a');
                             btn.href = cleanCell;
                             btn.target = "_blank";
                             btn.className = 'link-btn';
-
-                            const currentHeader = headers[index].toLowerCase();
-                            if (currentHeader.includes("original")) {
-                                btn.innerText = "Original Song";
+                            if (headers[index].toLowerCase().includes("original")) {
+                                btn.innerText = "Original";
                                 btn.classList.add('btn-orig');
                             } else {
                                 btn.innerText = "Karaoke";
@@ -107,22 +100,17 @@
                     });
                     tableBody.appendChild(tr);
                 }
-            } catch (error) {
-                console.error("Error loading data:", error);
-            }
+            } catch (e) { console.error(e); }
         }
 
         function filterTable() {
             let input = document.getElementById("searchInput").value.toUpperCase();
             let rows = document.getElementById("tableBody").getElementsByTagName("tr");
             for (let i = 0; i < rows.length; i++) {
-                let text = rows[i].innerText.toUpperCase();
-                rows[i].style.display = text.includes(input) ? "" : "none";
+                rows[i].style.display = rows[i].innerText.toUpperCase().includes(input) ? "" : "none";
             }
         }
-
         loadData();
     </script>
-
 </body>
 </html>
