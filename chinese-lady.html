@@ -5,50 +5,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chinese Lady Songlist - William H Chan Music Studio</title>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f4f9; padding: 10px; margin: 0; }
-        h1 { text-align: center; color: #d81b60; margin-top: 15px; font-size: 1.5rem; }
-        .search-container { text-align: center; margin-bottom: 15px; }
-        input[type="text"] { padding: 10px; width: 90%; max-width: 400px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; }
+        body { font-family: Arial, sans-serif; background-color: #f4f4f9; padding: 5px; margin: 0; }
+        h1 { text-align: center; color: #d81b60; margin-top: 10px; font-size: 1.3rem; }
+        .search-container { text-align: center; margin-bottom: 10px; }
+        input[type="text"] { padding: 8px; width: 95%; max-width: 400px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px; }
         
-        .table-wrapper { overflow-x: auto; width: 100%; -webkit-overflow-scrolling: touch; }
-        table { width: 100%; border-collapse: collapse; background: white; margin-top: 5px; font-size: 13px; table-layout: auto; }
+        .table-wrapper { overflow-x: auto; width: 100%; }
+        table { width: 100%; border-collapse: collapse; background: white; font-size: 12px; table-layout: auto; }
         
+        /* THE FIX: Minimal padding to shorten gaps */
         th, td { 
-            padding: 10px 4px; /* Tightened horizontal padding */
+            padding: 8px 3px; /* Reduced horizontal padding from 10px to 3px */
             text-align: left; 
             border-bottom: 1px solid #ddd; 
             white-space: nowrap; 
         }
 
-        /* Pulling Column C (SONG) closer to Column D (KARAOKE) */
-        td:nth-child(3) {
-            text-align: right; /* Aligns the button to the right of its cell */
-            width: 70px;       /* Tight width to keep it close to the next column */
-            padding-right: 2px; /* Minimal gap between buttons */
+        /* Tightening the gap between Column A & B and the buttons */
+        td:nth-child(1), td:nth-child(2) {
+            padding-right: 5px; 
         }
-        
-        td:nth-child(4) {
-            padding-left: 2px;  /* Minimal gap between buttons */
-            width: 70px;
+
+        /* Keeping the buttons (Col C & D) side-by-side with almost no gap */
+        td:nth-child(3), td:nth-child(4) {
+            width: 66px;
+            padding-left: 1px;
+            padding-right: 1px;
         }
 
         th { background-color: #d81b60; color: white; position: sticky; top: 0; }
 
         .link-btn {
             display: inline-block;
-            padding: 6px 0; /* Vertical padding only to keep them slim */
+            padding: 6px 0;
             border-radius: 4px;
             text-decoration: none !important;
             color: white !important;
             font-weight: bold;
             font-size: 11px; 
             text-align: center;
-            width: 65px; 
+            width: 64px; 
         }
         .btn-orig { background-color: #e74c3c; } 
         .btn-kara { background-color: #3498db; } 
 
-        .back-btn { display: inline-block; margin-bottom: 10px; text-decoration: none; color: #d81b60; font-weight: bold; }
+        .back-btn { display: inline-block; margin: 5px; text-decoration: none; color: #d81b60; font-weight: bold; font-size: 14px; }
     </style>
 </head>
 <body>
