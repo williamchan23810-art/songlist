@@ -2,53 +2,30 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Song List</title>
+    <title>Test List</title>
     <style>
         body { background: #111; color: white; font-family: sans-serif; padding: 20px; }
         .row { background: #222; padding: 15px; margin-bottom: 5px; border-radius: 8px; display: flex; justify-content: space-between; }
         .artist { color: #ff4b2b; font-weight: bold; margin-right: 10px; }
         .btn { background: #ff4b2b; color: white; text-decoration: none; padding: 5px 10px; border-radius: 4px; }
-        input { width: 100%; padding: 10px; margin-bottom: 20px; }
     </style>
 </head>
 <body>
     <a href="index.html" style="color: #64b5f6;">← Back</a>
-    <h2>Chinese Men's Songs</h2>
-    <input type="text" id="find" onkeyup="search()" placeholder="Search Artist or Song...">
-    <div id="list">Loading...</div>
-
-    <script>
-        var url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSeK0hJoqyYLa5BQLl42QIAHMlbT_0tAa0FxhoBBebSUqV98bwac7ACwQc1y2yA6SLOd1nGvJYD-zLB/pub?gid=0&single=true&output=csv';
-
-        function search() {
-            var val = document.getElementById("find").value.toUpperCase();
-            var items = document.getElementsByClassName("row");
-            for (var i = 0; i < items.length; i++) {
-                items[i].style.display = items[i].innerText.toUpperCase().includes(val) ? "" : "none";
-            }
-        }
-
-        fetch(url)
-            .then(function(res) { return res.text(); })
-            .then(function(data) {
-                var lines = data.split('\n');
-                var html = '';
-                for (var i = 1; i < lines.length; i++) {
-                    var cols = lines[i].split(',');
-                    if (cols.length > 1) {
-                        var artist = cols[0].replace(/"/g, "");
-                        var title = cols[1].replace(/"/g, "");
-                        var ktv = cols[7] ? cols[7].replace(/"/g, "").trim() : "";
-                        html += '<div class="row"><div><span class="artist">' + artist + '</span>' + title + '</div>';
-                        if (ktv) { html += '<a href="' + ktv + '" target="_blank" class="btn">KTV</a>'; }
-                        html += '</div>';
-                    }
-                }
-                document.getElementById('list').innerHTML = html;
-            })
-            .catch(function(err) {
-                document.getElementById('list').innerHTML = "Error loading data.";
-            });
-    </script>
+    <h2>Test Song List</h2>
+    <div id="list">
+        <div class="row">
+            <div><span class="artist">張學友</span>吻別</div>
+            <a href="https://youtu.be/3NskOpkOKFA" class="btn">KTV</a>
+        </div>
+        <div class="row">
+            <div><span class="artist">陳百強</span>一生何求</div>
+            <a href="https://youtu.be/9VrQtSn37M0" class="btn">KTV</a>
+        </div>
+        <div class="row">
+            <div><span class="artist">齊秦</span>大約在冬季</div>
+            <a href="https://youtu.be/kXCGE-zQmxw" class="btn">KTV</a>
+        </div>
+    </div>
 </body>
 </html>
