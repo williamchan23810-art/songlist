@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>男聲歌曲庫 (Compact List)</title>
+    <title>男聲歌曲庫 (Full 4-Column)</title>
     <style>
         body { background-color: #000; color: #ddd; font-family: sans-serif; padding: 10px; margin: 0; font-size: 13px; }
         h1 { color: #ff4500; font-size: 18px; margin: 0; display: inline-block; }
@@ -17,34 +17,37 @@
 
         table { width: 100%; border-collapse: collapse; table-layout: fixed; }
         th { text-align: left; color: #ff4500; border-bottom: 1px solid #444; padding: 6px 4px; font-size: 11px; }
-        td { padding: 5px 4px; border-bottom: 1px solid #222; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        td { padding: 6px 4px; border-bottom: 1px solid #222; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         
-        /* Column Widths */
-        .col-artist { width: 25%; color: #fff; font-weight: bold; }
-        .col-song { width: 40%; color: #bbb; }
-        .col-links { width: 35%; text-align: right; }
+        /* Specific Widths for 4 Columns */
+        .col-a { width: 22%; color: #fff; font-weight: bold; } /* Artist */
+        .col-b { width: 38%; color: #bbb; }              /* Song Title */
+        .col-c { width: 20%; text-align: center; }       /* Original Link */
+        .col-d { width: 20%; text-align: center; }       /* Karaoke Link */
 
         .btn { 
-            display: inline-block; text-decoration: none; padding: 2px 5px; 
-            border-radius: 3px; font-size: 10px; font-weight: bold; margin-left: 3px;
+            display: inline-block; text-decoration: none; padding: 3px 8px; 
+            border-radius: 3px; font-size: 10px; font-weight: bold; width: 80%;
         }
         .btn-orig { border: 1px solid #555; color: #aaa; }
         .btn-kara { border: 1px solid #ff4500; color: #ff4500; }
-        .btn:hover { background: #ff4500; color: #fff; border-color: #ff4500; }
+        .btn:hover { background: #ff4500; color: #fff !important; border-color: #ff4500; }
+        
         tr:hover td { background-color: #111; }
     </style>
 </head>
 <body>
 
-    <h1>男聲歌曲庫</h1><span id="count">Syncing...</span>
-    <input type="text" id="search" placeholder="Search Artist or Song Name..." onkeyup="filterSongs()">
+    <h1>男聲歌曲庫</h1><span id="count">Connecting...</span>
+    <input type="text" id="search" placeholder="Search Artist or Song Title..." onkeyup="filterSongs()">
 
     <table>
         <thead>
             <tr>
-                <th class="col-artist">Artist</th>
-                <th class="col-song">Song Title</th>
-                <th class="col-links">Links</th>
+                <th class="col-a">Artist</th>
+                <th class="col-b">Song Title</th>
+                <th class="col-c">Original</th>
+                <th class="col-d">Karaoke</th>
             </tr>
         </thead>
         <tbody id="song-table-body">
@@ -59,10 +62,12 @@
             try {
                 const response = await fetch(SHEET_URL);
                 const csvText = await response.text();
+                
+                // Splitting by lines and filtering out empty ones
                 const rows = csvText.split(/\r?\n/).filter(row => row.trim() !== "");
                 
-                // Mapping the 4 columns: A(Artist), B(Song), C(Original Link), D(Karaoke Link)
                 songData = rows.slice(1).map(row => {
+                    // This regex is safer for CSVs that might have commas inside quotes
                     const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/); 
                     return {
                         artist: cols[0]?.replace(/"/g, '').trim() || '',
@@ -72,10 +77,10 @@
                     };
                 }).filter(s => s.artist || s.song); 
 
-                document.getElementById('count').innerText = `(${songData.length} items)`;
+                document.getElementById('count').innerText = `(${songData.length} items found)`;
                 displaySongs(songData);
             } catch (err) {
-                document.getElementById('song-table-body').innerHTML = "<tr><td colspan='3'>Error loading data.</td></tr>";
+                document.getElementById('song-table-body').innerHTML = "<tr><td colspan='4'>Failed to load Column D. Please check if the sheet sharing includes all columns.</td></tr>";
             }
         }
 
@@ -83,11 +88,13 @@
             const body = document.getElementById('song-table-body');
             body.innerHTML = songs.map(s => `
                 <tr>
-                    <td class="col-artist">${s.artist}</td>
-                    <td class="col-song">${s.song}</td>
-                    <td class="col-links">
-                        ${s.origLink ? `<a href="${s.origLink}" class="btn btn-orig" target="_blank">ORIG</a>` : ''}
-                        ${s.karaLink ? `<a href="${s.karaLink}" class="btn btn-kara" target="_blank">KARA</a>` : ''}
+                    <td class="col-a">${s.artist}</td>
+                    <td class="col-b">${s.song}</td>
+                    <td class="col-c">
+                        ${s.origLink && s.origLink !== '#' ? `<a href="${s.origLink}" class="btn btn-orig" target="_blank">VIEW</a>` : '--'}
+                    </td>
+                    <td class="col-d">
+                        ${s.karaLink && s.karaLink !== '#' ? `<a href="${s.karaLink}" class="btn btn-kara" target="_blank">SING</a>` : '--'}
                     </td>
                 </tr>
             `).join('');
