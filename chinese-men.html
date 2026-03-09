@@ -9,83 +9,88 @@
         h1 { text-align: center; color: #27ae60; margin-top: 10px; font-size: 1.2rem; }
         .search-container { text-align: center; margin-bottom: 10px; }
         input[type="text"] { padding: 8px; width: 92%; max-width: 400px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px; }
-        
         .table-wrapper { width: 100%; overflow-x: auto; }
         table { border-collapse: collapse; background: white; font-size: 11.5px; width: 100%; table-layout: auto; }
-        
-        th, td { 
-            padding: 8px 2px; 
-            border-bottom: 1px solid #ddd; 
-            white-space: nowrap;
-        }
-
-        /* Column B (Title): Tight right side */
+        th, td { padding: 8px 2px; border-bottom: 1px solid #ddd; white-space: nowrap; }
         td:nth-child(2) { padding-right: 4px; width: 1%; }
-
-        /* Snug C & D with exact 2px gap */
-        td:nth-child(3) {
-            width: 75px;
-            padding-left: 0px; 
-            padding-right: 1px;
-            text-align: right;
-        }
-        td:nth-child(4) {
-            width: 75px;
-            padding-left: 1px;
-            padding-right: 0px;
-            text-align: left;
-        }
-
+        td:nth-child(3) { width: 75px; padding-left: 0px; padding-right: 1px; text-align: right; }
+        td:nth-child(4) { width: 75px; padding-left: 1px; padding-right: 0px; text-align: left; }
         th { background-color: #27ae60; color: white; text-align: left; padding: 8px 4px; }
-
-        .link-btn {
-            display: inline-block;
-            padding: 6px 0;
-            border-radius: 4px;
-            text-decoration: none !important;
-            color: white !important;
-            font-weight: bold;
-            font-size: 9.5px;
-            text-align: center;
-            width: 72px; 
-        }
+        .link-btn { display: inline-block; padding: 6px 0; border-radius: 4px; text-decoration: none !important; color: white !important; font-weight: bold; font-size: 9.5px; text-align: center; width: 72px; }
         .btn-orig { background-color: #e74c3c; } 
         .btn-kara { background-color: #3498db; } 
-
         .back-btn { display: inline-block; margin: 5px; text-decoration: none; color: #27ae60; font-weight: bold; font-size: 14px; }
     </style>
 </head>
 <body>
-
     <a href="index.html" class="back-btn">← Back</a>
     <h1>Chinese Men Songlist</h1>
-
     <div class="search-container">
         <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="Search...">
     </div>
-
     <div class="table-wrapper">
         <table id="songTable">
-            <thead>
-                <tr id="tableHeader"></tr>
-            </thead>
+            <thead><tr id="tableHeader"></tr></thead>
             <tbody id="tableBody"></tbody>
         </table>
     </div>
-
     <script>
         const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSeK0hJoqyYLa5BQLl42QIAHMlbT_0tAa0FxhoBBebSUqV98bwac7ACwQc1y2yA6SLOd1nGvJYD-zLB/pub?gid=0&single=true&output=csv';
-
         async function loadData() {
             try {
                 const response = await fetch(sheetUrl);
                 const csvData = await response.text();
                 const rows = csvData.split(/\r?\n/);
                 if (rows.length === 0) return;
-
                 const headers = rows[0].split(',').map(h => h.replace(/"/g, '').trim());
                 const headerRow = document.getElementById('tableHeader');
-                
                 headers.forEach((h, index) => {
                     const th = document.createElement('th');
                     let title = h;
+                    if (index === 0) title = "ARTIST";
+                    if (index === 1) title = "TITLE";
+                    if (index === 2 || index === 3) title = "";
+                    th.innerText = title;
+                    headerRow.appendChild(th);
+                });
+                const tableBody = document.getElementById('tableBody');
+                for (let i = 1; i < rows.length; i++) {
+                    const columns = rows[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                    if (columns.join('').trim() === "") continue;
+                    const tr = document.createElement('tr');
+                    columns.forEach((cell, index) => {
+                        const td = document.createElement('td');
+                        let cleanCell = cell.replace(/"/g, '').trim();
+                        if (cleanCell.toLowerCase().startsWith('http')) {
+                            const btn = document.createElement('a');
+                            btn.href = cleanCell;
+                            btn.target = "_blank";
+                            btn.className = 'link-btn';
+                            if (index === 2) {
+                                btn.innerText = "Original";
+                                btn.classList.add('btn-orig');
+                            } else {
+                                btn.innerText = "Karaoke";
+                                btn.classList.add('btn-kara');
+                            }
+                            td.appendChild(btn);
+                        } else {
+                            td.innerText = cleanCell;
+                        }
+                        tr.appendChild(td);
+                    });
+                    tableBody.appendChild(tr);
+                }
+            } catch (e) { console.error(e); }
+        }
+        function filterTable() {
+            let input = document.getElementById("searchInput").value.toUpperCase();
+            let rows = document.getElementById("tableBody").getElementsByTagName("tr");
+            for (let i = 0; i < rows.length; i++) {
+                rows[i].style.display = rows[i].innerText.toUpperCase().includes(input) ? "" : "none";
+            }
+        }
+        loadData();
+    </script>
+</body>
+</html>
