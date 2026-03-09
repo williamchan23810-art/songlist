@@ -1,66 +1,59 @@
-<script>
-        // Your specific published CSV link
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Men's List | The Sound Capsule</title>
+    <style>
+        body { background: #0f0f0f; color: white; font-family: sans-serif; padding: 20px; }
+        .song-row { background: rgba(255,255,255,0.05); padding: 15px; margin-bottom: 10px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .artist { color: #ff4b2b; font-weight: bold; font-size: 0.9em; }
+        .title { display: block; font-size: 1.1em; }
+        .btn-ktv { background: #ff4b2b; color: white; text-decoration: none; padding: 8px 12px; border-radius: 5px; font-size: 0.8em; }
+        #searchInput { width: 100%; padding: 12px; margin-bottom: 20px; border-radius: 10px; border: none; background: #222; color: white; }
+    </style>
+</head>
+<body>
+    <a href="index.html" style="color: #888; text-decoration: none;">← Back</a>
+    <h2>Chinese Men's Songs</h2>
+    <input type="text" id="searchInput" onkeyup="filter()" placeholder="Search artist or song...">
+    <div id="songContainer">Loading songs from Google Sheets...</div>
+
+    <script>
         const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSeK0hJoqyYLa5BQLl42QIAHMlbT_0tAa0FxhoBBebSUqV98bwac7ACwQc1y2yA6SLOd1nGvJYD-zLB/pub?gid=0&single=true&output=csv';
 
         async function fetchSongs() {
             try {
-                const response = await fetch(sheetUrl);
-                const data = await response.text();
-                
-                // This handles the CSV rows properly even if there are commas in song titles
-                const rows = data.split('\n').slice(1); 
-                
-                const container = document.getElementById('songContainer');
-                document.getElementById('loading').style.display = 'none';
+                const res = await fetch(sheetUrl);
+                const csvText = await res.text();
+                const rows = csvText.split('\n').slice(1);
+                let html = '';
 
-                container.innerHTML = rows.map(row => {
-                    // Splitting by comma, but being careful with the data
-                    const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/); 
-                    
-                    if (cols.length < 2) return ''; 
-
-                    // MAPPING TO YOUR SHEET COLUMNS:
-                    // cols[0] = Artist (A)
-                    // cols[1] = Song Title (B)
-                    // cols[5] = Language (F)
-                    // cols[6] = Music Link (G)
-                    // cols[7] = KTV Link (H)
-                    
-                    const artist = cols[0]?.replace(/"/g, "") || "Unknown";
-                    const title = cols[1]?.replace(/"/g, "") || "Unknown";
-                    const lang = cols[5]?.replace(/"/g, "") || "國語/廣東話";
-                    const musicLink = cols[6]?.replace(/"/g, "").trim();
-                    const ktvLink = cols[7]?.replace(/"/g, "").trim();
-
-                    return `
-                        <div class="song-row">
-                            <div class="song-info">
-                                <span class="artist">${artist}</span>
-                                <span class="title">${title}</span>
-                            </div>
-                            <span class="lang-badge">${lang}</span>
-                            <div class="actions">
-                                ${musicLink ? `<a href="${musicLink}" target="_blank" class="btn btn-orig">MUSIC</a>` : ''}
-                                ${ktvLink ? `<a href="${ktvLink}" target="_blank" class="btn btn-ktv">KTV</a>` : ''}
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-            } catch (error) {
-                console.error(error);
-                document.getElementById('loading').innerHTML = "Error syncing data. Please refresh.";
+                rows.forEach(row => {
+                    const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                    if (cols.length > 1) {
+                        const artist = cols[0].replace(/"/g, "");
+                        const title = cols[1].replace(/"/g, "");
+                        const ktv = cols[7] ? cols[7].replace(/"/g, "").trim() : "";
+                        html += `<div class="song-row">
+                                    <div><span class="artist">${artist}</span><span class="title">${title}</span></div>
+                                    ${ktv ? `<a href="${ktv}" target="_blank" class="btn-ktv">KTV</a>` : ''}
+                                 </div>`;
+                    }
+                });
+                document.getElementById('songContainer').innerHTML = html;
+            } catch (err) {
+                document.getElementById('songContainer').innerHTML = "Error loading songs. Please check your internet connection.";
             }
         }
 
-        function filterSongs() {
+        function filter() {
             let input = document.getElementById("searchInput").value.toUpperCase();
             let rows = document.getElementsByClassName("song-row");
-            for (let i = 0; i < rows.length; i++) {
-                let text = rows[i].textContent.toUpperCase();
-                rows[i].style.display = text.includes(input) ? "" : "none";
+            for (let row of rows) {
+                row.style.display = row.innerText.toUpperCase().includes(input) ? "" : "none";
             }
         }
-
         fetchSongs();
     </script>
 </body>
