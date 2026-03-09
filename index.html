@@ -5,54 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>William H Chan Music Studio</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #121212;
-            color: white;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-        }
-        h1 { margin-bottom: 40px; font-size: 2.5rem; color: #f1c40f; text-align: center; }
-        .container {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            width: 90%;
-            max-width: 400px;
-        }
-        .btn {
-            padding: 25px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            text-align: center;
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .container { text-align: center; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 90%; max-width: 400px; }
+        h1 { color: #333; margin-bottom: 25px; font-size: 1.5rem; }
+        
+        .menu-btn {
+            display: block;
+            width: 100%;
+            padding: 15px 0;
+            margin: 10px 0;
             text-decoration: none;
             color: white;
-            border-radius: 12px;
-            transition: transform 0.2s, background-color 0.3s;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            font-weight: bold;
+            border-radius: 8px;
+            transition: transform 0.2s;
+            font-size: 1.1rem;
         }
-        .btn:hover { transform: scale(1.03); }
-        
-        /* Specific Colors for each list */
-        .btn-english { background-color: #2980b9; } 
-        .btn-men { background-color: #27ae60; }     
-        .btn-lady { background-color: #d81b60; }    
+        .menu-btn:active { transform: scale(0.98); }
+
+        /* Color Coding for consistency */
+        .btn-lady { background-color: #d81b60; } /* Pink */
+        .btn-men  { background-color: #27ae60; } /* Green */
+        .btn-duet { background-color: #8e44ad; } /* Purple - New! */
+        .btn-eng  { background-color: #2980b9; } /* Blue */
+
+        .footer { margin-top: 20px; font-size: 0.8rem; color: #777; }
     </style>
 </head>
 <body>
 
-    <h1>William H Chan Music Studio <br> 安清</h1>
-
     <div class="container">
-        <a href="english.html" class="btn btn-english">English Songlist</a>
+        <h1>Music Studio Songlists</h1>
+        
+        <a href="chinese-lady.html" class="menu-btn btn-lady">Chinese Lady Songs</a>
+        <a href="chinese-men.html" class="menu-btn btn-men">Chinese Men Songs</a>
+        <a href="chinese-duet.html" class="menu-btn btn-duet">Chinese Duets</a>
+        <a href="english.html" class="menu-btn btn-eng">English Songs</a>
 
-        <a href="chinese-men.html" class="btn btn-men">Chinese Men Songlist</a>
-
-        <a href="chinese-lady.html" class="btn btn-lady">Chinese Lady Songlist</a>
+        <div class="footer">
+            &copy; 2026 William H Chan Music Studio
+        </div>
     </div>
 
 </body>
