@@ -3,92 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Men's Songlist | The Sound Capsule</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Men's Collection | The Sound Capsule</title>
     <style>
-        body { background: #0f0f0f; color: #ffffff; font-family: 'Segoe UI', sans-serif; }
-        .nav-header { padding: 10px 20px; display: flex; align-items: center; gap: 15px; background: rgba(255,255,255,0.05); }
-        .nav-header a { color: #aaa; text-decoration: none; font-size: 0.9em; }
+        :root { --primary: #ff4b2b; --glass: rgba(255, 255, 255, 0.05); }
+        body { background: #0f0f0f; color: white; font-family: 'Inter', sans-serif; margin: 0; padding-bottom: 50px; }
         
-        .search-box { width: 90%; max-width: 500px; margin: 15px auto; display: block; padding: 8px 15px; border-radius: 20px; border: none; background: #222; color: white; }
+        /* Floating Header */
+        .sticky-nav { position: sticky; top: 0; background: rgba(15, 15, 15, 0.9); backdrop-filter: blur(10px); padding: 15px; z-index: 100; border-bottom: 1px solid #333; text-align: center; }
+        .back-link { position: absolute; left: 15px; top: 20px; color: var(--primary); text-decoration: none; font-size: 0.9em; }
 
-        /* Compact Table Styles */
-        .song-table { width: 100%; border-collapse: collapse; font-size: 0.85em; }
-        .song-table th { text-align: left; padding: 8px; color: #888; border-bottom: 1px solid #333; font-weight: normal; }
-        .song-table td { padding: 6px 8px; border-bottom: 1px solid #1a1a1a; vertical-align: middle; }
+        /* Search Bar Styling */
+        .search-container { padding: 20px; text-align: center; }
+        #searchInput { width: 85%; max-width: 500px; padding: 12px 20px; border-radius: 30px; border: 1px solid #444; background: #1a1a1a; color: white; outline: none; transition: 0.3s; }
+        #searchInput:focus { border-color: var(--primary); box-shadow: 0 0 10px rgba(255, 75, 43, 0.3); }
+
+        /* Compact List View */
+        .song-list { width: 95%; max-width: 800px; margin: 0 auto; }
+        .song-row { display: flex; align-items: center; padding: 12px; margin-bottom: 8px; background: var(--glass); border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); transition: 0.2s; }
+        .song-row:hover { background: rgba(255,255,255,0.1); transform: scale(1.01); }
+
+        .song-info { flex-grow: 1; }
+        .artist { color: var(--primary); font-weight: bold; font-size: 0.9em; display: block; }
+        .title { font-size: 1.1em; margin-top: 2px; display: block; }
         
-        .artist-name { color: #64b5f6; font-weight: 600; }
-        .song-title { color: #eee; }
-        
-        /* Language Badges */
-        .tag { font-size: 0.7em; padding: 2px 5px; border-radius: 3px; margin-right: 5px; }
-        .cantonese { border: 1px solid #1976d2; color: #1976d2; }
-        .mandarin { border: 1px solid #f57c00; color: #f57c00; }
+        .lang-badge { font-size: 0.7em; padding: 3px 8px; border-radius: 20px; border: 1px solid #666; color: #aaa; margin-right: 10px; }
 
-        /* Small Action Buttons */
-        .btn-sm { text-decoration: none; padding: 4px 8px; border-radius: 4px; font-size: 0.75em; margin-right: 4px; display: inline-block; transition: 0.2s; }
-        .btn-orig { background: #333; color: #ccc; }
-        .btn-ktv { background: #e50914; color: white; }
-        .btn-sm:hover { opacity: 0.8; transform: scale(1.05); }
+        .actions { display: flex; gap: 8px; }
+        .btn { text-decoration: none; padding: 8px 15px; border-radius: 8px; font-size: 0.8em; font-weight: bold; }
+        .btn-orig { background: #333; color: white; }
+        .btn-ktv { background: var(--primary); color: white; }
 
-        /* Freeze Header */
-        thead { position: sticky; top: 0; background: #0f0f0f; z-index: 10; }
+        #loading { text-align: center; margin-top: 50px; color: #888; }
     </style>
 </head>
 <body>
 
-    <div class="nav-header">
-        <a href="chinese.html">← Back</a>
-        <h3 style="margin:0; font-size: 1em;">Chinese Men's Collection</h3>
+    <div class="sticky-nav">
+        <a href="chinese.html" class="back-link">← BACK</a>
+        <h2 style="margin:0; font-size: 1.2em; letter-spacing: 1px;">CHINESE MEN'S LIST</h2>
     </div>
 
-    <input type="text" id="songSearch" class="search-box" onkeyup="filterSongs()" placeholder="Search artist or song title...">
+    <div class="search-container">
+        <input type="text" id="searchInput" onkeyup="filterSongs()" placeholder="Search artist or song name...">
+    </div>
 
-    <table class="song-table" id="songTable">
-        <thead>
-            <tr>
-                <th>Artist / Song</th>
-                <th>Lang</th>
-                <th>Links</th>
-            </tr>
-        </thead>
-        <tbody id="songData">
-            </tbody>
-    </table>
+    <div id="loading">Syncing with Google Sheets...</div>
+    <div class="song-list" id="songContainer"></div>
 
     <script>
-        // Paste the converted song data here
-        const songs = [
-            { a: "張學友", s: "吻別", l: "國語", o: "URL", k: "URL" },
-            { a: "陳百強", s: "一生何求", l: "廣東話", o: "URL", k: "URL" }
-        ];
+        // PASTE YOUR PUBLISHED CSV LINK HERE
+        const sheetUrl = 'YOUR_PUBLISHED_CSV_LINK_HERE';
 
-        function loadSongs() {
-            const tbody = document.getElementById('songData');
-            tbody.innerHTML = songs.map(song => `
-                <tr>
-                    <td>
-                        <div class="artist-name">${song.a}</div>
-                        <div class="song-title">${song.s}</div>
-                    </td>
-                    <td><span class="tag ${song.l === '廣東話' ? 'cantonese' : 'mandarin'}">${song.l}</span></td>
-                    <td>
-                        <a href="${song.o}" target="_blank" class="btn-sm btn-orig">Music</a>
-                        <a href="${song.k}" target="_blank" class="btn-sm btn-ktv">KTV</a>
-                    </td>
-                </tr>
-            `).join('');
+        async function fetchSongs() {
+            try {
+                const response = await fetch(sheetUrl);
+                const data = await response.text();
+                const rows = data.split('\n').slice(1); // Skip header row
+                
+                const container = document.getElementById('songContainer');
+                document.getElementById('loading').style.display = 'none';
+
+                container.innerHTML = rows.map(row => {
+                    // Assuming columns: Artist, Song, OrigLink, KTVLink, Language
+                    const cols = row.split(','); 
+                    if (cols.length < 2) return ''; 
+
+                    return `
+                        <div class="song-row">
+                            <div class="song-info">
+                                <span class="artist">${cols[0]}</span>
+                                <span class="title">${cols[1]}</span>
+                            </div>
+                            <span class="lang-badge">${cols[4] || '國/粵'}</span>
+                            <div class="actions">
+                                <a href="${cols[2]}" target="_blank" class="btn btn-orig">MUSIC</a>
+                                <a href="${cols[3]}" target="_blank" class="btn btn-ktv">KTV</a>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } catch (error) {
+                document.getElementById('loading').innerHTML = "Error loading data. Check CSV link.";
+            }
         }
 
         function filterSongs() {
-            let input = document.getElementById("songSearch").value.toUpperCase();
-            let rows = document.getElementById("songData").getElementsByTagName("tr");
+            let input = document.getElementById("searchInput").value.toUpperCase();
+            let rows = document.getElementsByClassName("song-row");
             for (let i = 0; i < rows.length; i++) {
                 let text = rows[i].textContent.toUpperCase();
                 rows[i].style.display = text.includes(input) ? "" : "none";
             }
         }
-        window.onload = loadSongs;
+
+        fetchSongs();
     </script>
 </body>
 </html>
