@@ -8,30 +8,41 @@
         body { font-family: Arial, sans-serif; background-color: #f4f4f9; padding: 5px; margin: 0; }
         h1 { text-align: center; color: #d81b60; margin-top: 10px; font-size: 1.2rem; }
         .search-container { text-align: center; margin-bottom: 10px; }
-        input[type="text"] { padding: 8px; width: 95%; max-width: 400px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px; }
+        input[type="text"] { padding: 8px; width: 92%; max-width: 400px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px; }
         
         .table-wrapper { width: 100%; overflow-x: auto; }
-        table { border-collapse: collapse; background: white; font-size: 11.5px; margin: 0 auto; }
+        table { border-collapse: collapse; background: white; font-size: 11.5px; width: 100%; table-layout: auto; }
         
-        /* Column A & B: Minimum width */
-        td:nth-child(1), td:nth-child(2) { 
-            white-space: nowrap; 
-            padding: 8px 5px;
-            border-bottom: 1px solid #ddd;
+        th, td { 
+            padding: 8px 2px; /* Global tight padding */
+            border-bottom: 1px solid #ddd; 
+            white-space: nowrap;
         }
 
-        /* THE FIX: Rigidly narrow Column C & D */
-        th:nth-child(3), td:nth-child(3),
-        th:nth-child(4), td:nth-child(4) {
-            width: 55px; /* Extremely narrow */
-            min-width: 55px;
-            max-width: 55px;
+        /* Column B (Artist): Remove right padding to bring C closer */
+        td:nth-child(2) {
+            padding-right: 0px;
+            width: 1%;
+        }
+
+        /* Column C (SONG Button): Remove left padding to touch B */
+        td:nth-child(3) {
+            padding-left: 2px;
+            padding-right: 1px; /* Half of the 2px gap */
+            width: 56px;
             text-align: center;
-            padding: 8px 1px; /* 1px on each side = 2px gap */
-            border-bottom: 1px solid #ddd;
         }
 
-        th { background-color: #d81b60; color: white; padding: 8px 4px; }
+        /* Column D (KARAOKE Button): Half of the 2px gap */
+        td:nth-child(4) {
+            padding-left: 1px; 
+            padding-right: 2px;
+            width: 56px;
+            text-align: center;
+        }
+
+        th { background-color: #d81b60; color: white; text-align: left; padding: 8px 4px; }
+        th:nth-child(3), th:nth-child(4) { text-align: center; }
 
         .link-btn {
             display: inline-block;
@@ -42,7 +53,7 @@
             font-weight: bold;
             font-size: 10px;
             text-align: center;
-            width: 52px; /* Fits inside the 55px cell */
+            width: 54px; /* Tight button width */
         }
         .btn-orig { background-color: #e74c3c; } 
         .btn-kara { background-color: #3498db; } 
@@ -104,10 +115,10 @@
                             btn.target = "_blank";
                             btn.className = 'link-btn';
                             if (headers[index].toLowerCase().includes("original")) {
-                                btn.innerText = "Orig"; // Shortened
+                                btn.innerText = "Orig";
                                 btn.classList.add('btn-orig');
                             } else {
-                                btn.innerText = "Kara"; // Shortened
+                                btn.innerText = "Kara";
                                 btn.classList.add('btn-kara');
                             }
                             td.appendChild(btn);
