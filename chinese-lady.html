@@ -10,30 +10,24 @@
         .search-container { text-align: center; margin-bottom: 10px; }
         input[type="text"] { padding: 8px; width: 95%; max-width: 400px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px; }
         
-        .table-wrapper { overflow-x: auto; width: 100%; }
-        table { width: 100%; border-collapse: collapse; background: white; font-size: 12px; table-layout: auto; }
+        .table-wrapper { width: 100%; overflow-x: hidden; } /* Try to force no scroll */
+        table { width: 100%; border-collapse: collapse; background: white; font-size: 12px; table-layout: fixed; }
         
-        /* THE FIX: Minimal padding to shorten gaps */
+        /* Define specific widths for columns to save space */
+        th:nth-child(1), td:nth-child(1) { width: 30%; } /* Song Name */
+        th:nth-child(2), td:nth-child(2) { width: 25%; } /* Artist */
+        th:nth-child(3), td:nth-child(3) { width: 22.5%; text-align: center; } /* Song Button */
+        th:nth-child(4), td:nth-child(4) { width: 22.5%; text-align: center; } /* Karaoke Button */
+
         th, td { 
-            padding: 8px 3px; /* Reduced horizontal padding from 10px to 3px */
-            text-align: left; 
+            padding: 8px 2px; 
             border-bottom: 1px solid #ddd; 
             white-space: nowrap; 
+            overflow: hidden;
+            text-overflow: ellipsis; /* Fades out long names instead of pushing buttons off screen */
         }
 
-        /* Tightening the gap between Column A & B and the buttons */
-        td:nth-child(1), td:nth-child(2) {
-            padding-right: 5px; 
-        }
-
-        /* Keeping the buttons (Col C & D) side-by-side with almost no gap */
-        td:nth-child(3), td:nth-child(4) {
-            width: 66px;
-            padding-left: 1px;
-            padding-right: 1px;
-        }
-
-        th { background-color: #d81b60; color: white; position: sticky; top: 0; }
+        th { background-color: #d81b60; color: white; }
 
         .link-btn {
             display: inline-block;
@@ -42,9 +36,9 @@
             text-decoration: none !important;
             color: white !important;
             font-weight: bold;
-            font-size: 11px; 
+            font-size: 10px; /* Slightly smaller for guaranteed fit */
             text-align: center;
-            width: 64px; 
+            width: 95%; /* Fits within the narrow column */
         }
         .btn-orig { background-color: #e74c3c; } 
         .btn-kara { background-color: #3498db; } 
