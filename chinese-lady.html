@@ -1,74 +1,127 @@
-<script>
-    const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTFKLWjxEQgV4uXB9v15Bqyoyj57BY_PvPmn70OdDKOgQwvzQ1lAOHr55KsKF5EpHQUA6ZiO5YWGVC5/pub?gid=0&single=true&output=csv';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chinese Lady Songlist - William H Chan Music Studio</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f9; padding: 20px; margin: 0; }
+        h1 { text-align: center; color: #d81b60; margin-top: 20px; }
+        .search-container { text-align: center; margin-bottom: 20px; }
+        input[type="text"] { padding: 12px; width: 80%; max-width: 500px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; }
+        
+        /* Table Styling */
+        .table-wrapper { overflow-x: auto; } /* Makes it scrollable on mobile */
+        table { width: 100%; border-collapse: collapse; background: white; margin-top: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; white-space: nowrap; }
+        th { background-color: #d81b60; color: white; position: sticky; top: 0; }
+        tr:hover { background-color: #f9f9f9; }
 
-    async function loadData() {
-        const response = await fetch(sheetUrl);
-        const data = await response.text();
-        const rows = data.split('\n').map(row => row.split(','));
-
-        const header = rows[0];
-        const body = rows.slice(1);
-
-        const headerRow = document.getElementById('tableHeader');
-        header.forEach(col => {
-            const th = document.createElement('th');
-            th.innerText = col.trim();
-            headerRow.appendChild(th);
-        });
-
-        const tableBody = document.getElementById('tableBody');
-        body.forEach(row => {
-            if (row.join('').trim() === "") return; 
-            const tr = document.createElement('tr');
-            
-            row.forEach((cell, index) => {
-                const td = document.createElement('td');
-                const cellText = cell.trim();
-
-                // Check if the cell text looks like a YouTube/Web link
-                if (cellText.startsWith('http')) {
-                    const btn = document.createElement('a');
-                    btn.href = cellText;
-                    btn.target = "_blank"; // Opens in new tab
-                    btn.style.display = "inline-block";
-                    btn.style.padding = "5px 10px";
-                    btn.style.borderRadius = "5px";
-                    btn.style.textDecoration = "none";
-                    btn.style.color = "white";
-                    btn.style.fontSize = "12px";
-                    btn.style.fontWeight = "bold";
-
-                    // Logic to label the button based on the column header
-                    const columnHeader = header[index].toLowerCase();
-                    if (columnHeader.includes("original")) {
-                        btn.innerText = "Original Song";
-                        btn.style.backgroundColor = "#e74c3c"; // Red for Original
-                    } else if (columnHeader.includes("karaoke")) {
-                        btn.innerText = "Karaoke";
-                        btn.style.backgroundColor = "#3498db"; // Blue for Karaoke
-                    } else {
-                        btn.innerText = "Watch";
-                        btn.style.backgroundColor = "#7f8c8d"; // Gray for others
-                    }
-                    
-                    td.appendChild(btn);
-                } else {
-                    td.innerText = cellText;
-                }
-                tr.appendChild(td);
-            });
-            tableBody.appendChild(tr);
-        });
-    }
-
-    function filterTable() {
-        let input = document.getElementById("searchInput").value.toUpperCase();
-        let tr = document.getElementById("tableBody").getElementsByTagName("tr");
-        for (let i = 0; i < tr.length; i++) {
-            let textContent = tr[i].textContent.toUpperCase();
-            tr[i].style.display = textContent.includes(input) ? "" : "none";
+        /* Button Styling */
+        .link-btn {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none !important;
+            color: white !important;
+            font-weight: bold;
+            font-size: 13px;
+            text-align: center;
+            min-width: 110px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
-    }
+        .btn-orig { background-color: #e74c3c; } /* Red for Original */
+        .btn-kara { background-color: #3498db; } /* Blue for Karaoke */
 
-    loadData();
-</script>
+        .back-btn { display: inline-block; margin-bottom: 20px; text-decoration: none; color: #d81b60; font-weight: bold; font-size: 18px; }
+    </style>
+</head>
+<body>
+
+    <a href="index.html" class="back-btn">← Back to Home</a>
+    <h1>Chinese Lady Songlist</h1>
+
+    <div class="search-container">
+        <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="Search Song or Artist...">
+    </div>
+
+    <div class="table-wrapper">
+        <table id="songTable">
+            <thead>
+                <tr id="tableHeader"></tr>
+            </thead>
+            <tbody id="tableBody">
+                </tbody>
+        </table>
+    </div>
+
+    <script>
+        const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTFKLWjxEQgV4uXB9v15Bqyoyj57BY_PvPmn70OdDKOgQwvzQ1lAOHr55KsKF5EpHQUA6ZiO5YWGVC5/pub?gid=0&single=true&output=csv';
+
+        async function loadData() {
+            try {
+                const response = await fetch(sheetUrl);
+                const data = await response.text();
+                
+                // Parses CSV and handles quotes
+                const rows = data.split('\n').map(row => row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/));
+                const header = rows[0].map(h => h.replace(/"/g, '').trim());
+                const body = rows.slice(1);
+
+                const headerRow = document.getElementById('tableHeader');
+                header.forEach(col => {
+                    const th = document.createElement('th');
+                    th.innerText = col;
+                    headerRow.appendChild(th);
+                });
+
+                const tableBody = document.getElementById('tableBody');
+                body.forEach(row => {
+                    if (row.join('').trim() === "") return; 
+                    const tr = document.createElement('tr');
+                    
+                    row.forEach((cell, index) => {
+                        const td = document.createElement('td');
+                        let cellText = cell.replace(/"/g, '').trim();
+
+                        if (cellText.toLowerCase().includes('http')) {
+                            const btn = document.createElement('a');
+                            btn.href = cellText;
+                            btn.target = "_blank";
+                            btn.className = 'link-btn';
+
+                            const colName = header[index].toLowerCase();
+                            if (colName.includes("original")) {
+                                btn.innerText = "Original Song";
+                                btn.classList.add('btn-orig');
+                            } else {
+                                btn.innerText = "Karaoke";
+                                btn.classList.add('btn-kara');
+                            }
+                            td.appendChild(btn);
+                        } else {
+                            td.innerText = cellText;
+                        }
+                        tr.appendChild(td);
+                    });
+                    tableBody.appendChild(tr);
+                });
+            } catch (error) {
+                console.error("Error loading sheet:", error);
+            }
+        }
+
+        function filterTable() {
+            let input = document.getElementById("searchInput").value.toUpperCase();
+            let tr = document.getElementById("tableBody").getElementsByTagName("tr");
+            for (let i = 0; i < tr.length; i++) {
+                let rowText = tr[i].innerText.toUpperCase();
+                tr[i].style.display = rowText.includes(input) ? "" : "none";
+            }
+        }
+
+        loadData();
+    </script>
+
+</body>
+</html>
