@@ -3,77 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>男聲歌曲庫 (Double Column)</title>
+    <title>男聲歌曲庫 (Double Column + Divider)</title>
     <style>
-        body { background-color: #000; color: #ccc; font-family: -apple-system, sans-serif; padding: 10px; margin: 0; font-size: 12px; }
-        h1 { color: #ff4500; font-size: 18px; margin: 0; }
+        body { background-color: #000; color: #ccc; font-family: -apple-system, sans-serif; padding: 10px; margin: 0; font-size: 13px; }
+        h1 { color: #ff4500; font-size: 20px; margin: 0; }
         #count { font-size: 11px; color: #666; display: block; margin-bottom: 8px; }
         
         #search { 
-            width: 100%; padding: 6px; margin-bottom: 10px; 
+            width: 100%; padding: 8px; margin-bottom: 12px; 
             background: #111; border: 1px solid #333; color: #fff; border-radius: 4px;
         }
 
-        /* Flexbox wrapper to allow two columns side-by-side */
+        /* The Main Container with a Double Center Line */
         #main-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0 20px; /* 0 vertical gap, 20px horizontal gap between columns */
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Two equal columns */
+            column-gap: 30px; /* Space for the divider */
+            position: relative;
         }
 
-        /* Each song row takes up roughly 48% of the width */
+        /* The vertical double line divider */
+        #main-container::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            border-left: 3px double #444; /* The Double Line */
+            transform: translateX(-50%);
+        }
+
+        /* Song Row Styling */
         .song-item {
-            width: calc(50% - 15px);
             display: flex;
             align-items: center;
-            border-bottom: 1px solid #222;
-            padding: 3px 0;
-            white-space: nowrap;
+            border-bottom: 1px solid #1a1a1a;
+            padding: 4px 0;
             overflow: hidden;
         }
 
-        .artist { color: #fff; font-weight: bold; margin-right: 6px; flex-shrink: 0; }
-        .song { color: #888; flex-grow: 1; overflow: hidden; text-overflow: ellipsis; padding-right: 5px; }
+        .artist { color: #fff; font-weight: bold; margin-right: 8px; flex-shrink: 0; }
+        
+        /* Song title is flexible but stays close to the artist */
+        .song { color: #888; margin-right: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        /* Small Icons */
+        /* Links sit immediately after the title */
+        .link-group { display: flex; gap: 3px; flex-shrink: 0; }
+
         .btn {
-            width: 16px; height: 16px; line-height: 16px; text-align: center;
+            width: 17px; height: 17px; line-height: 17px; text-align: center;
             text-decoration: none; font-size: 10px; font-weight: bold;
-            border-radius: 2px; margin-left: 3px; flex-shrink: 0;
+            border-radius: 2px;
         }
-        .btn-o { background: #333; color: #aaa; } 
-        .btn-k { background: #ff4500; color: #fff; }
-        .btn:hover { opacity: 0.7; }
+        .btn-o { background: #333; color: #aaa; } /* Original Link */
+        .btn-k { background: #ff4500; color: #fff; } /* Karaoke Link */
+        .btn:hover { background: #fff; color: #000; }
 
-        /* Responsive: Single column for phones */
-        @media (max-width: 700px) {
-            .song-item { width: 100%; }
+        /* Mobile View: Hide the double line and go to 1 column */
+        @media (max-width: 800px) {
+            #main-container { grid-template-columns: 1fr; }
+            #main-container::after { display: none; }
         }
     </style>
 </head>
 <body>
 
     <h1>男聲歌曲庫</h1>
-    <span id="count">Status: Connecting...</span>
+    <span id="count">Connecting...</span>
     
-    <input type="text" id="search" placeholder="Search..." oninput="filterSongs()">
+    <input type="text" id="search" placeholder="Search Artist or Song..." oninput="filterSongs()">
 
     <div id="main-container">
-        </div>
+        <div id="col-left"></div>
+        <div id="col-right"></div>
+    </div>
 
     <script>
         const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSeK0hJoqyYLa5BQLl42QIAHMlbT_0tAa0FxhoBBebSUqV98bwac7ACwQc1y2yA6SLOd1nGvJYD-zLB/pub?gid=0&single=true&output=csv';
         let songData = [];
 
         async function loadSongs() {
-            const countEl = document.getElementById('count');
-            const container = document.getElementById('main-container');
-
             try {
                 const response = await fetch(SHEET_URL);
-                if (!response.ok) throw new Error("Fetch failed");
                 const csvText = await response.text();
-                
                 const rows = csvText.split(/\r?\n/).filter(row => row.trim() !== "");
                 
                 songData = rows.slice(1).map(row => {
@@ -86,36 +98,22 @@
                     };
                 }).filter(s => s.artist || s.song);
 
-                countEl.innerText = `${songData.length} Songs Loaded`;
+                document.getElementById('count').innerText = `${songData.length} Songs Loaded`;
                 displaySongs(songData);
             } catch (err) {
-                countEl.innerText = "Error: Could not load data. Ensure Sheet is Published.";
-                console.error(err);
+                document.getElementById('count').innerText = "Error loading Google Sheet.";
             }
         }
 
         function displaySongs(songs) {
-            const container = document.getElementById('main-container');
-            container.innerHTML = songs.map(s => `
+            const leftCol = document.getElementById('col-left');
+            const rightCol = document.getElementById('col-right');
+            
+            // Split the array in half
+            const half = Math.ceil(songs.length / 2);
+            const leftSongs = songs.slice(0, half);
+            const rightSongs = songs.slice(half);
+
+            const render = (s) => `
                 <div class="song-item">
-                    <span class="artist">${s.artist}</span>
-                    <span class="song">${s.song}</span>
-                    ${s.orig ? `<a href="${s.orig}" class="btn btn-o" target="_blank">O</a>` : ''}
-                    ${s.kara ? `<a href="${s.kara}" class="btn btn-k" target="_blank">K</a>` : ''}
-                </div>
-            `).join('');
-        }
-
-        function filterSongs() {
-            const term = document.getElementById('search').value.toLowerCase();
-            const filtered = songData.filter(s => 
-                s.artist.toLowerCase().includes(term) || 
-                s.song.toLowerCase().includes(term)
-            );
-            displaySongs(filtered);
-        }
-
-        loadSongs();
-    </script>
-</body>
-</html>
+                    <span class="artist
