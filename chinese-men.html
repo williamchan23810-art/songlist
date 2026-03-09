@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Men's Songlist | The Sound Capsule</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body { background: #0f0f0f; color: #ffffff; font-family: 'Segoe UI', sans-serif; }
+        .nav-header { padding: 10px 20px; display: flex; align-items: center; gap: 15px; background: rgba(255,255,255,0.05); }
+        .nav-header a { color: #aaa; text-decoration: none; font-size: 0.9em; }
+        
+        .search-box { width: 90%; max-width: 500px; margin: 15px auto; display: block; padding: 8px 15px; border-radius: 20px; border: none; background: #222; color: white; }
+
+        /* Compact Table Styles */
+        .song-table { width: 100%; border-collapse: collapse; font-size: 0.85em; }
+        .song-table th { text-align: left; padding: 8px; color: #888; border-bottom: 1px solid #333; font-weight: normal; }
+        .song-table td { padding: 6px 8px; border-bottom: 1px solid #1a1a1a; vertical-align: middle; }
+        
+        .artist-name { color: #64b5f6; font-weight: 600; }
+        .song-title { color: #eee; }
+        
+        /* Language Badges */
+        .tag { font-size: 0.7em; padding: 2px 5px; border-radius: 3px; margin-right: 5px; }
+        .cantonese { border: 1px solid #1976d2; color: #1976d2; }
+        .mandarin { border: 1px solid #f57c00; color: #f57c00; }
+
+        /* Small Action Buttons */
+        .btn-sm { text-decoration: none; padding: 4px 8px; border-radius: 4px; font-size: 0.75em; margin-right: 4px; display: inline-block; transition: 0.2s; }
+        .btn-orig { background: #333; color: #ccc; }
+        .btn-ktv { background: #e50914; color: white; }
+        .btn-sm:hover { opacity: 0.8; transform: scale(1.05); }
+
+        /* Freeze Header */
+        thead { position: sticky; top: 0; background: #0f0f0f; z-index: 10; }
+    </style>
+</head>
+<body>
+
+    <div class="nav-header">
+        <a href="chinese.html">← Back</a>
+        <h3 style="margin:0; font-size: 1em;">Chinese Men's Collection</h3>
+    </div>
+
+    <input type="text" id="songSearch" class="search-box" onkeyup="filterSongs()" placeholder="Search artist or song title...">
+
+    <table class="song-table" id="songTable">
+        <thead>
+            <tr>
+                <th>Artist / Song</th>
+                <th>Lang</th>
+                <th>Links</th>
+            </tr>
+        </thead>
+        <tbody id="songData">
+            </tbody>
+    </table>
+
+    <script>
+        // Paste the converted song data here
+        const songs = [
+            { a: "張學友", s: "吻別", l: "國語", o: "URL", k: "URL" },
+            { a: "陳百強", s: "一生何求", l: "廣東話", o: "URL", k: "URL" }
+        ];
+
+        function loadSongs() {
+            const tbody = document.getElementById('songData');
+            tbody.innerHTML = songs.map(song => `
+                <tr>
+                    <td>
+                        <div class="artist-name">${song.a}</div>
+                        <div class="song-title">${song.s}</div>
+                    </td>
+                    <td><span class="tag ${song.l === '廣東話' ? 'cantonese' : 'mandarin'}">${song.l}</span></td>
+                    <td>
+                        <a href="${song.o}" target="_blank" class="btn-sm btn-orig">Music</a>
+                        <a href="${song.k}" target="_blank" class="btn-sm btn-ktv">KTV</a>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function filterSongs() {
+            let input = document.getElementById("songSearch").value.toUpperCase();
+            let rows = document.getElementById("songData").getElementsByTagName("tr");
+            for (let i = 0; i < rows.length; i++) {
+                let text = rows[i].textContent.toUpperCase();
+                rows[i].style.display = text.includes(input) ? "" : "none";
+            }
+        }
+        window.onload = loadSongs;
+    </script>
+</body>
+</html>
