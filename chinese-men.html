@@ -103,40 +103,11 @@
                     const columns = rows[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                     if (columns.join('').trim() === "") continue;
                     const tr = document.createElement('tr');
+                    
                     columns.forEach((cell, index) => {
                         const td = document.createElement('td');
                         let cleanCell = cell.replace(/"/g, '').trim();
+                        
                         if (cleanCell.toLowerCase().startsWith('http')) {
                             const btn = document.createElement('a');
-                            btn.href = cleanCell;
-                            btn.target = "_blank";
-                            btn.className = 'link-btn';
-                            if (headers[index].toLowerCase().includes("original")) {
-                                btn.innerText = "Original";
-                                btn.classList.add('btn-orig');
-                            } else {
-                                btn.innerText = "Karaoke";
-                                btn.classList.add('btn-kara');
-                            }
-                            td.appendChild(btn);
-                        } else {
-                            td.innerText = cleanCell;
-                        }
-                        tr.appendChild(td);
-                    });
-                    tableBody.appendChild(tr);
-                }
-            } catch (e) { console.error(e); }
-        }
-
-        function filterTable() {
-            let input = document.getElementById("searchInput").value.toUpperCase();
-            let rows = document.getElementById("tableBody").getElementsByTagName("tr");
-            for (let i = 0; i < rows.length; i++) {
-                rows[i].style.display = rows[i].innerText.toUpperCase().includes(input) ? "" : "none";
-            }
-        }
-        loadData();
-    </script>
-</body>
-</html>
+                            btn.href =
