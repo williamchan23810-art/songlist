@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,108 +13,56 @@
         }
 
         body {
-            margin: 0;
-            padding: 0;
-            background: var(--bg);
-            color: white;
-            font-family: 'PingFang HK', 'Microsoft JhengHei', sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
+            margin: 0; padding: 0; background: var(--bg); color: white;
+            font-family: 'Inter', 'PingFang HK', sans-serif;
+            display: flex; flex-direction: column; align-items: center; min-height: 100vh;
         }
 
-        header {
-            text-align: center;
-            padding: 50px 20px 30px;
-        }
-
+        header { text-align: center; padding: 50px 20px 30px; }
         h1 { margin: 0; letter-spacing: 3px; font-size: 2.2em; }
-        .subtitle { color: #888; font-size: 0.9em; margin-top: 10px; letter-spacing: 1px; }
+        .subtitle { color: #888; font-size: 0.9em; margin-top: 10px; }
 
         .main-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 30px;
-            width: 90%;
-            max-width: 1000px;
-            margin-bottom: 50px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px; width: 90%; max-width: 1000px; margin-bottom: 50px;
         }
 
         .hub-box {
-            background: var(--glass);
-            backdrop-filter: blur(15px);
+            background: var(--glass); backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 30px;
-            display: flex;
-            flex-direction: column;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-radius: 20px; padding: 30px; display: flex; flex-direction: column;
+            transition: 0.3s ease;
         }
 
-        /* English Side */
-        .box-english:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(100, 181, 246, 0.2);
-            border-color: var(--english-accent);
-        }
-
+        /* English Side - NO CHINESE TEXT */
+        .box-english:hover { transform: translateY(-5px); border-color: var(--english-accent); }
         .btn-direct {
-            background: var(--english-accent);
-            color: white;
-            text-decoration: none;
-            padding: 15px;
-            border-radius: 12px;
-            text-align: center;
-            font-weight: bold;
+            background: var(--english-accent); color: white; text-decoration: none;
+            padding: 15px; border-radius: 12px; text-align: center; font-weight: bold;
             margin-top: 30px;
-            transition: 0.2s;
         }
 
-        /* Chinese Side */
+        /* Chinese Side - WITH CHINESE TEXT */
         .box-chinese { border-color: rgba(255, 75, 43, 0.2); }
-
-        .category-list {
-            margin-top: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
+        .category-list { margin-top: 20px; display: flex; flex-direction: column; gap: 12px; }
         .sub-link {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.1);
-            color: white;
-            text-decoration: none;
-            padding: 15px;
-            border-radius: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: all 0.2s;
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
+            color: white; text-decoration: none; padding: 15px; border-radius: 10px;
+            display: flex; justify-content: space-between; align-items: center; transition: 0.2s;
         }
+        .sub-link:hover { background: rgba(255, 75, 43, 0.15); border-color: var(--chinese-accent); padding-left: 20px; }
+        .label-zh { font-size: 1.1em; font-weight: bold; display: block; }
+        .label-en { font-size: 0.75em; opacity: 0.6; }
 
-        .sub-link:hover {
-            background: rgba(255, 75, 43, 0.15);
-            border-color: var(--chinese-accent);
-            padding-left: 20px;
-        }
-
-        .sub-link .label-zh { font-size: 1.1em; font-weight: bold; }
-        .sub-link .label-en { font-size: 0.75em; opacity: 0.6; display: block; }
-        .arrow { color: var(--chinese-accent); font-weight: bold; }
-
-        .disabled { opacity: 0.4; pointer-events: none; filter: grayscale(1); }
+        .disabled { opacity: 0.4; pointer-events: none; }
         .icon-header { font-size: 2.5em; margin-bottom: 10px; }
-
-        @media (max-width: 600px) { h1 { font-size: 1.7em; } }
     </style>
 </head>
 <body>
 
     <header>
         <h1>THE SOUND CAPSULE</h1>
-        <div class="subtitle">音樂庫 | MUSIC LIBRARY</div>
+        <div class="subtitle">MUSIC LIBRARY | 音樂庫</div>
     </header>
 
     <main class="main-container">
@@ -122,8 +70,8 @@
         <div class="hub-box box-english">
             <div class="icon-header">🎸</div>
             <h2 style="color: var(--english-accent); margin-bottom: 5px;">English Songs</h2>
-            <p style="color: #aaa; font-size: 0.9em;">Western Pop, Rock & Indie Classics</p>
-            <a href="english.html" class="btn-direct">查看英文歌單 →</a>
+            <p style="color: #aaa; font-size: 0.9em;">Browse our collection of Western Pop, Rock, and Karaoke classics.</p>
+            <a href="english.html" class="btn-direct">VIEW SONG LIST →</a>
         </div>
 
         <div class="hub-box box-chinese">
@@ -137,33 +85,19 @@
                         <span class="label-zh">男聲歌曲 (Men)</span>
                         <span class="label-en">280+ 經典及流行曲目</span>
                     </div>
-                    <span class="arrow">›</span>
+                    <span style="color: var(--chinese-accent);">›</span>
                 </a>
-
                 <a href="#" class="sub-link disabled">
                     <div>
                         <span class="label-zh">女聲歌曲 (Lady)</span>
-                        <span class="label-en">即將推出 | Coming Soon</span>
+                        <span class="label-en">Coming Soon</span>
                     </div>
-                    <span class="arrow">›</span>
-                </a>
-
-                <a href="#" class="sub-link disabled">
-                    <div>
-                        <span class="label-zh">合唱歌曲 (Duet)</span>
-                        <span class="label-en">即將推出 | Coming Soon</span>
-                    </div>
-                    <span class="arrow">›</span>
+                    <span>›</span>
                 </a>
             </div>
         </div>
 
     </main>
-
-    <footer style="color: #444; font-size: 0.75em; margin-top: auto; padding: 30px; text-align: center;">
-        &copy; 2026 The Sound Capsule <br>
-        <span style="font-size: 0.8em; opacity: 0.5;">最後更新: 2026年3月</span>
-    </footer>
 
 </body>
 </html>
