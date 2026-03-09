@@ -3,39 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Sound Capsule | Music Library</title>
+    <title>William H Chan Music Studio</title>
     <style>
-        :root { --bg: #0f0f0f; --glass: rgba(255, 255, 255, 0.05); --english-accent: #64b5f6; --chinese-accent: #ff4b2b; }
-        body { margin: 0; background: var(--bg); color: white; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
-        header { text-align: center; padding: 50px 20px; }
-        .main-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; width: 90%; max-width: 1000px; }
-        .hub-box { background: var(--glass); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 30px; display: flex; flex-direction: column; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #121212;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        h1 { margin-bottom: 40px; font-size: 2.5rem; color: #f1c40f; }
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            width: 80%;
+            max-width: 1000px;
+        }
+        .btn {
+            padding: 40px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+            color: white;
+            border-radius: 15px;
+            transition: transform 0.3s, background-color 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        .btn:hover { transform: scale(1.05); }
         
-        /* English Side - NO CHINESE */
-        .box-english { border-color: rgba(100, 181, 246, 0.2); }
-        .btn-eng { background: var(--english-accent); color: white; text-decoration: none; padding: 15px; border-radius: 12px; text-align: center; font-weight: bold; margin-top: 30px; }
-
-        /* Chinese Side - WITH CHINESE */
-        .sub-link { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); color: white; text-decoration: none; padding: 15px; border-radius: 10px; margin-top: 10px; display: flex; justify-content: space-between; align-items: center; }
-        .label-zh { font-size: 1.1em; font-weight: bold; display: block; }
-        .label-en { font-size: 0.75em; opacity: 0.6; }
+        /* Button Colors */
+        .btn-english { background-color: #2980b9; } /* Blue */
+        .btn-men { background-color: #27ae60; }     /* Green */
+        .btn-lady { background-color: #d81b60; }    /* Pink/Magenta */
+        
     </style>
 </head>
 <body>
-    <header><h1>THE SOUND CAPSULE</h1></header>
-    <main class="main-container">
-        <div class="hub-box box-english">
-            <h2 style="color: var(--english-accent);">English Songs</h2>
-            <p style="color: #aaa;">Full collection of Western Pop, Rock, and Karaoke tracks.</p>
-            <a href="english.html" class="btn-eng">VIEW SONG LIST →</a>
-        </div>
-        <div class="hub-box">
-            <h2 style="color: var(--chinese-accent);">中文歌曲</h2>
-            <div class="sub-link" onclick="location.href='chinese-men.html'" style="cursor:pointer">
-                <div><span class="label-zh">男聲歌曲 (Men)</span><span class="label-en">280+ 經典及流行曲目</span></div>
-                <span style="color: var(--chinese-accent);">›</span>
-            </div>
-        </div>
-    </main>
+
+    <h1>William H Chan Music Studio 安清</h1>
+
+    <div class="container">
+        <a href="english.html" class="btn btn-english">English Songlist</a>
+
+        <a href="chinese-men.html" class="btn btn-men">Chinese Men Songlist</a>
+
+        <a href="chinese-lady.html" class="btn btn-lady">Chinese Lady Songlist</a>
+    </div>
+
 </body>
 </html>
