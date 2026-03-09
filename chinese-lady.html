@@ -13,25 +13,30 @@
         .table-wrapper { overflow-x: auto; width: 100%; -webkit-overflow-scrolling: touch; }
         table { width: 100%; border-collapse: collapse; background: white; margin-top: 5px; font-size: 13px; table-layout: auto; }
         
-        /* Fixed the spacing here */
         th, td { 
-            padding: 10px 8px; /* Increased side padding for better spacing */
+            padding: 10px 4px; /* Tightened horizontal padding */
             text-align: left; 
             border-bottom: 1px solid #ddd; 
             white-space: nowrap; 
         }
+
+        /* Pulling Column C (SONG) closer to Column D (KARAOKE) */
+        td:nth-child(3) {
+            text-align: right; /* Aligns the button to the right of its cell */
+            width: 70px;       /* Tight width to keep it close to the next column */
+            padding-right: 2px; /* Minimal gap between buttons */
+        }
         
-        /* Ensure the text columns don't collapse too much */
-        td:nth-child(1), td:nth-child(2) {
-            min-width: 80px; 
-            padding-right: 15px; /* Forced gap after the text */
+        td:nth-child(4) {
+            padding-left: 2px;  /* Minimal gap between buttons */
+            width: 70px;
         }
 
         th { background-color: #d81b60; color: white; position: sticky; top: 0; }
 
         .link-btn {
             display: inline-block;
-            padding: 6px 4px;
+            padding: 6px 0; /* Vertical padding only to keep them slim */
             border-radius: 4px;
             text-decoration: none !important;
             color: white !important;
