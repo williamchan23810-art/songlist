@@ -1,95 +1,160 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chinese Collection | The Sound Capsule</title>
-    <link rel="stylesheet" href="style.css">
+    <title>The Sound Capsule | Music Library</title>
     <style>
+        :root {
+            --bg: #0f0f0f;
+            --glass: rgba(255, 255, 255, 0.05);
+            --english-accent: #64b5f6;
+            --chinese-accent: #ff4b2b;
+        }
+
         body {
-            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a2e 100%);
+            margin: 0;
+            padding: 0;
+            background: var(--bg);
             color: white;
-            min-height: 100vh;
+            font-family: 'Inter', -apple-system, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
+            min-height: 100vh;
         }
 
-        .category-grid {
+        header {
+            text-align: center;
+            padding: 50px 20px 30px;
+        }
+
+        h1 { margin: 0; letter-spacing: 3px; font-size: 2em; }
+        .subtitle { color: #888; font-size: 0.9em; margin-top: 10px; }
+
+        .main-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
             width: 90%;
             max-width: 1000px;
-            margin-top: 40px;
+            margin-bottom: 50px;
         }
 
-        .card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
+        .hub-box {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 40px 20px;
-            text-align: center;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card:hover {
-            transform: translateY(-10px);
-            background: rgba(255, 255, 255, 0.1);
-            border-color: #ff4b2b;
-            box-shadow: 0 10px 30px rgba(255, 75, 43, 0.3);
-        }
-
-        .card h2 { margin: 10px 0; font-size: 1.8em; }
-        .card p { color: #aaa; font-size: 0.9em; }
-        .icon-circle {
-            width: 70px;
-            height: 70px;
-            background: rgba(255, 75, 43, 0.2);
-            border-radius: 50%;
+            border-radius: 20px;
+            padding: 30px;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 15px;
-            font-size: 2em;
+            flex-direction: column;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(1); }
-        .back-btn { margin-top: 30px; color: #888; text-decoration: none; }
+        /* English Side - Simple Button */
+        .box-english:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(100, 181, 246, 0.2);
+            border-color: var(--english-accent);
+        }
+
+        .btn-direct {
+            background: var(--english-accent);
+            color: white;
+            text-decoration: none;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: bold;
+            margin-top: auto;
+            transition: opacity 0.2s;
+        }
+
+        /* Chinese Side - Nested Links */
+        .box-chinese {
+            border-color: rgba(255, 75, 43, 0.2);
+        }
+
+        .category-list {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .sub-link {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: white;
+            text-decoration: none;
+            padding: 12px 15px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s;
+        }
+
+        .sub-link:hover {
+            background: rgba(255, 75, 43, 0.15);
+            border-color: var(--chinese-accent);
+            padding-left: 20px;
+        }
+
+        .sub-link span { font-size: 0.8em; opacity: 0.6; }
+
+        .disabled { opacity: 0.4; pointer-events: none; }
+
+        .icon-header { font-size: 2.5em; margin-bottom: 10px; }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 1.5em; }
+        }
     </style>
 </head>
 <body>
 
-    <header style="text-align: center; margin-top: 50px;">
-        <h1 style="letter-spacing: 2px;">CHINESE COLLECTION</h1>
-        <p style="color: #ff4b2b; font-weight: bold;">SELECT YOUR VIBE</p>
+    <header>
+        <h1>THE SOUND CAPSULE</h1>
+        <div class="subtitle">SELECT YOUR LANGUAGE & CATEGORY</div>
     </header>
 
-    <div class="category-grid">
-        <div class="card" onclick="location.href='chinese-men.html'">
-            <div class="icon-circle">👨</div>
-            <h2>Men (男聲)</h2>
-            <p>280+ Classics & Modern Hits</p>
+    <main class="main-container">
+        
+        <div class="hub-box box-english">
+            <div class="icon-header">🎸</div>
+            <h2 style="color: var(--english-accent);">English Songs</h2>
+            <p>Full collection of Western hits, indie gems, and karaoke tracks.</p>
+            <a href="english.html" class="btn-direct">VIEW FULL LIST →</a>
         </div>
 
-        <div class="card disabled">
-            <div class="icon-circle">👩</div>
-            <h2>Lady (女聲)</h2>
-            <p>Coming Soon</p>
+        <div class="hub-box box-chinese">
+            <div class="icon-header">🏮</div>
+            <h2 style="color: var(--chinese-accent);">Chinese Songs</h2>
+            <p>國語 & 廣東話 Collections</p>
+            
+            <div class="category-list">
+                <a href="chinese-men.html" class="sub-link">
+                    <div><b>A. Men</b> (男聲)</div>
+                    <span>280+ Songs ›</span>
+                </a>
+                <a href="#" class="sub-link disabled">
+                    <div><b>B. Lady</b> (女聲)</div>
+                    <span>Coming Soon</span>
+                </a>
+                <a href="#" class="sub-link disabled">
+                    <div><b>C. Duet</b> (合唱)</div>
+                    <span>Coming Soon</span>
+                </a>
+            </div>
         </div>
 
-        <div class="card disabled">
-            <div class="icon-circle">👫</div>
-            <h2>Duet (合唱)</h2>
-            <p>Coming Soon</p>
-        </div>
-    </div>
+    </main>
 
-    <a href="index.html" class="back-btn">← Return to Main Hub</a>
+    <footer style="color: #444; font-size: 0.7em; margin-top: auto; padding: 20px;">
+        &copy; 2026 The Sound Capsule Music Library
+    </footer>
 
 </body>
 </html>
