@@ -47,10 +47,27 @@
                 headers.forEach((h, index) => {
                     const th = document.createElement('th');
                     let title = h;
-                    if (index === 0) title = "TITLE";
+                    if (index === 0) title = "ARTIST";
+                    if (index === 1) title = "TITLE";
                     if (index === 2 || index === 3) title = "";
                     th.innerText = title;
                     headerRow.appendChild(th);
                 });
                 const tableBody = document.getElementById('tableBody');
                 for (let i = 1; i < rows.length; i++) {
+                    const columns = rows[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                    if (columns.join('').trim() === "") continue;
+                    const tr = document.createElement('tr');
+                    columns.forEach((cell, index) => {
+                        const td = document.createElement('td');
+                        let cleanCell = cell.replace(/"/g, '').trim();
+                        if (cleanCell.toLowerCase().startsWith('http')) {
+                            const btn = document.createElement('a');
+                            btn.href = cleanCell;
+                            btn.target = "_blank";
+                            btn.className = 'link-btn';
+                            if (index === 2) {
+                                btn.innerText = "Original";
+                                btn.classList.add('btn-orig');
+                            } else {
+                                btn.innerText = "Karaoke";
