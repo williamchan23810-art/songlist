@@ -5,67 +5,60 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>男聲歌曲庫 (Double Column)</title>
     <style>
-        body { background-color: #000; color: #ddd; font-family: sans-serif; padding: 10px; margin: 0; font-size: 12px; }
-        h1 { color: #ff4500; font-size: 18px; margin: 0 0 5px 0; }
-        #count { font-size: 11px; color: #666; margin-bottom: 10px; display: block; }
+        body { background-color: #000; color: #ccc; font-family: -apple-system, sans-serif; padding: 10px; margin: 0; font-size: 12px; }
+        h1 { color: #ff4500; font-size: 18px; margin: 0; }
+        #count { font-size: 11px; color: #666; display: block; margin-bottom: 8px; }
         
         #search { 
-            width: 100%; padding: 8px; margin-bottom: 15px; 
+            width: 100%; padding: 6px; margin-bottom: 10px; 
             background: #111; border: 1px solid #333; color: #fff; border-radius: 4px;
         }
 
-        /* Main Container: 2 Main Columns */
-        #grid-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr; /* Two equal main columns */
-            column-gap: 15px; /* Space between the two main lists */
+        /* Flexbox wrapper to allow two columns side-by-side */
+        #main-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0 20px; /* 0 vertical gap, 20px horizontal gap between columns */
         }
 
-        /* Individual Song Row Grid */
+        /* Each song row takes up roughly 48% of the width */
         .song-item {
-            display: grid;
-            /* Artist | Song Title | O | K */
-            grid-template-columns: auto 1fr 22px 22px;
-            gap: 4px;
+            width: calc(50% - 15px);
+            display: flex;
             align-items: center;
-            padding: 4px 0;
             border-bottom: 1px solid #222;
+            padding: 3px 0;
+            white-space: nowrap;
+            overflow: hidden;
         }
 
-        .artist { color: #fff; font-weight: bold; padding-right: 5px; white-space: nowrap; }
-        .song { color: #999; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .artist { color: #fff; font-weight: bold; margin-right: 6px; flex-shrink: 0; }
+        .song { color: #888; flex-grow: 1; overflow: hidden; text-overflow: ellipsis; padding-right: 5px; }
 
-        /* Tiny Link Buttons */
+        /* Small Icons */
         .btn {
-            display: inline-block;
-            width: 18px;
-            height: 18px;
-            line-height: 18px;
-            text-align: center;
-            text-decoration: none;
-            font-size: 10px;
-            font-weight: bold;
-            border-radius: 2px;
+            width: 16px; height: 16px; line-height: 16px; text-align: center;
+            text-decoration: none; font-size: 10px; font-weight: bold;
+            border-radius: 2px; margin-left: 3px; flex-shrink: 0;
         }
-        .btn-o { background: #333; color: #aaa; } /* Original */
-        .btn-k { background: #ff4500; color: #fff; } /* Karaoke */
-        .btn:hover { opacity: 0.8; transform: scale(1.1); }
-        .no-link { width: 18px; display: inline-block; }
+        .btn-o { background: #333; color: #aaa; } 
+        .btn-k { background: #ff4500; color: #fff; }
+        .btn:hover { opacity: 0.7; }
 
-        /* Responsive: Stack back to 1 column on very small phones */
-        @media (max-width: 600px) {
-            #grid-container { grid-template-columns: 1fr; }
+        /* Responsive: Single column for phones */
+        @media (max-width: 700px) {
+            .song-item { width: 100%; }
         }
     </style>
 </head>
 <body>
 
     <h1>男聲歌曲庫</h1>
-    <span id="count">Loading...</span>
+    <span id="count">Status: Connecting...</span>
     
-    <input type="text" id="search" placeholder="Search..." onkeyup="filterSongs()">
+    <input type="text" id="search" placeholder="Search..." oninput="filterSongs()">
 
-    <div id="grid-container">
+    <div id="main-container">
         </div>
 
     <script>
@@ -73,9 +66,14 @@
         let songData = [];
 
         async function loadSongs() {
+            const countEl = document.getElementById('count');
+            const container = document.getElementById('main-container');
+
             try {
                 const response = await fetch(SHEET_URL);
+                if (!response.ok) throw new Error("Fetch failed");
                 const csvText = await response.text();
+                
                 const rows = csvText.split(/\r?\n/).filter(row => row.trim() !== "");
                 
                 songData = rows.slice(1).map(row => {
@@ -88,21 +86,22 @@
                     };
                 }).filter(s => s.artist || s.song);
 
-                document.getElementById('count').innerText = `${songData.length} Songs`;
+                countEl.innerText = `${songData.length} Songs Loaded`;
                 displaySongs(songData);
             } catch (err) {
-                document.getElementById('grid-container').innerHTML = "Error loading list.";
+                countEl.innerText = "Error: Could not load data. Ensure Sheet is Published.";
+                console.error(err);
             }
         }
 
         function displaySongs(songs) {
-            const container = document.getElementById('grid-container');
+            const container = document.getElementById('main-container');
             container.innerHTML = songs.map(s => `
                 <div class="song-item">
                     <span class="artist">${s.artist}</span>
                     <span class="song">${s.song}</span>
-                    ${s.orig ? `<a href="${s.orig}" class="btn btn-o" target="_blank" title="Original">O</a>` : '<span class="no-link"></span>'}
-                    ${s.kara ? `<a href="${s.kara}" class="btn btn-k" target="_blank" title="Karaoke">K</a>` : '<span class="no-link"></span>'}
+                    ${s.orig ? `<a href="${s.orig}" class="btn btn-o" target="_blank">O</a>` : ''}
+                    ${s.kara ? `<a href="${s.kara}" class="btn btn-k" target="_blank">K</a>` : ''}
                 </div>
             `).join('');
         }
