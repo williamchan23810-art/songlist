@@ -1,31 +1,47 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Test List</title>
-    <style>
-        body { background: #111; color: white; font-family: sans-serif; padding: 20px; }
-        .row { background: #222; padding: 15px; margin-bottom: 5px; border-radius: 8px; display: flex; justify-content: space-between; }
-        .artist { color: #ff4b2b; font-weight: bold; margin-right: 10px; }
-        .btn { background: #ff4b2b; color: white; text-decoration: none; padding: 5px 10px; border-radius: 4px; }
-    </style>
-</head>
-<body>
-    <a href="index.html" style="color: #64b5f6;">← Back</a>
-    <h2>Test Song List</h2>
-    <div id="list">
-        <div class="row">
-            <div><span class="artist">張學友</span>吻別</div>
-            <a href="https://youtu.be/3NskOpkOKFA" class="btn">KTV</a>
-        </div>
-        <div class="row">
-            <div><span class="artist">陳百強</span>一生何求</div>
-            <a href="https://youtu.be/9VrQtSn37M0" class="btn">KTV</a>
-        </div>
-        <div class="row">
-            <div><span class="artist">齊秦</span>大約在冬季</div>
-            <a href="https://youtu.be/kXCGE-zQmxw" class="btn">KTV</a>
-        </div>
-    </div>
-</body>
-</html>
+<script>
+    const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSeK0hJoqyYLa5BQLl42QIAHMlbT_0tAa0FxhoBBebSUqV98bwac7ACwQc1y2yA6SLOd1nGvJYD-zLB/pub?gid=0&single=true&output=csv';
+
+    async function fetchSongs() {
+        try {
+            const res = await fetch(sheetUrl);
+            const text = await res.text();
+            
+            // This handles both Windows and Mac line breaks
+            const lines = text.split(/\r?\n/).filter(line => line.trim() !== '');
+            const dataRows = lines.slice(1);
+            
+            let html = '';
+            dataRows.forEach(line => {
+                // This regex is the "Gold Standard" for CSV splitting
+                const cols = line.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)|(?<=,|^)(?:".*?"|[^",\s]+)(?=\s*,|\s*$)|(?<=,|^)\s*(?=,|$)/g);
+                
+                if (cols && cols.length >= 8) {
+                    const artist = cols[0].replace(/"/g, "").trim();
+                    const title = cols[1].replace(/"/g, "").trim();
+                    const lang = cols[5] ? cols[5].replace(/"/g, "").trim() : "";
+                    const music = cols[6] ? cols[6].replace(/"/g, "").trim() : "";
+                    const ktv = cols[7] ? cols[7].replace(/"/g, "").trim() : "";
+
+                    html += `
+                        <div class="song-row">
+                            <div class="song-info">
+                                <span class="artist">${artist}</span>
+                                <span class="title">${title}</span>
+                            </div>
+                            <span class="lang">${lang}</span>
+                            <div class="btn-group">
+                                ${music.startsWith('http') ? `<a href="${music}" target="_blank" class="btn btn-music">MUSIC</a>` : ''}
+                                ${ktv.startsWith('http') ? `<a href="${ktv}" target="_blank" class="btn btn-ktv">KTV</a>` : ''}
+                            </div>
+                        </div>`;
+                }
+            });
+
+            document.getElementById('status').style.display = 'none';
+            document.getElementById('songContainer').innerHTML = html;
+        } catch (err) {
+            document.getElementById('status').innerHTML = "Check your internet or Sheet Publishing.";
+        }
+    }
+    fetchSongs();
+</script>
