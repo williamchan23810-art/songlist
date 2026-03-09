@@ -3,45 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>男聲歌曲庫 (Men's List)</title>
+    <title>男聲歌曲庫 (Compact)</title>
     <style>
-        body { background-color: #000; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 20px; }
-        h1 { color: #ff4500; font-size: 28px; border-bottom: 2px solid #333; padding-bottom: 10px; }
+        /* Base Styles */
+        body { background-color: #000; color: #fff; font-family: -apple-system, sans-serif; padding: 15px; margin: 0; }
+        h1 { color: #ff4500; font-size: 20px; margin: 0 0 10px 0; }
         
+        /* Compact Search */
         #search { 
-            width: 100%; padding: 12px; margin: 20px 0; 
-            background: #111; border: 1px solid #444; color: #fff; border-radius: 8px;
-            font-size: 16px;
+            width: 100%; padding: 8px; margin-bottom: 15px; 
+            background: #111; border: 1px solid #444; color: #fff; border-radius: 4px;
+            box-sizing: border-box;
         }
 
-        .container { display: flex; flex-direction: column; gap: 12px; }
-        
-        .card { 
-            background: #1a1a1a; border: 1px solid #333; padding: 15px; 
-            border-radius: 10px; transition: transform 0.2s;
+        /* Multi-column Grid Layout */
+        #song-list { 
+            display: grid; 
+            /* This creates columns that are at least 300px wide and fill the screen */
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); 
+            gap: 5px 15px; /* Tiny vertical gap, larger horizontal gap */
         }
-        .card:hover { border-color: #ff4500; transform: translateY(-2px); }
 
-        .initial { color: #ff4500; font-weight: bold; font-size: 13px; text-transform: uppercase; margin-bottom: 4px; }
-        .artist { font-size: 19px; font-weight: 600; display: block; margin-bottom: 8px; }
+        /* The Condensed Row (1/4 the original size) */
+        .song-row { 
+            display: flex; 
+            align-items: center; 
+            background: #111; 
+            border-bottom: 1px solid #222; 
+            padding: 4px 8px; /* Very tight padding */
+            font-size: 14px;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+        .song-row:hover { background: #222; border-color: #ff4500; }
+
+        .initial { 
+            color: #ff4500; font-weight: bold; font-size: 11px; 
+            width: 35px; flex-shrink: 0; 
+        }
+        .artist { 
+            flex-grow: 1; font-weight: 500; text-overflow: ellipsis; 
+            overflow: hidden; margin-right: 10px;
+        }
         
+        /* Small Link Icon/Button */
         .link-btn {
-            display: inline-block; padding: 6px 12px; background: #333; color: #eee;
-            text-decoration: none; border-radius: 4px; font-size: 14px;
+            color: #888; text-decoration: none; font-size: 12px;
+            padding: 2px 6px; border: 1px solid #444; border-radius: 3px;
         }
-        .link-btn:hover { background: #ff4500; color: #fff; }
+        .link-btn:hover { background: #ff4500; color: #fff; border-color: #ff4500; }
 
-        .loading { color: #888; text-align: center; margin-top: 50px; }
+        .loading { color: #888; grid-column: 1 / -1; text-align: center; padding: 20px; }
     </style>
 </head>
 <body>
 
-    <h1>男聲歌曲庫 (Men's List)</h1>
-    
-    <input type="text" id="search" placeholder="Search by Artist, Song, or Initial (e.g. CCT)..." onkeyup="filterSongs()">
+    <h1>男聲歌曲庫 <span id="count" style="font-size: 12px; color: #666;"></span></h1>
+    <input type="text" id="search" placeholder="Quick Search..." onkeyup="filterSongs()">
 
-    <div id="song-list" class="container">
-        <div class="loading">Fetching data from Google Sheets...</div>
+    <div id="song-list">
+        <div class="loading">Syncing with Sheets...</div>
     </div>
 
     <script>
@@ -53,31 +74,32 @@
                 const response = await fetch(SHEET_URL);
                 const csvText = await response.text();
                 
-                // Parse CSV lines
-                const rows = csvText.split('\n').slice(1); // Remove header row
+                // Advanced split to handle potential commas in names
+                const rows = csvText.split(/\r?\n/).filter(row => row.trim() !== "");
                 
-                songData = rows.map(row => {
-                    const cols = row.split(',');
+                songData = rows.slice(1).map(row => {
+                    const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/); 
                     return {
-                        initial: cols[0]?.trim(),
-                        artist: cols[1]?.trim(),
-                        link: cols[2]?.trim()
+                        initial: cols[0]?.replace(/"/g, '').trim() || '',
+                        artist: cols[1]?.replace(/"/g, '').trim() || 'Empty',
+                        link: cols[2]?.replace(/"/g, '').trim() || '#'
                     };
-                }).filter(s => s.artist); // Only keep rows with names
+                }).filter(s => s.artist !== 'Empty'); 
 
+                document.getElementById('count').innerText = `(${songData.length} songs)`;
                 displaySongs(songData);
             } catch (err) {
-                document.getElementById('song-list').innerHTML = "Error loading data. Check if the Sheet is published to web.";
+                document.getElementById('song-list').innerHTML = "Error loading data.";
             }
         }
 
         function displaySongs(songs) {
             const list = document.getElementById('song-list');
             list.innerHTML = songs.map(s => `
-                <div class="card">
-                    <div class="initial">${s.initial || 'N/A'}</div>
+                <div class="song-row">
+                    <span class="initial">${s.initial}</span>
                     <span class="artist">${s.artist}</span>
-                    <a href="${s.link}" class="link-btn" target="_blank">View Karaoke Link</a>
+                    <a href="${s.link}" class="link-btn" target="_blank">Play</a>
                 </div>
             `).join('');
         }
@@ -86,7 +108,7 @@
             const term = document.getElementById('search').value.toLowerCase();
             const filtered = songData.filter(s => 
                 s.artist.toLowerCase().includes(term) || 
-                (s.initial && s.initial.toLowerCase().includes(term))
+                s.initial.toLowerCase().includes(term)
             );
             displaySongs(filtered);
         }
