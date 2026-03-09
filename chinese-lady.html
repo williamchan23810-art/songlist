@@ -10,24 +10,31 @@
         .search-container { text-align: center; margin-bottom: 10px; }
         input[type="text"] { padding: 8px; width: 95%; max-width: 400px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px; }
         
-        .table-wrapper { width: 100%; overflow-x: hidden; }
-        table { width: 100%; border-collapse: collapse; background: white; font-size: 12px; table-layout: fixed; }
+        .table-wrapper { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        table { width: 100%; border-collapse: collapse; background: white; font-size: 12px; table-layout: auto; }
         
-        /* ADJUSTED PERCENTAGES: Shortens gap between A and B */
-        th:nth-child(1), td:nth-child(1) { width: 35%; padding-right: 2px; } /* Song Name */
-        th:nth-child(2), td:nth-child(2) { width: 20%; padding-left: 2px; }  /* Artist - Narrower to sit close to Song */
-        th:nth-child(3), td:nth-child(3) { width: 22.5%; text-align: center; } 
-        th:nth-child(4), td:nth-child(4) { width: 22.5%; text-align: center; }
-
-        th, td { 
-            padding: 8px 2px; 
-            border-bottom: 1px solid #ddd; 
+        /* THE FIX: Shrink-wrap the first two columns to eliminate the gap */
+        th:nth-child(1), td:nth-child(1),
+        th:nth-child(2), td:nth-child(2) { 
+            width: 1%; 
             white-space: nowrap; 
-            overflow: hidden;
-            text-overflow: ellipsis; 
+            padding-right: 10px; /* This is the ONLY gap between A and B */
         }
 
-        th { background-color: #d81b60; color: white; text-align: left; }
+        th, td { 
+            padding: 8px 4px; 
+            border-bottom: 1px solid #ddd; 
+            text-align: left;
+        }
+
+        /* Keep buttons tight on the right */
+        td:nth-child(3), td:nth-child(4) {
+            width: 65px;
+            text-align: center;
+            padding: 8px 2px;
+        }
+
+        th { background-color: #d81b60; color: white; }
         th:nth-child(3), th:nth-child(4) { text-align: center; }
 
         .link-btn {
@@ -39,7 +46,7 @@
             font-weight: bold;
             font-size: 10px;
             text-align: center;
-            width: 95%; 
+            width: 62px; 
         }
         .btn-orig { background-color: #e74c3c; } 
         .btn-kara { background-color: #3498db; } 
