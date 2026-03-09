@@ -1,47 +1,76 @@
-<script>
-    const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSeK0hJoqyYLa5BQLl42QIAHMlbT_0tAa0FxhoBBebSUqV98bwac7ACwQc1y2yA6SLOd1nGvJYD-zLB/pub?gid=0&single=true&output=csv';
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Song List | The Sound Capsule</title>
+    <style>
+        body { background: #0f0f0f; color: white; font-family: sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; }
+        .song-row { background: #1a1a1a; padding: 15px; margin-bottom: 10px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #333; }
+        .artist { color: #ff4b2b; font-weight: bold; font-size: 0.85em; display: block; }
+        .title { font-size: 1.1em; }
+        .btn-ktv { background: #ff4b2b; color: white; text-decoration: none; padding: 8px 12px; border-radius: 6px; font-size: 0.8em; font-weight: bold; }
+        .btn-music { background: #333; color: #ccc; text-decoration: none; padding: 8px 12px; border-radius: 6px; font-size: 0.8em; margin-right: 5px; }
+        #searchInput { width: 100%; padding: 12px; margin-bottom: 20px; border-radius: 8px; border: 1px solid #444; background: #222; color: white; box-sizing: border-box; }
+    </style>
+</head>
+<body>
+    <a href="index.html" style="color: #64b5f6; text-decoration: none;">← Back</a>
+    <h2 style="color:#ff4b2b">男聲歌曲庫 (Men's List)</h2>
+    <input type="text" id="searchInput" onkeyup="filter()" placeholder="Search Artist or Song...">
+    <div id="songContainer">Loading songs...</div>
 
-    async function fetchSongs() {
-        try {
-            const res = await fetch(sheetUrl);
-            const text = await res.text();
-            
-            // This handles both Windows and Mac line breaks
-            const lines = text.split(/\r?\n/).filter(line => line.trim() !== '');
-            const dataRows = lines.slice(1);
-            
-            let html = '';
-            dataRows.forEach(line => {
-                // This regex is the "Gold Standard" for CSV splitting
-                const cols = line.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)|(?<=,|^)(?:".*?"|[^",\s]+)(?=\s*,|\s*$)|(?<=,|^)\s*(?=,|$)/g);
+    <script>
+        // Using the visualization API to avoid CSV splitting errors
+        const sheetId = '1wzY9xpypKyztNvIcnLlCvKqtNUSTumXnU1asSCREz8w';
+        const query = encodeURIComponent('Select A, B, F, G, H');
+        const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&tq=${query}`;
+
+        async function fetchSongs() {
+            try {
+                const res = await fetch(url);
+                const text = await res.text();
+                // This cleans the Google JSON wrapper
+                const json = JSON.parse(text.substr(47).slice(0, -2));
+                const rows = json.table.rows;
                 
-                if (cols && cols.length >= 8) {
-                    const artist = cols[0].replace(/"/g, "").trim();
-                    const title = cols[1].replace(/"/g, "").trim();
-                    const lang = cols[5] ? cols[5].replace(/"/g, "").trim() : "";
-                    const music = cols[6] ? cols[6].replace(/"/g, "").trim() : "";
-                    const ktv = cols[7] ? cols[7].replace(/"/g, "").trim() : "";
+                let html = '';
+                rows.forEach(row => {
+                    const artist = row.c[0] ? row.c[0].v : '';
+                    const title = row.c[1] ? row.c[1].v : '';
+                    const lang = row.c[2] ? row.c[2].v : '';
+                    const music = row.c[3] ? row.c[3].v : '';
+                    const ktv = row.c[4] ? row.c[4].v : '';
 
-                    html += `
-                        <div class="song-row">
-                            <div class="song-info">
-                                <span class="artist">${artist}</span>
-                                <span class="title">${title}</span>
-                            </div>
-                            <span class="lang">${lang}</span>
-                            <div class="btn-group">
-                                ${music.startsWith('http') ? `<a href="${music}" target="_blank" class="btn btn-music">MUSIC</a>` : ''}
-                                ${ktv.startsWith('http') ? `<a href="${ktv}" target="_blank" class="btn btn-ktv">KTV</a>` : ''}
-                            </div>
-                        </div>`;
-                }
-            });
-
-            document.getElementById('status').style.display = 'none';
-            document.getElementById('songContainer').innerHTML = html;
-        } catch (err) {
-            document.getElementById('status').innerHTML = "Check your internet or Sheet Publishing.";
+                    if (artist || title) {
+                        html += `
+                            <div class="song-row">
+                                <div>
+                                    <span class="artist">${artist}</span>
+                                    <span class="title">${title}</span>
+                                    <small style="color:#666; margin-left:10px">${lang}</small>
+                                </div>
+                                <div>
+                                    ${music ? `<a href="${music}" target="_blank" class="btn-music">MUSIC</a>` : ''}
+                                    ${ktv ? `<a href="${ktv}" target="_blank" class="btn-ktv">KTV</a>` : ''}
+                                </div>
+                            </div>`;
+                    }
+                });
+                document.getElementById('songContainer').innerHTML = html;
+            } catch (err) {
+                document.getElementById('songContainer').innerHTML = "Error: Sheet data not accessible. Make sure 'Anyone with link' can view.";
+            }
         }
-    }
-    fetchSongs();
-</script>
+
+        function filter() {
+            let input = document.getElementById("searchInput").value.toUpperCase();
+            let rows = document.getElementsByClassName("song-row");
+            for (let row of rows) {
+                row.style.display = row.innerText.toUpperCase().includes(input) ? "" : "none";
+            }
+        }
+        fetchSongs();
+    </script>
+</body>
+</html>
