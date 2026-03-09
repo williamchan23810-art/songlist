@@ -11,10 +11,10 @@
         input[type="text"] { padding: 12px; width: 80%; max-width: 500px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; }
         
         /* Table Styling */
-        .table-wrapper { overflow-x: auto; } /* Makes it scrollable on mobile */
+        .table-wrapper { overflow-x: auto; width: 100%; }
         table { width: 100%; border-collapse: collapse; background: white; margin-top: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; white-space: nowrap; }
-        th { background-color: #d81b60; color: white; position: sticky; top: 0; }
+        th { background-color: #d81b60; color: white; }
         tr:hover { background-color: #f9f9f9; }
 
         /* Button Styling */
@@ -28,10 +28,9 @@
             font-size: 13px;
             text-align: center;
             min-width: 110px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
-        .btn-orig { background-color: #e74c3c; } /* Red for Original */
-        .btn-kara { background-color: #3498db; } /* Blue for Karaoke */
+        .btn-orig { background-color: #e74c3c; } /* Red */
+        .btn-kara { background-color: #3498db; } /* Blue */
 
         .back-btn { display: inline-block; margin-bottom: 20px; text-decoration: none; color: #d81b60; font-weight: bold; font-size: 18px; }
     </style>
@@ -61,37 +60,41 @@
         async function loadData() {
             try {
                 const response = await fetch(sheetUrl);
-                const data = await response.text();
+                const csvData = await response.text();
                 
-                // Parses CSV and handles quotes
-                const rows = data.split('\n').map(row => row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/));
-                const header = rows[0].map(h => h.replace(/"/g, '').trim());
-                const body = rows.slice(1);
+                // Splitting CSV rows
+                const rows = csvData.split(/\r?\n/);
+                if (rows.length === 0) return;
 
+                // Create Headers
+                const headers = rows[0].split(',').map(h => h.replace(/"/g, '').trim());
                 const headerRow = document.getElementById('tableHeader');
-                header.forEach(col => {
+                headers.forEach(headerText => {
                     const th = document.createElement('th');
-                    th.innerText = col;
+                    th.innerText = headerText;
                     headerRow.appendChild(th);
                 });
 
+                // Create Rows
                 const tableBody = document.getElementById('tableBody');
-                body.forEach(row => {
-                    if (row.join('').trim() === "") return; 
-                    const tr = document.createElement('tr');
-                    
-                    row.forEach((cell, index) => {
-                        const td = document.createElement('td');
-                        let cellText = cell.replace(/"/g, '').trim();
+                for (let i = 1; i < rows.length; i++) {
+                    const columns = rows[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                    if (columns.join('').trim() === "") continue;
 
-                        if (cellText.toLowerCase().includes('http')) {
+                    const tr = document.createElement('tr');
+                    columns.forEach((cell, index) => {
+                        const td = document.createElement('td');
+                        let cleanCell = cell.replace(/"/g, '').trim();
+
+                        if (cleanCell.toLowerCase().startsWith('http')) {
                             const btn = document.createElement('a');
-                            btn.href = cellText;
+                            btn.href = cleanCell;
                             btn.target = "_blank";
                             btn.className = 'link-btn';
 
-                            const colName = header[index].toLowerCase();
-                            if (colName.includes("original")) {
+                            // Matching button text to the header name
+                            const currentHeader = headers[index].toLowerCase();
+                            if (currentHeader.includes("original")) {
                                 btn.innerText = "Original Song";
                                 btn.classList.add('btn-orig');
                             } else {
@@ -100,23 +103,23 @@
                             }
                             td.appendChild(btn);
                         } else {
-                            td.innerText = cellText;
+                            td.innerText = cleanCell;
                         }
                         tr.appendChild(td);
                     });
                     tableBody.appendChild(tr);
-                });
+                }
             } catch (error) {
-                console.error("Error loading sheet:", error);
+                console.error("Error loading data:", error);
             }
         }
 
         function filterTable() {
             let input = document.getElementById("searchInput").value.toUpperCase();
-            let tr = document.getElementById("tableBody").getElementsByTagName("tr");
-            for (let i = 0; i < tr.length; i++) {
-                let rowText = tr[i].innerText.toUpperCase();
-                tr[i].style.display = rowText.includes(input) ? "" : "none";
+            let rows = document.getElementById("tableBody").getElementsByTagName("tr");
+            for (let i = 0; i < rows.length; i++) {
+                let text = rows[i].innerText.toUpperCase();
+                rows[i].style.display = text.includes(input) ? "" : "none";
             }
         }
 
