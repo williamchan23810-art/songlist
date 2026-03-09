@@ -13,12 +13,12 @@
         .table-wrapper { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
         table { width: 100%; border-collapse: collapse; background: white; font-size: 12px; table-layout: auto; }
         
-        /* THE FIX: Shrink-wrap the first two columns to eliminate the gap */
+        /* Column A & B: Shrink-wrap to eliminate gaps */
         th:nth-child(1), td:nth-child(1),
         th:nth-child(2), td:nth-child(2) { 
             width: 1%; 
             white-space: nowrap; 
-            padding-right: 10px; /* This is the ONLY gap between A and B */
+            padding-right: 8px; 
         }
 
         th, td { 
@@ -27,11 +27,13 @@
             text-align: left;
         }
 
-        /* Keep buttons tight on the right */
-        td:nth-child(3), td:nth-child(4) {
-            width: 65px;
+        /* THE FIX: Remove gaps between C and D */
+        th:nth-child(3), td:nth-child(3),
+        th:nth-child(4), td:nth-child(4) {
+            width: 64px;
             text-align: center;
-            padding: 8px 2px;
+            padding-left: 0px;  /* No left gap */
+            padding-right: 0px; /* No right gap */
         }
 
         th { background-color: #d81b60; color: white; }
@@ -46,7 +48,7 @@
             font-weight: bold;
             font-size: 10px;
             text-align: center;
-            width: 62px; 
+            width: 62px; /* Button takes up almost the full narrow cell */
         }
         .btn-orig { background-color: #e74c3c; } 
         .btn-kara { background-color: #3498db; } 
