@@ -10,12 +10,25 @@
         .search-container { text-align: center; margin-bottom: 15px; }
         input[type="text"] { padding: 10px; width: 90%; max-width: 400px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; }
         
-        .table-wrapper { overflow-x: hidden; width: 100%; } /* Prevent side scroll */
-        table { width: 100%; border-collapse: collapse; background: white; margin-top: 5px; font-size: 13px; }
-        th, td { padding: 8px 4px; text-align: left; border-bottom: 1px solid #ddd; }
-        th { background-color: #d81b60; color: white; }
+        .table-wrapper { overflow-x: auto; width: 100%; -webkit-overflow-scrolling: touch; }
+        table { width: 100%; border-collapse: collapse; background: white; margin-top: 5px; font-size: 13px; table-layout: auto; }
+        
+        /* Fixed the spacing here */
+        th, td { 
+            padding: 10px 8px; /* Increased side padding for better spacing */
+            text-align: left; 
+            border-bottom: 1px solid #ddd; 
+            white-space: nowrap; 
+        }
+        
+        /* Ensure the text columns don't collapse too much */
+        td:nth-child(1), td:nth-child(2) {
+            min-width: 80px; 
+            padding-right: 15px; /* Forced gap after the text */
+        }
 
-        /* Narrower Buttons */
+        th { background-color: #d81b60; color: white; position: sticky; top: 0; }
+
         .link-btn {
             display: inline-block;
             padding: 6px 4px;
@@ -23,9 +36,9 @@
             text-decoration: none !important;
             color: white !important;
             font-weight: bold;
-            font-size: 11px; /* Smaller text for mobile */
+            font-size: 11px; 
             text-align: center;
-            width: 65px; /* Fixed narrow width */
+            width: 65px; 
         }
         .btn-orig { background-color: #e74c3c; } 
         .btn-kara { background-color: #3498db; } 
