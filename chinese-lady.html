@@ -22,16 +22,16 @@
         /* Column B (Artist): Tight right side */
         td:nth-child(2) { padding-right: 4px; width: 1%; }
 
-        /* THE FIX: Rigidly narrow C & D with exact 2px gap */
+        /* Snug C & D with exact 2px gap */
         td:nth-child(3) {
             width: 75px;
             padding-left: 0px; 
-            padding-right: 1px; /* 1px here */
+            padding-right: 1px;
             text-align: right;
         }
         td:nth-child(4) {
             width: 75px;
-            padding-left: 1px; /* 1px here = 2px total gap */
+            padding-left: 1px;
             padding-right: 0px;
             text-align: left;
         }
@@ -46,7 +46,7 @@
             text-decoration: none !important;
             color: white !important;
             font-weight: bold;
-            font-size: 9.5px; /* Smallest size to fit the full word */
+            font-size: 9.5px;
             text-align: center;
             width: 72px; 
         }
@@ -90,6 +90,8 @@
                 headers.forEach(h => {
                     const th = document.createElement('th');
                     let title = h;
+                    // Logic for the requested header changes
+                    if (h.toLowerCase().includes("song name") || h.toLowerCase() === "song") title = "TITLE";
                     if (h.toLowerCase().includes("original")) title = "SONG";
                     if (h.toLowerCase().includes("karaoke")) title = "KARAOKE";
                     th.innerText = title;
