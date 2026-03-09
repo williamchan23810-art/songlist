@@ -3,66 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>男聲歌曲庫 (Double Column + Divider)</title>
+    <title>男聲歌曲庫 (Double Column - Clear Spacing)</title>
     <style>
-        body { background-color: #000; color: #ccc; font-family: -apple-system, sans-serif; padding: 10px; margin: 0; font-size: 13px; }
-        h1 { color: #ff4500; font-size: 20px; margin: 0; }
-        #count { font-size: 11px; color: #666; display: block; margin-bottom: 8px; }
+        body { background-color: #000; color: #ccc; font-family: -apple-system, sans-serif; padding: 15px; margin: 0; font-size: 13px; }
+        h1 { color: #ff4500; font-size: 22px; margin: 0 0 5px 0; }
+        #count { font-size: 12px; color: #666; display: block; margin-bottom: 12px; }
         
         #search { 
-            width: 100%; padding: 8px; margin-bottom: 12px; 
-            background: #111; border: 1px solid #333; color: #fff; border-radius: 4px;
+            width: 100%; padding: 10px; margin-bottom: 20px; 
+            background: #111; border: 1px solid #333; color: #fff; border-radius: 6px;
         }
 
-        /* The Main Container with a Double Center Line */
+        /* The Main Container */
         #main-container {
             display: grid;
             grid-template-columns: 1fr 1fr; /* Two equal columns */
-            column-gap: 30px; /* Space for the divider */
+            column-gap: 40px; /* Increased gutter for the center divider */
             position: relative;
         }
 
-        /* The vertical double line divider */
+        /* The vertical double line divider (30px total visual space) */
         #main-container::after {
             content: "";
             position: absolute;
             left: 50%;
             top: 0;
             bottom: 0;
-            border-left: 3px double #444; /* The Double Line */
+            border-left: 3px double #444; 
             transform: translateX(-50%);
         }
 
-        /* Song Row Styling */
+        /* Individual Song Row */
         .song-item {
             display: flex;
             align-items: center;
             border-bottom: 1px solid #1a1a1a;
-            padding: 4px 0;
+            padding: 5px 0;
             overflow: hidden;
+            /* Prevents left-side links from getting too close to the center divider */
+            padding-right: 10px; 
         }
 
-        .artist { color: #fff; font-weight: bold; margin-right: 8px; flex-shrink: 0; }
+        .artist { color: #fff; font-weight: bold; margin-right: 10px; flex-shrink: 0; }
         
-        /* Song title is flexible but stays close to the artist */
-        .song { color: #888; margin-right: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        /* Song title hugs the artist name */
+        .song { color: #888; margin-right: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        /* Links sit immediately after the title */
-        .link-group { display: flex; gap: 3px; flex-shrink: 0; }
+        /* Links (O & K) placed immediately after the title */
+        .link-group { display: flex; gap: 4px; flex-shrink: 0; }
 
         .btn {
-            width: 17px; height: 17px; line-height: 17px; text-align: center;
+            width: 18px; height: 18px; line-height: 18px; text-align: center;
             text-decoration: none; font-size: 10px; font-weight: bold;
-            border-radius: 2px;
+            border-radius: 3px;
         }
-        .btn-o { background: #333; color: #aaa; } /* Original Link */
-        .btn-k { background: #ff4500; color: #fff; } /* Karaoke Link */
-        .btn:hover { background: #fff; color: #000; }
+        .btn-o { background: #333; color: #aaa; } 
+        .btn-k { background: #ff4500; color: #fff; }
+        .btn:hover { background: #fff; color: #000; transform: scale(1.1); }
 
-        /* Mobile View: Hide the double line and go to 1 column */
-        @media (max-width: 800px) {
+        /* Mobile View: Switch to 1 column and hide divider */
+        @media (max-width: 850px) {
             #main-container { grid-template-columns: 1fr; }
             #main-container::after { display: none; }
+            .song-item { padding-right: 0; }
         }
     </style>
 </head>
@@ -71,7 +74,7 @@
     <h1>男聲歌曲庫</h1>
     <span id="count">Connecting...</span>
     
-    <input type="text" id="search" placeholder="Search Artist or Song..." oninput="filterSongs()">
+    <input type="text" id="search" placeholder="Quick Search Artist or Song Title..." oninput="filterSongs()">
 
     <div id="main-container">
         <div id="col-left"></div>
@@ -89,31 +92,4 @@
                 const rows = csvText.split(/\r?\n/).filter(row => row.trim() !== "");
                 
                 songData = rows.slice(1).map(row => {
-                    const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/); 
-                    return {
-                        artist: cols[0]?.replace(/"/g, '').trim() || '',
-                        song: cols[1]?.replace(/"/g, '').trim() || '',
-                        orig: cols[2]?.replace(/"/g, '').trim() || '',
-                        kara: cols[3]?.replace(/"/g, '').trim() || ''
-                    };
-                }).filter(s => s.artist || s.song);
-
-                document.getElementById('count').innerText = `${songData.length} Songs Loaded`;
-                displaySongs(songData);
-            } catch (err) {
-                document.getElementById('count').innerText = "Error loading Google Sheet.";
-            }
-        }
-
-        function displaySongs(songs) {
-            const leftCol = document.getElementById('col-left');
-            const rightCol = document.getElementById('col-right');
-            
-            // Split the array in half
-            const half = Math.ceil(songs.length / 2);
-            const leftSongs = songs.slice(0, half);
-            const rightSongs = songs.slice(half);
-
-            const render = (s) => `
-                <div class="song-item">
-                    <span class="artist
+                    const cols = row.split(/,(?=(?:(?:[^"]*
