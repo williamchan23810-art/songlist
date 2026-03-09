@@ -3,53 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>男聲歌曲庫 (Double Column - Clear Spacing)</title>
+    <title>男聲歌曲庫 (Double Column)</title>
     <style>
         body { background-color: #000; color: #ccc; font-family: -apple-system, sans-serif; padding: 15px; margin: 0; font-size: 13px; }
         h1 { color: #ff4500; font-size: 22px; margin: 0 0 5px 0; }
-        #count { font-size: 12px; color: #666; display: block; margin-bottom: 12px; }
+        #status { font-size: 12px; color: #666; display: block; margin-bottom: 12px; }
         
         #search { 
             width: 100%; padding: 10px; margin-bottom: 20px; 
             background: #111; border: 1px solid #333; color: #fff; border-radius: 6px;
         }
 
-        /* The Main Container */
-        #main-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr; /* Two equal columns */
-            column-gap: 40px; /* Increased gutter for the center divider */
-            position: relative;
+        /* The Magic: CSS Column-Count */
+        #song-list {
+            column-count: 2;
+            column-gap: 40px;
+            /* This creates your 30px center double line spacing naturally */
+            column-rule: 3px double #444; 
         }
 
-        /* The vertical double line divider (30px total visual space) */
-        #main-container::after {
-            content: "";
-            position: absolute;
-            left: 50%;
-            top: 0;
-            bottom: 0;
-            border-left: 3px double #444; 
-            transform: translateX(-50%);
-        }
-
-        /* Individual Song Row */
+        /* Song Row Styling */
         .song-item {
             display: flex;
             align-items: center;
             border-bottom: 1px solid #1a1a1a;
             padding: 5px 0;
+            break-inside: avoid; /* Prevents a song from splitting between columns */
             overflow: hidden;
-            /* Prevents left-side links from getting too close to the center divider */
-            padding-right: 10px; 
         }
 
-        .artist { color: #fff; font-weight: bold; margin-right: 10px; flex-shrink: 0; }
+        .artist { color: #fff; font-weight: bold; margin-right: 8px; flex-shrink: 0; }
         
-        /* Song title hugs the artist name */
-        .song { color: #888; margin-right: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        /* The song title - limited width to keep links close */
+        .song { color: #888; margin-right: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 160px; }
 
-        /* Links (O & K) placed immediately after the title */
         .link-group { display: flex; gap: 4px; flex-shrink: 0; }
 
         .btn {
@@ -59,37 +46,37 @@
         }
         .btn-o { background: #333; color: #aaa; } 
         .btn-k { background: #ff4500; color: #fff; }
-        .btn:hover { background: #fff; color: #000; transform: scale(1.1); }
+        .btn:hover { background: #fff; color: #000; }
 
-        /* Mobile View: Switch to 1 column and hide divider */
-        @media (max-width: 850px) {
-            #main-container { grid-template-columns: 1fr; }
-            #main-container::after { display: none; }
-            .song-item { padding-right: 0; }
+        /* Mobile Adjustments */
+        @media (max-width: 800px) {
+            #song-list { column-count: 1; column-rule: none; }
+            .song { max-width: none; }
         }
     </style>
 </head>
 <body>
 
     <h1>男聲歌曲庫</h1>
-    <span id="count">Connecting...</span>
+    <span id="status">Connecting to Database...</span>
     
-    <input type="text" id="search" placeholder="Quick Search Artist or Song Title..." oninput="filterSongs()">
+    <input type="text" id="search" placeholder="Search Artist or Song Title..." oninput="filterSongs()">
 
-    <div id="main-container">
-        <div id="col-left"></div>
-        <div id="col-right"></div>
-    </div>
+    <div id="song-list">
+        </div>
 
     <script>
         const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSeK0hJoqyYLa5BQLl42QIAHMlbT_0tAa0FxhoBBebSUqV98bwac7ACwQc1y2yA6SLOd1nGvJYD-zLB/pub?gid=0&single=true&output=csv';
         let songData = [];
 
         async function loadSongs() {
+            const statusEl = document.getElementById('status');
             try {
                 const response = await fetch(SHEET_URL);
+                if (!response.ok) throw new Error("Could not reach Google Sheets");
+                
                 const csvText = await response.text();
                 const rows = csvText.split(/\r?\n/).filter(row => row.trim() !== "");
                 
                 songData = rows.slice(1).map(row => {
-                    const cols = row.split(/,(?=(?:(?:[^"]*
+                    // Splits CSV while respecting
