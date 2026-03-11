@@ -5,83 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chinese Lady Songs - William H Chan Studio</title>
     <style>
+        /* General Styles */
         body { font-family: 'Segoe UI', sans-serif; background-color: #f0f2f5; margin: 0; padding: 15px; display: flex; flex-direction: column; align-items: center; }
         .nav-bar { width: 100%; max-width: 900px; margin-bottom: 15px; }
-        .back-btn { display: inline-block; text-decoration: none; background-color: #d81b60; color: white; padding: 10px 20px; border-radius: 8px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .back-btn { display: inline-block; text-decoration: none; background-color: #d81b60; color: white; padding: 10px 20px; border-radius: 8px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.2s; }
+        .back-btn:hover { background-color: #ad1457; transform: translateY(-2px); }
+
         .container { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); width: 100%; max-width: 900px; position: relative; min-height: 400px; box-sizing: border-box; }
-        .qr-header { position: absolute; top: 15px; right: 15px; text-align: center; }
+        
+        /* QR Code Header */
+        .qr-header { position: absolute; top: 15px; right: 15px; text-align: center; cursor: pointer; }
         .qr-header img { width: 60px; height: 60px; border: 1px solid #ddd; border-radius: 5px; }
         .qr-header p { font-size: 0.6rem; margin: 3px 0 0 0; color: #d81b60; font-weight: bold; }
+
         h1 { color: #d81b60; margin: 0 0 15px 0; padding-right: 80px; font-size: 1.5rem; border-bottom: 2px solid #fce4ec; padding-bottom: 10px; }
-        #searchBox { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; box-sizing: border-box; }
+        
+        /* Search Box */
+        #searchBox { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; box-sizing: border-box; outline: none; border: 2px solid #fce4ec; }
+        #searchBox:focus { border-color: #d81b60; }
+
+        /* Responsive Table */
         .table-wrapper { overflow-x: auto; width: 100%; }
         table { width: 100%; border-collapse: collapse; margin-top: 10px; min-width: 550px; }
-        th { text-align: left; border-bottom: 2px solid #d81b60; padding: 12px; color: #d81b60; background: #fff; font-size: 0.9rem; }
-        td { padding: 12px; border-bottom: 1px solid #eee; color: #333; font-size: 1rem; }
+        th { text-align: left; border-bottom: 2px solid #d81b60; padding: 12px; color: #d81b60; background: #fff; font-size: 0.85rem; }
+        td { padding: 12px; border-bottom: 1px solid #eee; color: #333; font-size: 1rem; vertical-align: middle; }
         tr:nth-child(even) { background: #fafafa; }
-        .btn-link { text-decoration: none; color: white !important; padding: 6px 12px; border-radius: 5px; font-size: 0.75rem; font-weight: bold; display: inline-block; text-align: center; min-width: 90px; }
-        .btn-orig { background: #3498db; }
-        .btn-kara { background: #8e44ad; }
-        #status { text-align: center; padding: 50px; color: #d81b60; font-weight: bold; font-style: italic; }
-    </style>
-</head>
-<body>
 
-    <div class="nav-bar">
-        <a href="index.html" class="back-btn">← Back to Menu</a>
-    </div>
-
-    <div class="container">
-        <div class="qr-header">
-            <a href="javascript:void(0);" onclick="alert('To Install:\n1. Tap the Share icon\n2. Select Add to Home Screen')">
-                <img src="qr-code.png" alt="Install">
-                <p>INSTALL</p>
-            </a>
-        </div>
-
-        <h1>Chinese Lady Songs</h1>
-        
-        <input type="text" id="searchBox" placeholder="Search singer or song name..." onkeyup="filterTable()">
-
-        <div id="status">Syncing with Studio Library...</div>
-
-        <div class="table-wrapper">
-            <table id="songTable" style="display:none;">
-                <thead>
-                    <tr>
-                        <th>ARTIST</th>
-                        <th>SONG</th>
-                        <th>ORIGINAL</th>
-                        <th>KARAOKE</th>
-                    </tr>
-                </thead>
-                <tbody id="tableBody"></tbody>
-            </table>
-        </div>
-    </div>
-
-    <script>
-        const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTFKLWjxEQgV4uXB9v15Bqyoyj57BY_PvPmn70OdDKOgQwvzQ1lAOHr55KsKF5EpHQUA6ZiO5YWGVC5/pub?gid=0&single=true&output=csv&cb=' + new Date().getTime();
-
-        async function loadSongs() {
-            try {
-                const response = await fetch(sheetUrl);
-                if (!response.ok) throw new Error('Network error');
-                const data = await response.text();
-                const lines = data.split(/\r?\n/);
-                const tableBody = document.getElementById('tableBody');
-                
-                tableBody.innerHTML = "";
-
-                for (let i = 1; i < lines.length; i++) {
-                    const line = lines[i].trim();
-                    if (!line) continue;
-                    const cols = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                    
-                    if (cols.length >= 2) {
-                        const tr = document.createElement('tr');
-                        const artist = cols[0].replace(/^"|"$/g, '').trim();
-                        const song = cols[1].replace(/^"|"$/g, '').trim();
-                        
-                        let origCell = "<td>-</td>";
-                        if (cols[2] && cols
+        /* Link Buttons */
+        .btn-link { text-decoration: none; color: white !important; padding: 7px 12
