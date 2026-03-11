@@ -11,7 +11,6 @@
         
         .container { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); width: 100%; max-width: 900px; position: relative; box-sizing: border-box; min-height: 300px; }
         
-        /* QR Code positioned top right */
         .qr-header { position: absolute; top: 15px; right: 15px; text-align: center; }
         .qr-header img { width: 55px; height: 55px; border: 1px solid #eee; border-radius: 4px; }
         .qr-header p { font-size: 0.5rem; margin: 2px 0 0 0; color: #d81b60; font-weight: bold; }
@@ -19,61 +18,12 @@
         h1 { color: #d81b60; margin: 0 0 15px 0; padding-right: 70px; font-size: 1.4rem; border-bottom: 2px solid #fce4ec; padding-bottom: 10px; }
         #searchBox { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; box-sizing: border-box; }
 
-        /* Responsive Table */
         .table-wrapper { overflow-x: auto; width: 100%; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; min-width: 500px; }
-        th { text-align: left; border-bottom: 2px solid #d81b60; padding: 10px; color: #d81b60; font-size: 0.85rem; background: white; }
-        td { padding: 10px; border-bottom: 1px solid #f0f0f0; color: #333; font-size: 0.9rem; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; min-width: 550px; }
+        th { text-align: left; border-bottom: 2px solid #d81b60; padding: 12px; color: #d81b60; font-size: 0.85rem; background: white; }
+        td { padding: 12px; border-bottom: 1px solid #f0f0f0; color: #333; font-size: 0.9rem; vertical-align: middle; }
         tr:nth-child(even) { background: #fafafa; }
         
-        /* Link Buttons */
-        .btn-link { text-decoration: none; color: white !important; padding: 6px 10px; border-radius: 5px; font-size: 0.75rem; font-weight: bold; display: inline-block; text-align: center; min-width: 80px; }
-        .btn-orig { background: #3498db; } /* Blue for Original */
-        .btn-kara { background: #8e44ad; } /* Purple for Karaoke */
-
-        #status { text-align: center; padding: 40px; color: #d81b60; font-weight: bold; font-style: italic; }
-    </style>
-</head>
-<body>
-
-    <div class="nav-bar">
-        <a href="index.html" class="back-btn">← Back to Menu</a>
-    </div>
-
-    <div class="container">
-        <div class="qr-header">
-            <a href="javascript:void(0);" onclick="alert('To Install Studio App:\n1. Tap Share (square with arrow)\n2. Select \'Add to Home Screen\'')">
-                <img src="qr-code.png" alt="Install">
-                <p>INSTALL</p>
-            </a>
-        </div>
-
-        <h1>Chinese Lady Songs</h1>
-        <input type="text" id="searchBox" placeholder="Search by singer or song title..." onkeyup="filterTable()">
-
-        <div id="status">Syncing with William H Chan Studio Library...</div>
-
-        <div class="table-wrapper">
-            <table id="songTable" style="display:none;">
-                <thead>
-                    <tr>
-                        <th>Artist</th>
-                        <th>Song</th>
-                        <th>Original</th>
-                        <th>Karaoke</th>
-                    </tr>
-                </thead>
-                <tbody id="tableBody"></tbody>
-            </table>
-        </div>
-    </div>
-
-    <script>
-        // Your Google Sheet CSV Link
-        const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTFKLWjxEQgV4uXB9v15Bqyoyj57BY_PvPmn70OdDKOgQwvzQ1lAOHr55KsKF5EpHQUA6ZiO5YWGVC5/pub?gid=0&single=true&output=csv&cache=' + new Date().getTime(); 
-
-        async function loadSongs() {
-            try {
-                const response = await fetch(sheetUrl);
-                const data = await response.text();
-                const lines = data.split(/\r?\
+        .btn-link { text-decoration: none; color: white !important; padding: 6px 12px; border-radius: 5px; font-size: 0.75rem; font-weight: bold; display: inline-block; text-align: center; min-width: 85px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .btn-orig { background: #3498db; }
+        .btn-kara {
