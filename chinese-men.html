@@ -8,29 +8,34 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     
     <style>
-        :root { --primary: #2e7d32; --secondary: #457b9d; --bg: #f8f9fa; --text: #1d3557; }
+        :root { 
+            --primary-green: #2e7d32; 
+            --primary-blue: #3498db; 
+            --secondary: #457b9d; 
+            --bg: #f8f9fa; 
+            --text: #1d3557; 
+        }
+        
         body { font-family: sans-serif; background: var(--bg); color: var(--text); max-width: 800px; margin: 0 auto; padding: 10px; }
         
-        /* Master Header Layout */
+        /* 1, 2, 3. MASTER HEADER (Arrow, Disc, QR) */
         .master-header-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 10px 5px;
             width: 100%;
+            box-sizing: border-box;
         }
 
-        /* 1. Left Arrow (Home) */
-        .nav-home { font-size: 26px; text-decoration: none; color: #333; width: 60px; font-weight: bold; }
+        .nav-home { font-size: 28px; text-decoration: none; color: #333; width: 60px; font-weight: bold; }
 
-        /* 2. Turning Disc (Center) */
         @keyframes slowSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         .logo-center { width: 75px; height: 75px; object-fit: cover; border-radius: 50%; border: 2px solid #333; animation: slowSpin 5s linear infinite; }
 
-        /* 3. Static QR (Right) */
         .qr-static { width: 60px; height: 60px; border: 1px solid #ddd; border-radius: 4px; }
 
-        /* 4. Studio Name (Cambria Font) */
+        /* 4. STUDIO NAME (Cambria Font) */
         .studio-title { text-align: center; margin-top: 8px; }
         .studio-title h1 { 
             font-family: 'Cambria', 'Georgia', serif; 
@@ -40,21 +45,21 @@
             font-weight: bold;
         }
         
-        /* 5. Horizontal Divider */
+        /* 5. HORIZONTAL LINE */
         .divider { height: 2px; background-color: var(--secondary); margin: 15px 0; width: 100%; }
 
-        #search-box { width: 100%; padding: 12px; font-size: 16px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 12px; box-sizing: border-box; outline: none; }
+        /* Search & List Styles */
+        #search-box { width: 100%; padding: 12px; font-size: 16px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 15px; box-sizing: border-box; outline: none; }
 
-        /* Song Card Layout */
         .song-card { background: white; margin-bottom: 8px; padding: 12px 15px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .details { flex: 1; margin-right: 10px; }
         .artist { font-size: 0.75rem; font-weight: bold; color: var(--secondary); text-transform: uppercase; display: block; margin-bottom: 2px; }
         .song-name { font-size: 1rem; font-weight: 600; color: #333; line-height: 1.2; }
 
         .actions { display: flex; gap: 8px; }
-        .btn { text-decoration: none; padding: 8px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; color: white; min-width: 65px; text-align: center; display: inline-block; }
-        .btn-orig { background-color: #3498db; } /* Blue for Song */
-        .btn-kara { background-color: #2e7d32; } /* Green for Men's Sing */
+        .btn { text-decoration: none; padding: 8px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; color: white; min-width: 65px; text-align: center; }
+        .btn-orig { background-color: var(--primary-blue); }
+        .btn-kara { background-color: var(--primary-green); }
 
         #loading { text-align: center; font-style: italic; color: #888; margin-top: 40px; }
     </style>
@@ -63,10 +68,8 @@
 
     <div class="master-header-container">
         <a href="index.html" class="nav-home">←</a>
-        
-        <img src="turntable-Icon.jpg" alt="Spinning Disc" class="logo-center">
-        
-        <img src="qr-code.png" alt="QR Code" class="qr-static">
+        <img src="turntable-Icon.jpg" alt="Logo" class="logo-center">
+        <img src="qr-code.png" alt="QR" class="qr-static">
     </div>
 
     <div class="studio-title">
@@ -75,13 +78,13 @@
 
     <div class="divider"></div>
 
-    <input type="text" id="search-box" placeholder="Search singer or song..." onkeyup="filterSongs()">
+    <input type="text" id="search-box" placeholder="Search Men's singer or song..." onkeyup="filterSongs()">
 
-    <div id="loading">Syncing Men's Library...</div>
+    <div id="loading">Updating Men's Library...</div>
     <div id="song-list-container"></div>
 
     <script>
-        // Use the Men's CSV URL
+        // Men's Tab CSV URL
         const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRURv3BhrTaAjayuts-7v61qTznVRxe-0hyvgevw8wIj3OHTvQLnGiLOc8TdwD0CvKNrRS_U3qj2o33/pub?output=csv&v=' + Date.now();
 
         function renderSongs(data) {
@@ -92,7 +95,7 @@
             for (let i = 1; i < data.length; i++) {
                 const row = data[i];
                 
-                // Stable Column Mapping: A=0, B=1, C=2, D=3
+                // Index-based: A=0, B=1, C=2, D=3
                 const artistName = row[0] ? row[0].trim() : "";
                 const songTitle = row[1] ? row[1].trim() : "";
                 const origLink = row[2] ? row[2].trim() : "";
@@ -126,7 +129,7 @@
 
         Papa.parse(CSV_URL, {
             download: true,
-            header: false, // Ensures we use index 0,1,2,3 for stability
+            header: false, 
             skipEmptyLines: true,
             complete: function(results) {
                 renderSongs(results.data);
