@@ -35,7 +35,7 @@
         .btn-orig { background-color: var(--primary-blue); }
         .btn-kara { background-color: var(--primary-green); }
 
-        #loading { text-align: center; font-style: italic; color: #888; margin-top: 40px; }
+        #status { text-align: center; font-style: italic; color: #888; margin-top: 40px; }
     </style>
 </head>
 <body>
@@ -43,86 +43,4 @@
     <div class="master-header-container">
         <a href="index.html" class="nav-home">←</a>
         <img src="turntable-Icon.jpg" alt="Logo" class="logo-center">
-        <img src="qr-code.png" alt="QR" class="qr-static">
-    </div>
-
-    <div class="studio-title">
-        <h1>William H Chan Music Studio</h1>
-    </div>
-
-    <div class="divider"></div>
-
-    <input type="text" id="search-box" placeholder="Search Men's singer or song..." onkeyup="filterSongs()">
-
-    <div id="loading">Updating Men's Library...</div>
-    <div id="song-list-container"></div>
-
-    <script>
-        // Your specific Men's CSV Link
-        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSeK0hJoqyYLa5BQLl42QIAHMlbT_0tAa0FxhoBBebSUqV98bwac7ACwQc1y2yA6SLOd1nGvJYD-zLB/pub?gid=0&single=true&output=csv';
-
-        function renderSongs(data) {
-            const container = document.getElementById('song-list-container');
-            container.innerHTML = '';
-            
-            if (!data || data.length < 2) {
-                document.getElementById('loading').innerText = "No songs found. Check if sheet is published.";
-                return;
-            }
-
-            for (let i = 1; i < data.length; i++) {
-                const row = data[i];
-                const artistName = row[0] ? row[0].trim() : "";
-                const songTitle = row[1] ? row[1].trim() : "";
-                const origLink = row[2] ? row[2].trim() : "";
-                const karaLink = row[3] ? row[3].trim() : "";
-
-                if (!songTitle) continue;
-
-                const div = document.createElement('div');
-                div.className = 'song-card';
-                
-                let buttonsHtml = '';
-                if (origLink && origLink.toLowerCase().includes('http')) {
-                    buttonsHtml += `<a href="${origLink}" target="_blank" class="btn btn-orig">SONG</a>`;
-                }
-                if (karaLink && karaLink.toLowerCase().includes('http')) {
-                    buttonsHtml += `<a href="${karaLink}" target="_blank" class="btn btn-kara">SING</a>`;
-                }
-
-                div.innerHTML = `
-                    <div class="details">
-                        <span class="artist">${artistName || 'CHINESE MEN'}</span>
-                        <span class="song-name">${songTitle}</span>
-                    </div>
-                    <div class="actions">
-                        ${buttonsHtml}
-                    </div>`;
-                container.appendChild(div);
-            }
-            document.getElementById('loading').style.display = 'none';
-        }
-
-        // Fetch using cache buster to bypass "Updating" hang
-        Papa.parse(CSV_URL + '&v=' + Date.now(), {
-            download: true,
-            header: false, 
-            skipEmptyLines: true,
-            complete: function(results) {
-                renderSongs(results.data);
-            },
-            error: function() {
-                document.getElementById('loading').innerText = "Trouble connecting to Google. Please refresh.";
-            }
-        });
-
-        function filterSongs() {
-            const term = document.getElementById('search-box').value.toLowerCase();
-            const cards = document.getElementsByClassName('song-card');
-            for (let card of cards) {
-                card.style.display = card.innerText.toLowerCase().includes(term) ? 'flex' : 'none';
-            }
-        }
-    </script>
-</body>
-</html>
+        <img src="
