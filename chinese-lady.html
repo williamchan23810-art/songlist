@@ -3,91 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chinese Lady Songlist - William H Chan Music Studio</title>
+    <title>Chinese Lady Songs - William H Chan Studio</title>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f4f9; padding: 5px; margin: 0; }
-        h1 { text-align: center; color: #d81b60; margin-top: 10px; font-size: 1.2rem; }
-        .search-container { text-align: center; margin-bottom: 10px; }
-        input[type="text"] { padding: 8px; width: 92%; max-width: 400px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px; }
-        .table-wrapper { width: 100%; overflow-x: auto; }
-        table { border-collapse: collapse; background: white; font-size: 11.5px; width: 100%; table-layout: auto; }
-        th, td { padding: 8px 2px; border-bottom: 1px solid #ddd; white-space: nowrap; }
-        td:nth-child(2) { padding-right: 4px; width: 1%; }
-        td:nth-child(3) { width: 75px; padding-left: 0px; padding-right: 1px; text-align: right; }
-        td:nth-child(4) { width: 75px; padding-left: 1px; padding-right: 0px; text-align: left; }
-        th { background-color: #d81b60; color: white; text-align: left; padding: 8px 4px; }
-        .link-btn { display: inline-block; padding: 6px 0; border-radius: 4px; text-decoration: none !important; color: white !important; font-weight: bold; font-size: 9.5px; text-align: center; width: 72px; }
-        .btn-orig { background-color: #e74c3c; } 
-        .btn-kara { background-color: #3498db; } 
-        .back-btn { display: inline-block; margin: 5px; text-decoration: none; color: #d81b60; font-weight: bold; font-size: 14px; }
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            margin: 0; 
+            background-color: #1a1a1a;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Immersive Background */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('JP.jpg'); 
+            background-size: cover;
+            background-position: center;
+            filter: sepia(100%) hue-rotate(-20deg) brightness(0.7);
+            opacity: 0.4;
+            z-index: -1;
+        }
+
+        .nav-bar {
+            width: 100%;
+            padding: 15px;
+            display: flex;
+            justify-content: flex-start;
+            z-index: 10;
+        }
+
+        .back-btn {
+            background: rgba(216, 27, 96, 0.9);
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+
+        .container {
+            width: 90%;
+            max-width: 600px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 25px;
+            border-radius: 20px;
+            margin: 10px 0 40px 0;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        h1 { text-align: center; color: #d81b60; margin-top: 0; text-shadow: 2px 2px 4px black; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th { text-align: left; border-bottom: 2px solid #d81b60; padding: 12px; color: #d81b60; font-size: 1.1rem; }
+        td { padding: 15px 12px; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 1rem; }
+        tr:nth-child(even) { background: rgba(255, 255, 255, 0.05); }
+
+        /* QR Install Section */
+        .qr-section {
+            margin-top: 40px;
+            text-align: center;
+            padding: 20px;
+            border-top: 1px dashed rgba(216, 27, 96, 0.5);
+        }
+
+        .qr-section a { text-decoration: none; }
+
+        .qr-section img {
+            width: 130px;
+            height: 130px;
+            margin-top: 15px;
+            border: 3px solid white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+            transition: transform 0.2s;
+        }
+
+        .qr-section img:active { transform: scale(0.95); }
     </style>
 </head>
 <body>
-    <a href="index.html" class="back-btn">← Back</a>
-    <h1>Chinese Lady Songlist</h1>
-    <div class="search-container">
-        <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="Search...">
+
+    <div class="nav-bar">
+        <a href="index.html" class="back-btn">← Back to Menu</a>
     </div>
-    <div class="table-wrapper">
-        <table id="songTable">
-            <thead><tr id="tableHeader"></tr></thead>
-            <tbody id="tableBody"></tbody>
-        </table>
-    </div>
-    <script>
-        const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTFKLWjxEQgV4uXB9v15Bqyoyj57BY_PvPmn70OdDKOgQwvzQ1lAOHr55KsKF5EpHQUA6ZiO5YWGVC5/pub?gid=0&single=true&output=csv';
+
+    <div class="container">
+        <h1>Chinese Lady Songs</h1>
         
-        async function loadData() {
-            try {
-                const response = await fetch(sheetUrl);
-                const data = await response.text();
-                const rows = data.split(/\r?\n/);
-                const tableHeader = document.getElementById('tableHeader');
-                const tableBody = document.getElementById('tableBody');
+        <table>
+            <thead>
+                <tr>
+                    <th>Artist</th>
+                    <th>Song Title</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>Winnie Hsin</td><td>Understanding (領悟)</td></tr>
+                <tr><td>Faye Wong</td><td>Red Beans (紅豆)</td></tr>
+                <tr><td>Sandy Lam</td><td>At Least I Still Have You</td></tr>
+                <tr><td>Anita Mui</td><td>Song of the Sunset</td></tr>
+            </tbody>
+        </table>
 
-                // Hardcoded Headers for Safety
-                const displayHeaders = ["ARTIST", "TITLE", "", ""];
-                displayHeaders.forEach(h => {
-                    const th = document.createElement('th');
-                    th.innerText = h;
-                    tableHeader.appendChild(th);
-                });
+        <div class="qr-section">
+            <a href="javascript:void(0);" onclick="alert('To Install this App:\n\n1. Tap the Share icon (square with arrow) at the bottom.\n2. Scroll down and tap \'Add to Home Screen\'.\n3. Tap \'Add\' at the top right.')">
+                <p style="color: #FFD700; font-weight: bold; font-size: 1.1rem; margin: 0; text-shadow: 1px 1px 2px black;">
+                    Tap to Install this App
+                </p>
+                <img src="qr-code.png" alt="Scan or Tap to Install">
+            </a>
+            <p style="font-size: 0.8rem; color: #bbb; margin-top: 10px;">
+                (Or scan if on a computer)
+            </p>
+        </div>
+    </div>
 
-                rows.forEach((row, i) => {
-                    if (i === 0 || row.trim() === "") return;
-                    const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                    const tr = document.createElement('tr');
-                    
-                    cols.forEach((cell, index) => {
-                        if (index > 3) return; // Only process first 4 columns
-                        const td = document.createElement('td');
-                        let clean = cell.replace(/"/g, '').trim();
-                        
-                        if (clean.toLowerCase().startsWith('http')) {
-                            const a = document.createElement('a');
-                            a.href = clean;
-                            a.target = "_blank";
-                            a.className = 'link-btn ' + (index === 2 ? 'btn-orig' : 'btn-kara');
-                            a.innerText = (index === 2 ? 'Original' : 'Karaoke');
-                            td.appendChild(a);
-                        } else {
-                            td.innerText = clean;
-                        }
-                        tr.appendChild(td);
-                    });
-                    tableBody.appendChild(tr);
-                });
-            } catch (err) { console.error("Error loading CSV:", err); }
-        }
-
-        function filterTable() {
-            let val = document.getElementById("searchInput").value.toUpperCase();
-            let rows = document.getElementById("tableBody").getElementsByTagName("tr");
-            for (let i = 0; i < rows.length; i++) {
-                rows[i].style.display = rows[i].innerText.toUpperCase().includes(val) ? "" : "none";
-            }
-        }
-        loadData();
-    </script>
 </body>
 </html>
