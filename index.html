@@ -3,12 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
     <link rel="manifest" href="manifest.json">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-   <link rel="apple-touch-icon" href="icon-192.jpg">
-   <link rel="icon" type="image/jpeg" href="icon-192.jpg">
+    <link rel="apple-touch-icon" href="icon-192.jpg">
+    <link rel="apple-touch-icon-precomposed" href="icon-192.jpg">
+    <link rel="icon" type="image/jpeg" href="icon-192.jpg">
+
     <title>William H Chan Music Studio</title>
+    
     <style>
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
@@ -20,9 +24,10 @@
             min-height: 100vh; 
             margin: 0; 
             position: relative;
+            overflow-x: hidden;
         }
 
-        /* The Background Layer - Brown Tone and 40% Opacity */
+        /* The Background Layer - Jimmy Page Sepia 40% */
         body::before {
             content: "";
             position: fixed;
@@ -30,57 +35,50 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: url('JP.jpg'); /* Ensures connection to your GitHub file */
+            background-image: url('JP.jpg'); 
             background-size: cover;
             background-position: center;
-            
-            /* Color Tone (Warm Brown/Sepia) */
             filter: sepia(100%) hue-rotate(-20deg) brightness(1.1); 
-            
-            /* Opacity (40%) */
             opacity: 0.4; 
-            
             z-index: -1; 
             pointer-events: none;
         }
 
+        /* Fully Transparent Container */
         .container { 
             text-align: center; 
-            /* CHANGE 1: Fully transparent background */
             background: transparent; 
             padding: 30px; 
             width: 90%; 
             max-width: 400px; 
             z-index: 1;
-            /* CHANGE 2: Removed box-shadow and border-radius for maximum immersion */
         }
 
         h1 { 
-            /* CHANGE 3: Text color updated to white for contrast against sepia image */
             color: #ffffff; 
             margin-bottom: 25px; 
             font-size: 1.6rem; 
             font-weight: 700;
-            /* CHANGE 4: Added text-shadow to ensure readability over darker image areas */
-            text-shadow: 1px 1px 4px rgba(0,0,0,0.6); 
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8); 
         }
         
         .menu-btn {
             display: block;
             width: 100%;
             padding: 15px 0;
-            margin: 10px 0;
+            margin: 12px 0;
             text-decoration: none;
-            color: white; /* Links text remains white against button colors */
+            color: white; 
             font-weight: bold;
             border-radius: 8px;
             transition: transform 0.2s, filter 0.2s;
             font-size: 1.1rem;
-            -webkit-tap-highlight-color: transparent; /* Clean mobile experience */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            -webkit-tap-highlight-color: transparent;
         }
 
         .menu-btn:hover { filter: brightness(1.1); }
-        .menu-btn:active { transform: scale(0.98); }
+        .menu-btn:active { transform: scale(0.97); }
 
         /* Studio Color Coding */
         .btn-lady { background-color: #d81b60; } 
@@ -91,26 +89,20 @@
         .footer { 
             margin-top: 30px; 
             font-size: 0.8rem; 
-            /* CHANGE 5: Footer text updated to a lighter color for visibility */
-            color: #d0d0d0; 
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
+            color: #ffffff; 
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
         }
-    </style>
-</head>
-<body>
 
-    <div class="container">
-        <h1>Music Studio Songlists</h1>
-        
-        <a href="chinese-lady.html" class="menu-btn btn-lady">Chinese Lady Songs</a>
-        <a href="chinese-men.html" class="menu-btn btn-men">Chinese Men Songs</a>
-        <a href="chinese-duet.html" class="menu-btn btn-duet">Chinese Duets</a>
-        <a href="english.html" class="menu-btn btn-eng">English Songs</a>
-
-        <div class="footer">
-            &copy; 2026 William H Chan Music Studio
-        </div>
-    </div>
-
-</body>
-</html>
+        /* Install Instruction Styling */
+        #install-prompt {
+            display: none; 
+            position: fixed; 
+            bottom: 20px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            background: rgba(0,0,0,0.9); 
+            color: white; 
+            padding: 18px; 
+            border-radius: 15px; 
+            z-index: 999; 
+            width: 85%;
