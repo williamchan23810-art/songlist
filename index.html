@@ -1,36 +1,80 @@
-<style>
-    body { 
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>William H Chan Music Studio</title>
+    <style>
+        /* This layer handles ONLY the background image */
+        html {
+            height: 100%;
+            background: #f0f2f5 url('JimmyPage (2).jpg') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        /* This creates the 10% opacity "wash" over the image */
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0;
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            min-height: 100vh;
+            /* This white overlay at 90% opacity makes the image look like 10% opacity */
+            background-color: rgba(240, 242, 245, 0.9); 
+        }
+
+        .container { 
+            text-align: center; 
+            background: white; 
+            padding: 30px; 
+            border-radius: 15px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+            width: 90%; 
+            max-width: 400px;
+            position: relative;
+            z-index: 10; /* Ensures it sits on top */
+        }
+
+        h1 { color: #333; margin-bottom: 25px; font-size: 1.5rem; }
         
-        /* 1. Add your image here */
-        background-image: linear-gradient(rgba(240, 242, 245, 0.9), rgba(240, 242, 245, 0.9)), 
-                          url('JimmyPage (2).jpg'); 
+        .menu-btn {
+            display: block;
+            width: 100%;
+            padding: 15px 0;
+            margin: 10px 0;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            border-radius: 8px;
+            transition: transform 0.2s;
+            font-size: 1.1rem;
+        }
+
+        /* Colors for the buttons */
+        .btn-lady { background-color: #d81b60; } 
+        .btn-men  { background-color: #27ae60; } 
+        .btn-duet { background-color: #8e44ad; } 
+        .btn-eng  { background-color: #2980b9; } 
+
+        .footer { margin-top: 20px; font-size: 0.8rem; color: #777; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Music Studio Songlists</h1>
         
-        /* 2. Style the background */
-        background-size: cover;
-        background-position: center;
-        background-attachment: fixed;
-        background-repeat: no-repeat;
+        <a href="chinese-lady.html" class="menu-btn btn-lady">Chinese Lady Songs</a>
+        <a href="chinese-men.html" class="menu-btn btn-men">Chinese Men Songs</a>
+        <a href="chinese-duet.html" class="menu-btn btn-duet">Chinese Duets</a>
+        <a href="english.html" class="menu-btn btn-eng">English Songs</a>
 
-        /* 3. Standard layout styles */
-        display: flex; 
-        flex-direction: column; 
-        align-items: center; 
-        justify-content: center; 
-        height: 100vh; 
-        margin: 0; 
-    }
+        <div class="footer">
+            &copy; 2026 William H Chan Music Studio
+        </div>
+    </div>
 
-    .container { 
-        text-align: center; 
-        background: white; /* This box sits ON TOP of the background */
-        padding: 30px; 
-        border-radius: 15px; 
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
-        width: 90%; 
-        max-width: 400px; 
-        z-index: 1; /* Ensures buttons are always clickable */
-    }
-
-    /* ... keep your button styles (btn-lady, btn-men, etc.) the same ... */
-</style>
+</body>
+</html>
