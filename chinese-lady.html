@@ -6,9 +6,9 @@
     <title>Chinese Lady Songs - William H Chan Studio</title>
     <style>
         body { font-family: 'Segoe UI', sans-serif; background-color: #f0f2f5; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
-        .nav-bar { width: 100%; max-width: 600px; margin-bottom: 20px; }
+        .nav-bar { width: 100%; max-width: 800px; margin-bottom: 20px; }
         .back-btn { display: inline-block; text-decoration: none; background-color: #d81b60; color: white; padding: 12px 24px; border-radius: 8px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); width: 95%; max-width: 700px; position: relative; min-height: 250px; }
+        .container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); width: 95%; max-width: 800px; position: relative; min-height: 250px; }
         
         .qr-header { position: absolute; top: 20px; right: 20px; text-align: center; }
         .qr-header img { width: 65px; height: 65px; border: 1px solid #eee; border-radius: 4px; }
@@ -18,21 +18,24 @@
         #searchBox { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 1rem; }
 
         table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th { text-align: left; border-bottom: 2px solid #d81b60; padding: 12px; color: #d81b60; }
-        td { padding: 12px; border-bottom: 1px solid #f0f0f0; color: #333; }
+        th { text-align: left; border-bottom: 2px solid #d81b60; padding: 12px; color: #d81b60; font-size: 0.9rem; }
+        td { padding: 12px; border-bottom: 1px solid #f0f0f0; color: #333; font-size: 0.95rem; }
         tr:nth-child(even) { background: #fafafa; }
         
-        /* YouTube Play Button Style */
-        .play-link { 
+        /* Link Button Styles */
+        .btn-link { 
             text-decoration: none; 
-            background: #ff0000; 
             color: white !important; 
-            padding: 5px 10px; 
+            padding: 6px 10px; 
             border-radius: 5px; 
-            font-size: 0.8rem; 
+            font-size: 0.75rem; 
             font-weight: bold; 
             display: inline-block;
+            text-align: center;
+            min-width: 70px;
         }
+        .btn-yt { background: #ff0000; } /* YouTube Red */
+        .btn-mic { background: #8e44ad; } /* Karaoke Purple */
 
         .status-msg { text-align: center; padding: 40px 20px; color: #d81b60; font-weight: bold; }
     </style>
@@ -55,14 +58,15 @@
         
         <input type="text" id="searchBox" placeholder="Search singer or song name..." onkeyup="filterTable()">
 
-        <div id="status" class="status-msg">Refreshing Library...</div>
+        <div id="status" class="status-msg">Loading Full Studio Library...</div>
 
         <table id="songTable" style="display:none;">
             <thead>
                 <tr>
                     <th>Artist</th>
-                    <th>Song Title</th>
-                    <th>Watch</th>
+                    <th>Song</th>
+                    <th>YouTube</th>
+                    <th>Karaoke</th>
                 </tr>
             </thead>
             <tbody id="tableBody"></tbody>
@@ -70,66 +74,4 @@
     </div>
 
     <script>
-        // Added a "t=" at the end to force the iPhone to download a fresh copy
-        const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTFKLWjxEQgV4uXB9v15Bqyoyj57BY_PvPmn70OdDKOgQwvzQ1lAOHr55KsKF5EpHQUA6ZiO5YWGVC5/pub?gid=0&single=true&output=csv&t=' + new Date().getTime(); 
-
-        async function loadSongs() {
-            try {
-                const response = await fetch(sheetUrl);
-                const data = await response.text();
-                const rows = data.split(/\r?\n/);
-                const tableBody = document.getElementById('tableBody');
-                
-                tableBody.innerHTML = "";
-
-                for (let i = 1; i < rows.length; i++) {
-                    const line = rows[i].trim();
-                    if (!line) continue;
-
-                    // Robust split for CSV columns
-                    const columns = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                    
-                    if (columns.length >= 2) {
-                        const tr = document.createElement('tr');
-                        const artist = columns[0].replace(/^"|"$/g, '').trim();
-                        const song = columns[1].replace(/^"|"$/g, '').trim();
-                        
-                        // Look for YouTube Link in Column 3
-                        let youtubeCell = '<td>-</td>';
-                        if (columns[2]) {
-                            const link = columns[2].replace(/^"|"$/g, '').trim();
-                            if (link.startsWith('http')) {
-                                youtubeCell = `<td><a href="${link}" target="_blank" class="play-link">PLAY 🎬</a></td>`;
-                            }
-                        }
-                        
-                        tr.innerHTML = `<td>${artist}</td><td>${song}</td>${youtubeCell}`;
-                        tableBody.appendChild(tr);
-                    }
-                }
-
-                document.getElementById('status').style.display = 'none';
-                document.getElementById('songTable').style.display = 'table';
-
-            } catch (error) {
-                document.getElementById('status').innerText = 'Connection Error. Please refresh.';
-            }
-        }
-
-        function filterTable() {
-            const input = document.getElementById('searchBox').value.toUpperCase();
-            const tr = document.getElementById('tableBody').getElementsByTagName('tr');
-            for (let i = 0; i < tr.length; i++) {
-                const tdArtist = tr[i].getElementsByTagName('td')[0];
-                const tdSong = tr[i].getElementsByTagName('td')[1];
-                if (tdArtist || tdSong) {
-                    const textValue = (tdArtist.textContent || tdArtist.innerText) + (tdSong.textContent || tdSong.innerText);
-                    tr[i].style.display = textValue.toUpperCase().indexOf(input) > -1 ? "" : "none";
-                }
-            }
-        }
-
-        loadSongs();
-    </script>
-</body>
-</html>
+        const sheetUrl = 'https://docs
