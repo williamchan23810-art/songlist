@@ -2,49 +2,49 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Chinese Lady Songs - William H Chan Studio</title>
     <style>
-        body { font-family: sans-serif; background-color: #f0f2f5; margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center; }
+        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background-color: #f0f2f5; margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center; }
         .nav-bar { width: 100%; max-width: 600px; margin-bottom: 10px; }
         .back-btn { text-decoration: none; color: #d81b60; font-weight: bold; font-size: 1rem; }
         
-        .container { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 600px; box-sizing: border-box; }
+        .container { background: white; padding: 12px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 600px; box-sizing: border-box; overflow: hidden; }
         
-        h1 { color: #d81b60; margin: 0 0 10px 0; border-bottom: 2px solid #fce4ec; padding-bottom: 10px; font-size: 1.3rem; }
-        
-        #searchBox { width: 100%; padding: 10px; margin-bottom: 15px; border: 2px solid #fce4ec; border-radius: 8px; font-size: 1rem; box-sizing: border-box; outline: none; }
+        h1 { color: #d81b60; margin: 0 0 10px 0; border-bottom: 2px solid #fce4ec; padding-bottom: 8px; font-size: 1.2rem; }
+        #searchBox { width: 100%; padding: 10px; margin-bottom: 12px; border: 2px solid #fce4ec; border-radius: 8px; font-size: 1rem; box-sizing: border-box; outline: none; }
 
-        /* Mobile Optimized Table */
-        .table-wrapper { width: 100%; overflow-x: hidden; } /* Prevents side-scrolling */
-        table { width: 100%; border-collapse: collapse; table-layout: fixed; } /* Forces columns to stay put */
+        /* Forces everything to fit on the screen */
+        .table-wrapper { width: 100%; overflow-x: hidden; }
+        table { width: 100%; border-collapse: collapse; table-layout: fixed; } 
         
-        /* Column Width Definitions */
-        th:nth-child(1), td:nth-child(1) { width: 28%; } /* Artist */
-        th:nth-child(2), td:nth-child(2) { width: 32%; } /* Song */
-        th:nth-child(3), td:nth-child(3) { width: 20%; text-align: center; } /* Original Button */
-        th:nth-child(4), td:nth-child(4) { width: 20%; text-align: center; } /* Karaoke Button */
+        /* Specific widths to ensure D (Karaoke) is visible */
+        th:nth-child(1), td:nth-child(1) { width: 30%; } /* Artist */
+        th:nth-child(2), td:nth-child(2) { width: 30%; } /* Song */
+        th:nth-child(3), td:nth-child(3) { width: 20%; text-align: center; } /* Original */
+        th:nth-child(4), td:nth-child(4) { width: 20%; text-align: center; } /* Karaoke */
 
-        th { text-align: left; border-bottom: 2px solid #d81b60; padding: 8px 4px; color: #d81b60; font-size: 0.75rem; }
-        td { padding: 10px 4px; border-bottom: 1px solid #eee; color: #333; font-size: 0.85rem; word-wrap: break-word; vertical-align: middle; }
+        th { text-align: left; border-bottom: 2px solid #d81b60; padding: 8px 2px; color: #d81b60; font-size: 0.7rem; text-transform: uppercase; }
+        td { padding: 8px 2px; border-bottom: 1px solid #eee; color: #333; font-size: 0.8rem; word-wrap: break-word; vertical-align: middle; }
         tr:nth-child(even) { background: #fafafa; }
         
-        /* Smaller, Narrower Buttons */
+        /* Buttons redesigned to be very narrow */
         .btn-link { 
             text-decoration: none; 
             color: white !important; 
-            padding: 5px 2px; 
+            padding: 4px 0; 
             border-radius: 4px; 
-            font-size: 0.65rem; 
+            font-size: 0.6rem; 
             font-weight: bold; 
-            display: block; /* Stacked look */
-            text-align: center; 
-            width: 100%; 
+            display: block; 
+            width: 90%; 
+            margin: 0 auto;
+            text-align: center;
         }
-        .btn-orig { background: #3498db; }
+        .btn-orig { background: #3498db; margin-bottom: 2px; }
         .btn-kara { background: #8e44ad; }
         
-        .install-hint { font-size: 0.75rem; color: #666; margin-top: 15px; text-align: center; border-top: 1px solid #eee; padding-top: 10px; line-height: 1.3; }
+        .install-hint { font-size: 0.7rem; color: #999; margin-top: 15px; text-align: center; }
     </style>
 </head>
 <body>
@@ -55,28 +55,24 @@
 
     <div class="container">
         <h1>Chinese Lady Songs</h1>
-        
-        <input type="text" id="searchBox" placeholder="Search singer or song..." onkeyup="filterTable()">
+        <input type="text" id="searchBox" placeholder="Search..." onkeyup="filterTable()">
 
-        <div id="loadingMsg" style="text-align:center; padding: 20px; color: #d81b60; font-size: 0.9rem;">Syncing Studio Library...</div>
+        <div id="loadingMsg" style="text-align:center; padding: 20px; color: #d81b60; font-size: 0.8rem;">Syncing...</div>
 
         <div class="table-wrapper">
             <table id="songTable" style="display:none;">
                 <thead>
                     <tr>
-                        <th>ARTIST</th>
-                        <th>SONG</th>
-                        <th>ORIG</th>
-                        <th>KARA</th>
+                        <th>Artist</th>
+                        <th>Song</th>
+                        <th>Orig</th>
+                        <th>Kara</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody"></tbody>
             </table>
         </div>
-
-        <div class="install-hint">
-            <strong>Install:</strong> Tap Share then "Add to Home Screen"
-        </div>
+        <div class="install-hint">Tap Share > Add to Home Screen</div>
     </div>
 
     <script>
@@ -88,7 +84,6 @@
                 const data = await response.text();
                 const rows = data.split(/\r?\n/);
                 const tableBody = document.getElementById('tableBody');
-                
                 tableBody.innerHTML = "";
 
                 for (let i = 1; i < rows.length; i++) {
@@ -118,7 +113,7 @@
                 document.getElementById('loadingMsg').style.display = 'none';
                 document.getElementById('songTable').style.display = 'table';
             } catch (err) {
-                document.getElementById('loadingMsg').innerText = "Sync delayed. Please refresh.";
+                document.getElementById('loadingMsg').innerText = "Refresh to sync.";
             }
         }
 
@@ -129,7 +124,6 @@
                 row.style.display = row.innerText.toUpperCase().includes(input) ? "" : "none";
             }
         }
-
         loadSongs();
     </script>
 </body>
