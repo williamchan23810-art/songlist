@@ -7,85 +7,65 @@
     <style>
         body { 
             font-family: 'Segoe UI', sans-serif; 
+            background-color: #f0f2f5; 
             margin: 0; 
-            background-color: #1a1a1a;
-            color: white;
+            padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-height: 100vh;
         }
 
-        /* Immersive Background */
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-image: url('JP.jpg'); 
-            background-size: cover;
-            background-position: center;
-            filter: sepia(100%) hue-rotate(-20deg) brightness(0.7);
-            opacity: 0.4;
-            z-index: -1;
-        }
-
-        .nav-bar {
-            width: 100%;
-            padding: 15px;
-            display: flex;
-            justify-content: flex-start;
-            z-index: 10;
-        }
-
+        .nav-bar { width: 100%; max-width: 600px; margin-bottom: 10px; }
+        
         .back-btn {
-            background: rgba(216, 27, 96, 0.9);
-            color: white;
             text-decoration: none;
-            padding: 10px 20px;
-            border-radius: 8px;
+            color: #d81b60;
             font-weight: bold;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            font-size: 1rem;
         }
 
-        .container {
-            width: 90%;
+        /* Restored White Background Container */
+        .container { 
+            background: white; 
+            padding: 30px; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1); 
+            width: 95%; 
             max-width: 600px;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 25px;
-            border-radius: 20px;
-            margin: 10px 0 40px 0;
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative; /* Needed for top-right placement */
         }
 
-        h1 { text-align: center; color: #d81b60; margin-top: 0; text-shadow: 2px 2px 4px black; }
+        /* QR Code positioned in Top Right */
+        .qr-header {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            text-align: center;
+            width: 80px;
+        }
+
+        .qr-header img {
+            width: 70px;
+            height: 70px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .qr-header p {
+            font-size: 0.6rem;
+            margin: 5px 0 0 0;
+            color: #666;
+            font-weight: bold;
+            line-height: 1;
+        }
+
+        h1 { color: #d81b60; margin-top: 0; padding-right: 90px; } /* Space for QR */
 
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th { text-align: left; border-bottom: 2px solid #d81b60; padding: 12px; color: #d81b60; font-size: 1.1rem; }
-        td { padding: 15px 12px; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 1rem; }
-        tr:nth-child(even) { background: rgba(255, 255, 255, 0.05); }
-
-        /* QR Install Section */
-        .qr-section {
-            margin-top: 40px;
-            text-align: center;
-            padding: 20px;
-            border-top: 1px dashed rgba(216, 27, 96, 0.5);
-        }
-
-        .qr-section a { text-decoration: none; }
-
-        .qr-section img {
-            width: 130px;
-            height: 130px;
-            margin-top: 15px;
-            border: 3px solid white;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
-            transition: transform 0.2s;
-        }
-
-        .qr-section img:active { transform: scale(0.95); }
+        th { text-align: left; border-bottom: 2px solid #d81b60; padding: 10px; color: #d81b60; }
+        td { padding: 12px 10px; border-bottom: 1px solid #eee; color: #333; }
+        tr:nth-child(even) { background: #f9f9f9; }
     </style>
 </head>
 <body>
@@ -95,6 +75,13 @@
     </div>
 
     <div class="container">
+        <div class="qr-header">
+            <a href="javascript:void(0);" onclick="alert('To Install:\n1. Tap Share\n2. Add to Home Screen')">
+                <img src="qr-code.png" alt="Tap to Install">
+                <p>Tap to Install</p>
+            </a>
+        </div>
+
         <h1>Chinese Lady Songs</h1>
         
         <table>
@@ -105,24 +92,16 @@
                 </tr>
             </thead>
             <tbody>
-                <tr><td>Winnie Hsin</td><td>Understanding (領悟)</td></tr>
-                <tr><td>Faye Wong</td><td>Red Beans (紅豆)</td></tr>
-                <tr><td>Sandy Lam</td><td>At Least I Still Have You</td></tr>
-                <tr><td>Anita Mui</td><td>Song of the Sunset</td></tr>
-            </tbody>
+                <tr>
+                    <td>Winnie Hsin 辛曉琪</td>
+                    <td>Understanding (領悟)</td>
+                </tr>
+                <tr>
+                    <td>Faye Wong 王菲</td>
+                    <td>Red Beans (紅豆)</td>
+                </tr>
+                </tbody>
         </table>
-
-        <div class="qr-section">
-            <a href="javascript:void(0);" onclick="alert('To Install this App:\n\n1. Tap the Share icon (square with arrow) at the bottom.\n2. Scroll down and tap \'Add to Home Screen\'.\n3. Tap \'Add\' at the top right.')">
-                <p style="color: #FFD700; font-weight: bold; font-size: 1.1rem; margin: 0; text-shadow: 1px 1px 2px black;">
-                    Tap to Install this App
-                </p>
-                <img src="qr-code.png" alt="Scan or Tap to Install">
-            </a>
-            <p style="font-size: 0.8rem; color: #bbb; margin-top: 10px;">
-                (Or scan if on a computer)
-            </p>
-        </div>
     </div>
 
 </body>
