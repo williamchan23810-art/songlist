@@ -5,14 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>William H Chan Music Studio</title>
     <style>
-        /* This layer handles ONLY the background image */
-        html {
-            height: 100%;
-            background: #f0f2f5 url('JimmyPage (2).jpg') no-repeat center center fixed;
-            background-size: cover;
-        }
-
-        /* This creates the 10% opacity "wash" over the image */
+        /* This sets the image as a fixed background on the bottom layer */
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             margin: 0;
@@ -21,8 +14,15 @@
             align-items: center; 
             justify-content: center; 
             min-height: 100vh;
-            /* This white overlay at 90% opacity makes the image look like 10% opacity */
-            background-color: rgba(240, 242, 245, 0.9); 
+            
+            /* Background Settings */
+            background-image: linear-gradient(rgba(240, 242, 245, 0.9), rgba(240, 242, 245, 0.9)), 
+                              url('background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            background-color: #f0f2f5; /* Fallback color */
         }
 
         .container { 
@@ -34,7 +34,6 @@
             width: 90%; 
             max-width: 400px;
             position: relative;
-            z-index: 10; /* Ensures it sits on top */
         }
 
         h1 { color: #333; margin-bottom: 25px; font-size: 1.5rem; }
@@ -52,7 +51,6 @@
             font-size: 1.1rem;
         }
 
-        /* Colors for the buttons */
         .btn-lady { background-color: #d81b60; } 
         .btn-men  { background-color: #27ae60; } 
         .btn-duet { background-color: #8e44ad; } 
