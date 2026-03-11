@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>William H Chan Music Studio</title>
     <style>
-        /* This sets the image as a fixed background on the bottom layer */
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             margin: 0;
@@ -15,25 +14,26 @@
             justify-content: center; 
             min-height: 100vh;
             
-            /* Background Settings */
-            background-image: linear-gradient(rgba(240, 242, 245, 0.9), rgba(240, 242, 245, 0.9)), 
-                              url('background.jpg');
+            /* BACKGROUND SETTINGS */
+            /* This creates the 10% opacity look by layering a 90% white tint OVER the image */
+            background: linear-gradient(rgba(240, 242, 245, 0.9), rgba(240, 242, 245, 0.9)), 
+                        url("JimmyPage (2).jpg"); /* Double quotes are required for spaces */
+            
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
             background-repeat: no-repeat;
-            background-color: #f0f2f5; /* Fallback color */
+            background-color: #f0f2f5; /* Fallback color if image is missing */
         }
 
         .container { 
             text-align: center; 
-            background: white; 
+            background: rgba(255, 255, 255, 0.95); /* Slightly transparent white */
             padding: 30px; 
             border-radius: 15px; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
             width: 90%; 
             max-width: 400px;
-            position: relative;
         }
 
         h1 { color: #333; margin-bottom: 25px; font-size: 1.5rem; }
