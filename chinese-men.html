@@ -18,7 +18,7 @@
         
         body { font-family: sans-serif; background: var(--bg); color: var(--text); max-width: 800px; margin: 0 auto; padding: 10px; }
         
-        /* MASTER HEADER */
+        /* Master Header (Arrow, Disc, QR) */
         .master-header-container {
             display: flex;
             justify-content: space-between;
@@ -35,7 +35,7 @@
 
         .qr-static { width: 60px; height: 60px; border: 1px solid #ddd; border-radius: 4px; }
 
-        /* STUDIO NAME (Cambria Font) */
+        /* Studio Title (Cambria Font) */
         .studio-title { text-align: center; margin-top: 8px; }
         .studio-title h1 { 
             font-family: 'Cambria', 'Georgia', serif; 
@@ -45,7 +45,7 @@
             font-weight: bold;
         }
         
-        /* HORIZONTAL LINE */
+        /* Horizontal Divider */
         .divider { height: 2px; background-color: var(--secondary); margin: 15px 0; width: 100%; }
 
         #search-box { width: 100%; padding: 12px; font-size: 16px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 15px; box-sizing: border-box; outline: none; }
@@ -79,4 +79,60 @@
 
     <input type="text" id="search-box" placeholder="Search Men's singer or song..." onkeyup="filterSongs()">
 
-    <div id="loading">Updating
+    <div id="loading">Updating Men's Library...</div>
+    <div id="song-list-container"></div>
+
+    <script>
+        // Updated Men's Spreadsheet URL with cache-buster
+        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSeK0hJoqyYLa5BQLl42QIAHMlbT_0tAa0FxhoBBebSUqV98bwac7ACwQc1y2yA6SLOd1nGvJYD-zLB/pub?gid=0&single=true&output=csv&v=' + Date.now();
+
+        function renderSongs(data) {
+            const container = document.getElementById('song-list-container');
+            container.innerHTML = '';
+            
+            for (let i = 1; i < data.length; i++) {
+                const row = data[i];
+                // Stable Column Mapping: A=0, B=1, C=2, D=3
+                const artistName = row[0] ? row[0].trim() : "";
+                const songTitle = row[1] ? row[1].trim() : "";
+                const origLink = row[2] ? row[2].trim() : "";
+                const karaLink = row[3] ? row[3].trim() : "";
+
+                if (!songTitle) continue;
+
+                const div = document.createElement('div');
+                div.className = 'song-card';
+                
+                let buttonsHtml = '';
+                if (origLink && origLink.toLowerCase().includes('http')) {
+                    buttonsHtml += `<a href="${origLink}" target="_blank" class="btn btn-orig">SONG</a>`;
+                }
+                if (karaLink && karaLink.toLowerCase().includes('http')) {
+                    buttonsHtml += `<a href="${karaLink}" target="_blank" class="btn btn-kara">SING</a>`;
+                }
+
+                div.innerHTML = `
+                    <div class="details">
+                        <span class="artist">${artistName || 'CHINESE MEN'}</span>
+                        <span class="song-name">${songTitle}</span>
+                    </div>
+                    <div class="actions">
+                        ${buttonsHtml}
+                    </div>`;
+                container.appendChild(div);
+            }
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        Papa.parse(CSV_URL, {
+            download: true,
+            header: false, 
+            skipEmptyLines: true,
+            complete: function(results) {
+                renderSongs(results.data);
+            }
+        });
+
+        function filterSongs() {
+            const term = document.getElementById('search-box').value.toLowerCase();
+            const cards = document
