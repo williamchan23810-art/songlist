@@ -3,90 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chinese Duet Songlist - William H Chan Music Studio</title>
+    <title>William H Chan Music Studio - Chinese Duet</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+    
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f4f9; padding: 5px; margin: 0; }
-        h1 { text-align: center; color: #8e44ad; margin-top: 10px; font-size: 1.2rem; }
-        .search-container { text-align: center; margin-bottom: 10px; }
-        input[type="text"] { padding: 8px; width: 92%; max-width: 400px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px; }
-        .table-wrapper { width: 100%; overflow-x: auto; }
-        table { border-collapse: collapse; background: white; font-size: 11.5px; width: 100%; table-layout: auto; }
-        th, td { padding: 8px 2px; border-bottom: 1px solid #ddd; white-space: nowrap; }
-        td:nth-child(2) { padding-right: 4px; width: 1%; }
-        td:nth-child(3) { width: 75px; padding-left: 0px; padding-right: 1px; text-align: right; }
-        td:nth-child(4) { width: 75px; padding-left: 1px; padding-right: 0px; text-align: left; }
-        th { background-color: #8e44ad; color: white; text-align: left; padding: 8px 4px; }
-        .link-btn { display: inline-block; padding: 6px 0; border-radius: 4px; text-decoration: none !important; color: white !important; font-weight: bold; font-size: 9.5px; text-align: center; width: 72px; }
-        .btn-orig { background-color: #e74c3c; } 
-        .btn-kara { background-color: #3498db; } 
-        .back-btn { display: inline-block; margin: 5px; text-decoration: none; color: #8e44ad; font-weight: bold; font-size: 14px; }
+        :root { 
+            --primary-blue: #3498db; 
+            --primary-duet: #8e44ad; /* Elegant Purple for Duet */
+            --secondary: #457b9d; 
+            --bg: #f8f9fa; 
+            --text: #1d3557; 
+        }
+        
+        body { font-family: sans-serif; background: var(--bg); color: var(--text); max-width: 800px; margin: 0 auto; padding: 10px; }
+        
+        /* Master Header (Arrow, Disc, QR) */
+        .master-header-container { display: flex; justify-content: space-between; align-items: center; padding: 10px 5px; width: 100%; box-sizing: border-box; }
+        .nav-home { font-size: 28px; text-decoration: none; color: #333; width: 60px; font-weight: bold; }
+        
+        @keyframes slowSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .logo-center { width: 75px; height: 75px; object-fit: cover; border-radius: 50%; border: 2px solid #333; animation: slowSpin 5s linear infinite; }
+        .qr-static { width: 60px; height: 60px; border: 1px solid #ddd; border-radius: 4px; }
+
+        /* Studio Title (Cambria Font) */
+        .studio-title { text-align: center; margin-top: 8px; }
+        .studio-title h1 { 
+            font-family: 'Cambria', 'Georgia', serif; 
+            font-size: 1.4rem; 
+            margin: 0; 
+            color: #333; 
+            font-weight: bold; 
+        }
+        
+        .divider { height: 2px; background-color: var(--secondary); margin: 15px 0; width: 100%; }
+        #search-box { width: 100%; padding: 12px; font-size: 16px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 15px; box-sizing: border-box; outline: none; }
+
+        .song-card { background: white; margin-bottom: 8px; padding: 12px 15px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .details { flex: 1; margin-right: 10px; }
+        .artist { font-size: 0.75rem; font-weight: bold; color: var(--secondary); text-transform: uppercase; display: block; margin-bottom: 2px; }
+        .song-name { font-size: 1rem; font-weight: 600; color: #333; line-height: 1.2; }
+
+        .actions { display: flex; gap: 8px; }
+        .btn { text-decoration: none; padding: 8px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; color: white; min-width: 65px; text-align: center; }
+        .btn-orig { background-color: var(--primary-blue); }
+        .btn-kara { background-color: var(--primary-duet); }
+
+        #status { text-align: center; font-style: italic; color: #888; margin-top: 40px; }
     </style>
 </head>
 <body>
-    <a href="index.html" class="back-btn">← Back</a>
-    <h1>Chinese Duet Songlist</h1>
-    <div class="search-container">
-        <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="Search...">
+
+    <div class="master-header-container">
+        <a href="index.html" class="nav-home">←</a>
+        <img src="turntable-Icon.jpg" alt="Logo" class="logo-center">
+        <img src="qr-code.png" alt="QR" class="qr-static">
     </div>
-    <div class="table-wrapper">
-        <table id="songTable">
-            <thead><tr id="tableHeader"></tr></thead>
-            <tbody id="tableBody"></tbody>
-        </table>
+
+    <div class="studio-title">
+        <h1>William H Chan Music Studio</h1>
     </div>
+
+    <div class="divider"></div>
+
+    <input type="text" id="search-box" placeholder="Search Duet singer or song..." onkeyup="filterSongs()">
+
+    <div id="status">Syncing Duet Library...</div>
+    <div id="song-list-container"></div>
+
     <script>
-        const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR-cGrii8LceA3d1lC3Xs9NJ1FZvLMWApMVaubht97n5KGmvH_k1W8R75e-45UBc6gW9qo8HwM90Gcb/pub?gid=0&single=true&output=csv';
-        
-        async function loadData() {
-            try {
-                const response = await fetch(sheetUrl);
-                const data = await response.text();
-                const rows = data.split(/\r?\n/);
-                const tableHeader = document.getElementById('tableHeader');
-                const tableBody = document.getElementById('tableBody');
+        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR-cGrii8LceA3d1lC3Xs9NJ1FZvLMWApMVaubht97n5KGmvH_k1W8R75e-45UBc6gW9qo8HwM90Gcb/pub?gid=0&single=true&output=csv';
 
-                const displayHeaders = ["ARTIST", "TITLE", "", ""];
-                displayHeaders.forEach(h => {
-                    const th = document.createElement('th');
-                    th.innerText = h;
-                    tableHeader.appendChild(th);
-                });
+        function renderSongs(data) {
+            const container = document.getElementById('song-list-container');
+            container.innerHTML = '';
+            
+            for (let i = 1; i < data.length; i++) {
+                const row = data[i];
+                const artistName = row[0] ? row[0].trim() : "";
+                const songTitle = row[1] ? row[1].trim() : "";
+                const origLink = row[2] ? row[2].trim() : "";
+                const karaLink = row[3] ? row[3].trim() : "";
 
-                rows.forEach((row, i) => {
-                    if (i === 0 || row.trim() === "") return;
-                    const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                    const tr = document.createElement('tr');
-                    
-                    cols.forEach((cell, index) => {
-                        if (index > 3) return;
-                        const td = document.createElement('td');
-                        let clean = cell.replace(/"/g, '').trim();
-                        
-                        if (clean.toLowerCase().startsWith('http')) {
-                            const a = document.createElement('a');
-                            a.href = clean;
-                            a.target = "_blank";
-                            a.className = 'link-btn ' + (index === 2 ? 'btn-orig' : 'btn-kara');
-                            a.innerText = (index === 2 ? 'Original' : 'Karaoke');
-                            td.appendChild(a);
-                        } else {
-                            td.innerText = clean;
-                        }
-                        tr.appendChild(td);
-                    });
-                    tableBody.appendChild(tr);
-                });
-            } catch (err) { console.error("Error loading CSV:", err); }
+                if (!songTitle) continue;
+
+                const div = document.createElement('div');
+                div.className = 'song-card';
+                
+                let buttonsHtml = '';
+                if (origLink && origLink.toLowerCase().includes('http')) {
+                    buttonsHtml += `<a href="${origLink}" target="_blank" class="btn btn-orig">SONG</a>`;
+                }
+                if (karaLink && karaLink.toLowerCase().includes('http')) {
+                    buttonsHtml += `<a href="${karaLink}" target="_blank" class="btn btn-kara">SING</a>`;
+                }
+
+                div.innerHTML = `
+                    <div class="details">
+                        <span class="artist">${artistName || 'DUET'}</span>
+                        <span class="song-name">${songTitle}</span>
+                    </div>
+                    <div class="actions">
+                        ${buttonsHtml}
+                    </div>`;
+                container.appendChild(div);
+            }
+            document.getElementById('status').style.display = 'none';
         }
 
-        function filterTable() {
-            let val = document.getElementById("searchInput").value.toUpperCase();
-            let rows = document.getElementById("tableBody").getElementsByTagName("tr");
-            for (let i = 0; i < rows.length; i++) {
-                rows[i].style.display = rows[i].innerText.toUpperCase().includes(val) ? "" : "none";
+        Papa.parse(CSV_URL, {
+            download: true,
+            header: false, 
+            skipEmptyLines: true,
+            complete: function(results) {
+                renderSongs(results.data);
+            },
+            error: function() {
+                document.getElementById('status').innerText = "Trouble connecting to Google. Please refresh.";
+            }
+        });
+
+        function filterSongs() {
+            const term = document.getElementById('search-box').value.toLowerCase();
+            const cards = document.getElementsByClassName('song-card');
+            for (let card of cards) {
+                card.style.display = card.innerText.toLowerCase().includes(term) ? 'flex' : 'none';
             }
         }
-        loadData();
     </script>
 </body>
 </html>
