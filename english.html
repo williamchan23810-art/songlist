@@ -5,33 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>William H Chan Music Studio</title>
 
-    <meta property="og:title" content="William H Chan Music Studio">
-    <meta property="og:image" content="https://williamchan23810-art.github.io/songlist/turntable-Icon.jpg">
-    <meta property="og:url" content="https://williamchan23810-art.github.io/songlist/">
-    <meta property="og:type" content="website">
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     
     <style>
         :root { --primary: #e63946; --secondary: #457b9d; --bg: #f8f9fa; --text: #1d3557; }
         body { font-family: sans-serif; background: var(--bg); color: var(--text); max-width: 800px; margin: 0 auto; padding: 10px; }
         
+        /* Master Header Layout */
+        .master-header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 5px;
+            width: 100%;
+        }
+
+        /* 1. Left Arrow (Home) */
+        .nav-home { font-size: 24px; text-decoration: none; color: #333; width: 60px; font-weight: bold; }
+
+        /* 2. Turning Disc (Center) */
         @keyframes slowSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        .logo { width: 70px; height: 70px; object-fit: cover; border-radius: 50%; border: 2px solid #333; animation: slowSpin 5s linear infinite; margin-bottom: 5px; display: block; margin-left: auto; margin-right: auto; }
+        .logo-center { width: 75px; height: 75px; object-fit: cover; border-radius: 50%; border: 2px solid #333; animation: slowSpin 5s linear infinite; }
 
-        header { text-align: center; margin-bottom: 10px; border-bottom: 2px solid var(--secondary); padding-bottom: 8px; }
-        header h1 { font-size: 1.3rem; margin: 5px 0; }
-        header p { font-size: 0.85rem; margin: 0; color: #666; }
+        /* 3. Static QR (Right) */
+        .qr-static { width: 60px; height: 60px; border: 1px solid #ddd; border-radius: 4px; }
+
+        /* 4. Studio Name Section */
+        .studio-title { text-align: center; margin-top: 5px; }
+        .studio-title h1 { font-size: 1.2rem; margin: 0; color: #333; letter-spacing: 1px; }
         
-        #search-box { width: 100%; padding: 10px; font-size: 16px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 12px; box-sizing: border-box; outline: none; }
+        /* 5. Horizontal Divider */
+        .divider { height: 2px; background-color: var(--secondary); margin: 15px 0; width: 100%; }
 
-        .song-card { background: white; margin-bottom: 6px; padding: 8px 12px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        #search-box { width: 100%; padding: 12px; font-size: 16px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 12px; box-sizing: border-box; outline: none; }
+
+        .song-card { background: white; margin-bottom: 8px; padding: 10px 15px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .details { flex: 1; margin-right: 10px; }
-        .artist { font-size: 0.7rem; font-weight: bold; color: var(--secondary); text-transform: uppercase; display: block; }
-        .song-name { font-size: 0.95rem; font-weight: 600; color: #333; }
+        .artist { font-size: 0.75rem; font-weight: bold; color: var(--secondary); text-transform: uppercase; display: block; }
+        .song-name { font-size: 1rem; font-weight: 600; color: #333; }
 
-        .actions { display: flex; gap: 6px; }
-        .btn { text-decoration: none; padding: 6px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; color: white; min-width: 70px; text-align: center; }
+        .actions { display: flex; gap: 8px; }
+        .btn { text-decoration: none; padding: 8px 12px; border-radius: 6px; font-size: 11px; font-weight: bold; color: white; min-width: 65px; text-align: center; }
         .btn-orig { background-color: #3498db; }
         .btn-kara { background-color: #e63946; }
 
@@ -40,18 +54,27 @@
 </head>
 <body>
 
-    <header>
-        <img src="turntable-Icon.jpg" alt="Logo" class="logo">
-        <h1>English Song List</h1>
-        <p>William H Chan Music Studio</p>
-    </header>
+    <div class="master-header-container">
+        <a href="index.html" class="nav-home">←</a>
+        
+        <img src="turntable-Icon.jpg" alt="Spinning Disc" class="logo-center">
+        
+        <img src="qr-code.png" alt="QR Code" class="qr-static">
+    </div>
+
+    <div class="studio-title">
+        <h1>William H Chan Music Studio</h1>
+    </div>
+
+    <div class="divider"></div>
 
     <input type="text" id="search-box" placeholder="Search singer or song..." onkeyup="filterSongs()">
 
-    <div id="loading">Updating Library...</div>
+    <div id="loading">Updating Studio Library...</div>
     <div id="song-list-container"></div>
 
     <script>
+        // Update this URL for each page (Men, Duets, etc.)
         const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRURv3BhrTaAjayuts-7v61qTznVRxe-0hyvgevw8wIj3OHTvQLnGiLOc8TdwD0CvKNrRS_U3qj2o33/pub?output=csv';
 
         function renderSongs(data) {
@@ -67,8 +90,8 @@
                         <span class="song-name">${row['SONG']}</span>
                     </div>
                     <div class="actions">
-                        ${row['ORIGINAL LINK'] ? `<a href="${row['ORIGINAL LINK']}" target="_blank" class="btn btn-orig">Original</a>` : ''}
-                        ${row['KARAOKE LINK'] ? `<a href="${row['KARAOKE LINK']}" target="_blank" class="btn btn-kara">Karaoke</a>` : ''}
+                        ${row['ORIGINAL LINK'] ? `<a href="${row['ORIGINAL LINK']}" target="_blank" class="btn btn-orig">SONG</a>` : ''}
+                        ${row['KARAOKE LINK'] ? `<a href="${row['KARAOKE LINK']}" target="_blank" class="btn btn-kara">SING</a>` : ''}
                     </div>`;
                 container.appendChild(div);
             });
