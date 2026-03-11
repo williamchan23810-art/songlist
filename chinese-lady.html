@@ -10,14 +10,12 @@
         .back-btn { display: inline-block; text-decoration: none; background-color: #d81b60; color: white; padding: 12px 24px; border-radius: 8px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         .container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); width: 95%; max-width: 600px; position: relative; }
         
-        /* QR Code Top Right */
         .qr-header { position: absolute; top: 20px; right: 20px; text-align: center; }
         .qr-header img { width: 65px; height: 65px; border: 1px solid #eee; border-radius: 4px; }
         .qr-header p { font-size: 0.6rem; margin: 3px 0 0 0; color: #d81b60; font-weight: bold; }
 
         h1 { color: #d81b60; margin-top: 0; padding-right: 80px; font-size: 1.5rem; border-bottom: 2px solid #fce4ec; padding-bottom: 10px; }
         
-        /* Search Box Style */
         #searchBox { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 1rem; }
 
         table { width: 100%; border-collapse: collapse; margin-top: 15px; }
@@ -25,7 +23,7 @@
         td { padding: 12px; border-bottom: 1px solid #f0f0f0; color: #333; }
         tr:nth-child(even) { background: #fafafa; }
         
-        .loading { text-align: center; padding: 20px; color: #666; font-style: italic; }
+        .status-msg { text-align: center; padding: 20px; color: #666; font-style: italic; }
     </style>
 </head>
 <body>
@@ -36,7 +34,7 @@
 
     <div class="container">
         <div class="qr-header">
-            <a href="javascript:void(0);" onclick="alert('To Install:\n1. Tap Share\n2. Add to Home Screen')">
+            <a href="javascript:void(0);" onclick="alert('To Install:\n1. Tap the Share icon (square with arrow)\n2. Select \'Add to Home Screen\'')">
                 <img src="qr-code.png" alt="Install">
                 <p>INSTALL</p>
             </a>
@@ -46,61 +44,10 @@
         
         <input type="text" id="searchBox" placeholder="Search singer or song name..." onkeyup="filterTable()">
 
-        <div id="loading" class="loading">Loading your studio library...</div>
+        <div id="status" class="status-msg">Connecting to Studio Library...</div>
 
         <table id="songTable" style="display:none;">
             <thead>
                 <tr>
                     <th>Artist (歌手)</th>
-                    <th>Song Title (歌名)</th>
-                </tr>
-            </thead>
-            <tbody id="tableBody">
-                </tbody>
-        </table>
-    </div>
-
-    <script>
-        // PASTE YOUR GOOGLE SHEET CSV LINK BETWEEN THE QUOTES BELOW
-        const sheetUrl = 'YOUR_CSV_LINK_HERE';
-
-        async function loadSongs() {
-            try {
-                const response = await fetch(sheetUrl);
-                const data = await response.text();
-                const rows = data.split('\n').slice(1); // Skip the header row
-                const tableBody = document.getElementById('tableBody');
-                
-                rows.forEach(row => {
-                    const columns = row.split(',');
-                    if (columns.length >= 2) {
-                        const tr = document.createElement('tr');
-                        tr.innerHTML = `<td>${columns[0]}</td><td>${columns[1]}</td>`;
-                        tableBody.appendChild(tr);
-                    }
-                });
-
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('songTable').style.display = 'table';
-            } catch (error) {
-                document.getElementById('loading').innerText = 'Error loading songs. Please check your link!';
-            }
-        }
-
-        function filterTable() {
-            const input = document.getElementById('searchBox').value.toUpperCase();
-            const tr = document.getElementById('tableBody').getElementsByTagName('tr');
-            for (let i = 0; i < tr.length; i++) {
-                const tdArtist = tr[i].getElementsByTagName('td')[0];
-                const tdSong = tr[i].getElementsByTagName('td')[1];
-                if (tdArtist || tdSong) {
-                    const textValue = (tdArtist.textContent || tdArtist.innerText) + (tdSong.textContent || tdSong.innerText);
-                    tr[i].style.display = textValue.toUpperCase().indexOf(input) > -1 ? "" : "none";
-                }
-            }
-        }
-
-        loadSongs();
-    </script>
-</body>
-</html>
+                    <th>Song Title (歌名
