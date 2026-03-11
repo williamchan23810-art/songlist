@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>William H Chan Music Studio - Chinese Lady Songs</title>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
-    
     <style>
         :root { --primary: #e63946; --secondary: #457b9d; --bg: #f8f9fa; --text: #1d3557; }
         body { font-family: sans-serif; background: var(--bg); color: var(--text); max-width: 800px; margin: 0 auto; padding: 10px; }
@@ -20,26 +18,20 @@
             width: 100%;
         }
 
-        /* 1. Left Arrow (Home) */
         .nav-home { font-size: 24px; text-decoration: none; color: #333; width: 60px; font-weight: bold; }
 
-        /* 2. Turning Disc (Center) */
         @keyframes slowSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         .logo-center { width: 75px; height: 75px; object-fit: cover; border-radius: 50%; border: 2px solid #333; animation: slowSpin 5s linear infinite; }
 
-        /* 3. Static QR (Right) */
         .qr-static { width: 60px; height: 60px; border: 1px solid #ddd; border-radius: 4px; }
 
-        /* 4. Studio Name Section */
         .studio-title { text-align: center; margin-top: 5px; }
         .studio-title h1 { font-size: 1.2rem; margin: 0; color: #333; letter-spacing: 1px; }
         
-        /* 5. Horizontal Divider */
         .divider { height: 2px; background-color: var(--secondary); margin: 15px 0; width: 100%; }
 
         #search-box { width: 100%; padding: 12px; font-size: 16px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 12px; box-sizing: border-box; outline: none; }
 
-        /* Song Card Layout */
         .song-card { background: white; margin-bottom: 8px; padding: 10px 15px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .details { flex: 1; margin-right: 10px; }
         .artist { font-size: 0.75rem; font-weight: bold; color: var(--secondary); text-transform: uppercase; display: block; }
@@ -47,8 +39,8 @@
 
         .actions { display: flex; gap: 8px; }
         .btn { text-decoration: none; padding: 8px 12px; border-radius: 6px; font-size: 11px; font-weight: bold; color: white; min-width: 65px; text-align: center; }
-        .btn-orig { background-color: #3498db; } /* Blue for Song */
-        .btn-kara { background-color: #d81b60; } /* Pink for Lady Sing */
+        .btn-orig { background-color: #3498db; }
+        .btn-kara { background-color: #d81b60; }
 
         #loading { text-align: center; font-style: italic; color: #888; margin-top: 20px; }
     </style>
@@ -57,9 +49,7 @@
 
     <div class="master-header-container">
         <a href="index.html" class="nav-home">←</a>
-        
         <img src="turntable-Icon.jpg" alt="Spinning Disc" class="logo-center">
-        
         <img src="qr-code.png" alt="QR Code" class="qr-static">
     </div>
 
@@ -75,5 +65,51 @@
     <div id="song-list-container"></div>
 
     <script>
-        // Lady Tab Spreadsheet URL
-        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTFKLWjxEQgV4uXB9v15Bqyoyj57BY_PvPmn70OdDKOgQwvzQ1lAOHr55KsKF5EpHQUA6ZiO5YWGVC5/pub?
+        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTFKLWjxEQgV4uXB9v15Bqyoyj57BY_PvPmn70OdDKOgQwvzQ1lAOHr55KsKF5EpHQUA6ZiO5YWGVC5/pub?gid=0&single=true&output=csv&v=' + Date.now();
+
+        function renderSongs(data) {
+            const container = document.getElementById('song-list-container');
+            container.innerHTML = '';
+            data.forEach(row => {
+                const songTitle = row['SONG'] || row['Song'];
+                const artistName = row['ARTIST'] || row['Artist'];
+                const origLink = row['ORIGINAL LINK'] || row['Original Link'] || row['ORIGINAL'];
+                const karaLink = row['KARAOKE LINK'] || row['Karaoke Link'] || row['KARAOKE'];
+
+                if (!songTitle) return;
+
+                const div = document.createElement('div');
+                div.className = 'song-card';
+                div.innerHTML = `
+                    <div class="details">
+                        <span class="artist">${artistName || 'CHINESE LADY'}</span>
+                        <span class="song-name">${songTitle}</span>
+                    </div>
+                    <div class="actions">
+                        ${origLink ? `<a href="${origLink}" target="_blank" class="btn btn-orig">SONG</a>` : ''}
+                        ${karaLink ? `<a href="${karaLink}" target="_blank" class="btn btn-kara">SING</a>` : ''}
+                    </div>`;
+                container.appendChild(div);
+            });
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        Papa.parse(CSV_URL, {
+            download: true,
+            header: true,
+            skipEmptyLines: true,
+            complete: function(results) {
+                renderSongs(results.data);
+            }
+        });
+
+        function filterSongs() {
+            const term = document.getElementById('search-box').value.toLowerCase();
+            const cards = document.getElementsByClassName('song-card');
+            for (let card of cards) {
+                card.style.display = card.innerText.toLowerCase().includes(term) ? 'flex' : 'none';
+            }
+        }
+    </script>
+</body>
+</html>
