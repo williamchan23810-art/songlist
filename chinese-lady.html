@@ -8,7 +8,7 @@
         body { font-family: 'Segoe UI', sans-serif; background-color: #f0f2f5; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
         .nav-bar { width: 100%; max-width: 600px; margin-bottom: 20px; }
         .back-btn { display: inline-block; text-decoration: none; background-color: #d81b60; color: white; padding: 12px 24px; border-radius: 8px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); width: 95%; max-width: 600px; position: relative; min-height: 250px; }
+        .container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); width: 95%; max-width: 700px; position: relative; min-height: 250px; }
         
         .qr-header { position: absolute; top: 20px; right: 20px; text-align: center; }
         .qr-header img { width: 65px; height: 65px; border: 1px solid #eee; border-radius: 4px; }
@@ -22,8 +22,19 @@
         td { padding: 12px; border-bottom: 1px solid #f0f0f0; color: #333; }
         tr:nth-child(even) { background: #fafafa; }
         
+        /* YouTube Play Button Style */
+        .play-link { 
+            text-decoration: none; 
+            background: #ff0000; 
+            color: white !important; 
+            padding: 5px 10px; 
+            border-radius: 5px; 
+            font-size: 0.8rem; 
+            font-weight: bold; 
+            display: inline-block;
+        }
+
         .status-msg { text-align: center; padding: 40px 20px; color: #d81b60; font-weight: bold; }
-        .retry-btn { background: #d81b60; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -44,16 +55,14 @@
         
         <input type="text" id="searchBox" placeholder="Search singer or song name..." onkeyup="filterTable()">
 
-        <div id="status" class="status-msg">
-            <div id="loader-text">Loading Studio Library...</div>
-            <button id="retry" class="retry-btn" style="display:none;" onclick="location.reload()">Refresh Connection</button>
-        </div>
+        <div id="status" class="status-msg">Refreshing Library...</div>
 
         <table id="songTable" style="display:none;">
             <thead>
                 <tr>
-                    <th>Artist (歌手)</th>
-                    <th>Song Title (歌名)</th>
+                    <th>Artist</th>
+                    <th>Song Title</th>
+                    <th>Watch</th>
                 </tr>
             </thead>
             <tbody id="tableBody"></tbody>
@@ -61,44 +70,40 @@
     </div>
 
     <script>
-        const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTFKLWjxEQgV4uXB9v15Bqyoyj57BY_PvPmn70OdDKOgQwvzQ1lAOHr55KsKF5EpHQUA6ZiO5YWGVC5/pub?gid=0&single=true&output=csv'; 
-
-        // Show a retry button if it takes too long
-        setTimeout(() => {
-            const status = document.getElementById('loader-text');
-            if (status && status.innerText === 'Loading Studio Library...') {
-                status.innerText = "Taking a while? Your phone might be blocking the connection.";
-                document.getElementById('retry').style.display = 'inline-block';
-            }
-        }, 5000);
+        // Added a "t=" at the end to force the iPhone to download a fresh copy
+        const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTFKLWjxEQgV4uXB9v15Bqyoyj57BY_PvPmn70OdDKOgQwvzQ1lAOHr55KsKF5EpHQUA6ZiO5YWGVC5/pub?gid=0&single=true&output=csv&t=' + new Date().getTime(); 
 
         async function loadSongs() {
             try {
                 const response = await fetch(sheetUrl);
-                if (!response.ok) throw new Error('Network failure');
-                
                 const data = await response.text();
                 const rows = data.split(/\r?\n/);
                 const tableBody = document.getElementById('tableBody');
                 
-                if (rows.length < 2) {
-                    document.getElementById('status').innerText = 'The Sheet appears to be empty!';
-                    return;
-                }
+                tableBody.innerHTML = "";
 
-                // Loop through rows
                 for (let i = 1; i < rows.length; i++) {
-                    const row = rows[i].trim();
-                    if (!row) continue;
+                    const line = rows[i].trim();
+                    if (!line) continue;
 
-                    // Improved split to handle commas within quotes
-                    const columns = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                    // Robust split for CSV columns
+                    const columns = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                     
                     if (columns.length >= 2) {
                         const tr = document.createElement('tr');
                         const artist = columns[0].replace(/^"|"$/g, '').trim();
                         const song = columns[1].replace(/^"|"$/g, '').trim();
-                        tr.innerHTML = `<td>${artist}</td><td>${song}</td>`;
+                        
+                        // Look for YouTube Link in Column 3
+                        let youtubeCell = '<td>-</td>';
+                        if (columns[2]) {
+                            const link = columns[2].replace(/^"|"$/g, '').trim();
+                            if (link.startsWith('http')) {
+                                youtubeCell = `<td><a href="${link}" target="_blank" class="play-link">PLAY 🎬</a></td>`;
+                            }
+                        }
+                        
+                        tr.innerHTML = `<td>${artist}</td><td>${song}</td>${youtubeCell}`;
                         tableBody.appendChild(tr);
                     }
                 }
@@ -107,8 +112,7 @@
                 document.getElementById('songTable').style.display = 'table';
 
             } catch (error) {
-                document.getElementById('status').innerHTML = 'Connection Failed.<br><small>Make sure you are online and refresh.</small>';
-                document.getElementById('retry').style.display = 'inline-block';
+                document.getElementById('status').innerText = 'Connection Error. Please refresh.';
             }
         }
 
