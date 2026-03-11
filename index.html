@@ -8,7 +8,6 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="icon-192.jpg">
-    <link rel="apple-touch-icon-precomposed" href="icon-192.jpg">
     <link rel="icon" type="image/jpeg" href="icon-192.jpg">
 
     <title>William H Chan Music Studio</title>
@@ -16,7 +15,7 @@
     <style>
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background-color: #f0f2f5; 
+            background-color: #1a1a1a; /* Darker base for better immersion */
             display: flex; 
             flex-direction: column; 
             align-items: center; 
@@ -24,10 +23,9 @@
             min-height: 100vh; 
             margin: 0; 
             position: relative;
-            overflow-x: hidden;
         }
 
-        /* The Background Layer - Jimmy Page Sepia 40% */
+        /* The Background Layer */
         body::before {
             content: "";
             position: fixed;
@@ -38,20 +36,21 @@
             background-image: url('JP.jpg'); 
             background-size: cover;
             background-position: center;
-            filter: sepia(100%) hue-rotate(-20deg) brightness(1.1); 
+            filter: sepia(100%) hue-rotate(-20deg) brightness(0.8); /* Slightly dimmer for readability */
             opacity: 0.4; 
-            z-index: -1; 
+            z-index: -1; /* Keeps image BEHIND buttons */
             pointer-events: none;
         }
 
-        /* Fully Transparent Container */
+        /* The Container - Ensuring it is on top */
         .container { 
             text-align: center; 
             background: transparent; 
             padding: 30px; 
             width: 90%; 
             max-width: 400px; 
-            z-index: 1;
+            z-index: 10; /* Higher z-index to bring it to the front */
+            position: relative;
         }
 
         h1 { 
@@ -59,50 +58,89 @@
             margin-bottom: 25px; 
             font-size: 1.6rem; 
             font-weight: 700;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.8); 
+            text-shadow: 2px 2px 4px rgba(0,0,0,1); 
         }
         
         .menu-btn {
             display: block;
             width: 100%;
-            padding: 15px 0;
-            margin: 12px 0;
+            padding: 18px 0; /* Slightly larger for easier tapping */
+            margin: 15px 0;
             text-decoration: none;
-            color: white; 
+            color: white !important; /* Forces white text */
             font-weight: bold;
-            border-radius: 8px;
-            transition: transform 0.2s, filter 0.2s;
-            font-size: 1.1rem;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            -webkit-tap-highlight-color: transparent;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.5);
+            transition: transform 0.2s;
+            position: relative;
+            z-index: 20; /* Ensures the button itself is at the very front */
         }
 
-        .menu-btn:hover { filter: brightness(1.1); }
-        .menu-btn:active { transform: scale(0.97); }
-
-        /* Studio Color Coding */
-        .btn-lady { background-color: #d81b60; } 
-        .btn-men  { background-color: #27ae60; } 
-        .btn-duet { background-color: #8e44ad; } 
-        .btn-eng  { background-color: #2980b9; } 
+        /* Studio Color Coding - Solid Vibrant Colors */
+        .btn-lady { background-color: #d81b60 !important; } 
+        .btn-men  { background-color: #27ae60 !important; } 
+        .btn-duet { background-color: #8e44ad !important; } 
+        .btn-eng  { background-color: #2980b9 !important; } 
 
         .footer { 
             margin-top: 30px; 
-            font-size: 0.8rem; 
+            font-size: 0.85rem; 
             color: #ffffff; 
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+            text-shadow: 1px 1px 3px rgba(0,0,0,1);
         }
 
-        /* Install Instruction Styling */
+        /* Installation Prompt */
         #install-prompt {
             display: none; 
             position: fixed; 
             bottom: 20px; 
             left: 50%; 
             transform: translateX(-50%); 
-            background: rgba(0,0,0,0.9); 
+            background: rgba(0,0,0,0.95); 
             color: white; 
-            padding: 18px; 
+            padding: 20px; 
             border-radius: 15px; 
-            z-index: 999; 
-            width: 85%;
+            z-index: 1000; 
+            width: 85%; 
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Music Studio Songlists</h1>
+        
+        <a href="chinese-lady.html" class="menu-btn btn-lady">Chinese Lady Songs</a>
+        <a href="chinese-men.html" class="menu-btn btn-men">Chinese Men Songs</a>
+        <a href="chinese-duet.html" class="menu-btn btn-duet">Chinese Duets</a>
+        <a href="english.html" class="menu-btn btn-eng">English Songs</a>
+
+        <div class="footer">
+            &copy; 2026 William H Chan Music Studio 安清
+        </div>
+    </div>
+
+    <div id="install-prompt">
+        <span id="prompt-text"></span>
+        <button onclick="document.getElementById('install-prompt').style.display='none'" style="display:block; margin:15px auto 0; background:#8e44ad; border:none; color:white; border-radius:8px; padding:10px 20px; font-weight:bold;">Got it</button>
+    </div>
+
+    <script>
+        const isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
+        if (!isStandalone) {
+            const prompt = document.getElementById('install-prompt');
+            const text = document.getElementById('prompt-text');
+            if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+                text.innerHTML = "To install: Tap <strong>Share</strong> and select <strong>'Add to Home Screen'</strong>.";
+                prompt.style.display = 'block';
+            } else if (/Android/i.test(navigator.userAgent)) {
+                text.innerHTML = "To install: Tap the <strong>three dots</strong> and select <strong>'Install App'</strong>.";
+                prompt.style.display = 'block';
+            }
+        }
+    </script>
+
+</body>
+</html>
