@@ -5,8 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>William H Chan Music Studio</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-        .container { text-align: center; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 90%; max-width: 400px; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: #f0f2f5; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            height: 100vh; 
+            margin: 0; 
+            position: relative; /* Necessary for the background layer */
+        }
+
+        /* The Background Image Layer */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('JimmyPage (2).jpg'); /* Ensure the filename matches exactly */
+            background-size: cover;
+            background-position: center;
+            opacity: 0.1; /* 10% Opacity */
+            z-index: -1; /* Keeps it behind your buttons */
+            pointer-events: none; /* Allows clicks to pass through to links */
+        }
+
+        .container { 
+            text-align: center; 
+            background: rgba(255, 255, 255, 0.9); /* Slightly transparent white to show the background */
+            padding: 30px; 
+            border-radius: 15px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+            width: 90%; 
+            max-width: 400px; 
+            position: relative;
+            z-index: 1;
+        }
+
         h1 { color: #333; margin-bottom: 25px; font-size: 1.5rem; }
         
         .menu-btn {
@@ -23,11 +61,11 @@
         }
         .menu-btn:active { transform: scale(0.98); }
 
-        /* Color Coding for consistency */
-        .btn-lady { background-color: #d81b60; } /* Pink */
-        .btn-men  { background-color: #27ae60; } /* Green */
-        .btn-duet { background-color: #8e44ad; } /* Purple - New! */
-        .btn-eng  { background-color: #2980b9; } /* Blue */
+        /* Color Coding */
+        .btn-lady { background-color: #d81b60; } 
+        .btn-men  { background-color: #27ae60; } 
+        .btn-duet { background-color: #8e44ad; } 
+        .btn-eng  { background-color: #2980b9; } 
 
         .footer { margin-top: 20px; font-size: 0.8rem; color: #777; }
     </style>
