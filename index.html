@@ -12,12 +12,12 @@
             flex-direction: column; 
             align-items: center; 
             justify-content: center; 
-            height: 100vh; 
+            min-height: 100vh; 
             margin: 0; 
-            position: relative; /* Necessary for the background layer */
+            position: relative;
         }
 
-        /* The Background Image Layer */
+        /* This creates the 10% opacity background layer */
         body::before {
             content: "";
             position: fixed;
@@ -25,24 +25,25 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: url('JP.png'); /* Updated to the new filename and extension */
+            /* Make sure this matches the filename on GitHub exactly (case-sensitive) */
+            background-image: url('JP.png'); 
             background-size: cover;
             background-position: center;
-            opacity: 0.1; /* This gives you exactly 10% opacity */
-            z-index: -1; /* Places it behind your content */
-            pointer-events: none; /* Ensures hyperlinks stay clickable */
+            opacity: 0.1; /* 10% Opacity */
+            z-index: -1; 
+            pointer-events: none;
         }
 
         .container { 
             text-align: center; 
-            background: rgba(255, 255, 255, 0.9); /* Slightly translucent white */
+            background: rgba(255, 255, 255, 0.9); 
             padding: 30px; 
             border-radius: 15px; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
             width: 90%; 
             max-width: 400px; 
             position: relative;
-            z-index: 1; /* Sits above the background image */
+            z-index: 1;
         }
 
         h1 { color: #333; margin-bottom: 25px; font-size: 1.5rem; }
@@ -56,12 +57,15 @@
             color: white;
             font-weight: bold;
             border-radius: 8px;
-            transition: transform 0.2s;
+            transition: transform 0.2s, background-color 0.2s;
             font-size: 1.1rem;
         }
+
+        /* Adding a slight hover effect for a modern feel */
+        .menu-btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
         .menu-btn:active { transform: scale(0.98); }
 
-        /* Color Coding for consistency */
+        /* Button Colors */
         .btn-lady { background-color: #d81b60; } 
         .btn-men  { background-color: #27ae60; } 
         .btn-duet { background-color: #8e44ad; } 
@@ -73,17 +77,3 @@
 <body>
 
     <div class="container">
-        <h1>Music Studio Songlists</h1>
-        
-        <a href="chinese-lady.html" class="menu-btn btn-lady">Chinese Lady Songs</a>
-        <a href="chinese-men.html" class="menu-btn btn-men">Chinese Men Songs</a>
-        <a href="chinese-duet.html" class="menu-btn btn-duet">Chinese Duets</a>
-        <a href="english.html" class="menu-btn btn-eng">English Songs</a>
-
-        <div class="footer">
-            &copy; 2026 William H Chan Music Studio
-        </div>
-    </div>
-
-</body>
-</html>
