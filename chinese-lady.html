@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>William H Chan Music Studio - Chinese Lady Songs</title>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+    
     <style>
         :root { --primary: #e63946; --secondary: #457b9d; --bg: #f8f9fa; --text: #1d3557; }
         body { font-family: sans-serif; background: var(--bg); color: var(--text); max-width: 800px; margin: 0 auto; padding: 10px; }
@@ -18,31 +20,39 @@
             width: 100%;
         }
 
-        .nav-home { font-size: 24px; text-decoration: none; color: #333; width: 60px; font-weight: bold; }
+        .nav-home { font-size: 26px; text-decoration: none; color: #333; width: 60px; font-weight: bold; }
 
         @keyframes slowSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         .logo-center { width: 75px; height: 75px; object-fit: cover; border-radius: 50%; border: 2px solid #333; animation: slowSpin 5s linear infinite; }
 
         .qr-static { width: 60px; height: 60px; border: 1px solid #ddd; border-radius: 4px; }
 
-        .studio-title { text-align: center; margin-top: 5px; }
-        .studio-title h1 { font-size: 1.2rem; margin: 0; color: #333; letter-spacing: 1px; }
+        /* Updated Studio Title with Cambria Font */
+        .studio-title { text-align: center; margin-top: 8px; }
+        .studio-title h1 { 
+            font-family: 'Cambria', 'Georgia', serif; 
+            font-size: 1.4rem; 
+            margin: 0; 
+            color: #333; 
+            font-weight: bold;
+        }
         
         .divider { height: 2px; background-color: var(--secondary); margin: 15px 0; width: 100%; }
 
         #search-box { width: 100%; padding: 12px; font-size: 16px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 12px; box-sizing: border-box; outline: none; }
 
-        .song-card { background: white; margin-bottom: 8px; padding: 10px 15px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        /* Song Card Layout */
+        .song-card { background: white; margin-bottom: 8px; padding: 12px 15px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .details { flex: 1; margin-right: 10px; }
-        .artist { font-size: 0.75rem; font-weight: bold; color: var(--secondary); text-transform: uppercase; display: block; }
-        .song-name { font-size: 1rem; font-weight: 600; color: #333; }
+        .artist { font-size: 0.75rem; font-weight: bold; color: var(--secondary); text-transform: uppercase; display: block; margin-bottom: 2px; }
+        .song-name { font-size: 1rem; font-weight: 600; color: #333; line-height: 1.2; }
 
         .actions { display: flex; gap: 8px; }
-        .btn { text-decoration: none; padding: 8px 12px; border-radius: 6px; font-size: 11px; font-weight: bold; color: white; min-width: 65px; text-align: center; }
+        .btn { text-decoration: none; padding: 8px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; color: white; min-width: 65px; text-align: center; display: inline-block; }
         .btn-orig { background-color: #3498db; }
         .btn-kara { background-color: #d81b60; }
 
-        #loading { text-align: center; font-style: italic; color: #888; margin-top: 20px; }
+        #loading { text-align: center; font-style: italic; color: #888; margin-top: 40px; }
     </style>
 </head>
 <body>
@@ -61,7 +71,7 @@
 
     <input type="text" id="search-box" placeholder="Search singer or song..." onkeyup="filterSongs()">
 
-    <div id="loading">Updating Studio Library...</div>
+    <div id="loading">Syncing Studio Library...</div>
     <div id="song-list-container"></div>
 
     <script>
@@ -70,33 +80,48 @@
         function renderSongs(data) {
             const container = document.getElementById('song-list-container');
             container.innerHTML = '';
-            data.forEach(row => {
-                const songTitle = row['SONG'] || row['Song'];
-                const artistName = row['ARTIST'] || row['Artist'];
-                const origLink = row['ORIGINAL LINK'] || row['Original Link'] || row['ORIGINAL'];
-                const karaLink = row['KARAOKE LINK'] || row['Karaoke Link'] || row['KARAOKE'];
+            
+            // i = 1 skips the header row of your spreadsheet
+            for (let i = 1; i < data.length; i++) {
+                const row = data[i];
+                
+                // Column Mapping: A=0, B=1, C=2, D=3
+                const artistName = row[0] ? row[0].trim() : "";
+                const songTitle = row[1] ? row[1].trim() : "";
+                const origLink = row[2] ? row[2].trim() : "";
+                const karaLink = row[3] ? row[3].trim() : "";
 
-                if (!songTitle) return;
+                if (!songTitle) continue;
 
                 const div = document.createElement('div');
                 div.className = 'song-card';
+                
+                // Logic to only show buttons if a link exists
+                let buttonsHtml = '';
+                if (origLink && origLink.toLowerCase().includes('http')) {
+                    buttonsHtml += `<a href="${origLink}" target="_blank" class="btn btn-orig">SONG</a>`;
+                }
+                if (karaLink && karaLink.toLowerCase().includes('http')) {
+                    buttonsHtml += `<a href="${karaLink}" target="_blank" class="btn btn-kara">SING</a>`;
+                }
+
                 div.innerHTML = `
                     <div class="details">
-                        <span class="artist">${artistName || 'CHINESE LADY'}</span>
+                        <span class="artist">${artistName || 'Artist'}</span>
                         <span class="song-name">${songTitle}</span>
                     </div>
                     <div class="actions">
-                        ${origLink ? `<a href="${origLink}" target="_blank" class="btn btn-orig">SONG</a>` : ''}
-                        ${karaLink ? `<a href="${karaLink}" target="_blank" class="btn btn-kara">SING</a>` : ''}
+                        ${buttonsHtml}
                     </div>`;
                 container.appendChild(div);
-            });
+            }
             document.getElementById('loading').style.display = 'none';
         }
 
+        // Fetching data using Index positions instead of Header names
         Papa.parse(CSV_URL, {
             download: true,
-            header: true,
+            header: false, // This is the key fix for missing columns
             skipEmptyLines: true,
             complete: function(results) {
                 renderSongs(results.data);
