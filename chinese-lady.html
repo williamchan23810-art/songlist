@@ -2,112 +2,78 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Chinese Lady Songs - William H Chan Studio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>William H Chan Music Studio - Chinese Lady Songs</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+    
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background-color: #f0f2f5; margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center; }
-        .nav-bar { width: 100%; max-width: 600px; margin-bottom: 10px; }
-        .back-btn { text-decoration: none; color: #d81b60; font-weight: bold; font-size: 1rem; }
+        :root { --primary: #e63946; --secondary: #457b9d; --bg: #f8f9fa; --text: #1d3557; }
+        body { font-family: sans-serif; background: var(--bg); color: var(--text); max-width: 800px; margin: 0 auto; padding: 10px; }
         
-        .container { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 600px; box-sizing: border-box; min-height: 450px; }
-        
-        h1 { color: #d81b60; margin: 0 0 10px 0; border-bottom: 2px solid #fce4ec; padding-bottom: 8px; font-size: 1.2rem; }
-        #searchBox { width: 100%; padding: 10px; margin-bottom: 12px; border: 2px solid #fce4ec; border-radius: 8px; font-size: 1rem; box-sizing: border-box; outline: none; }
+        /* Master Header Layout */
+        .master-header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 5px;
+            width: 100%;
+        }
 
-        .table-wrapper { width: 100%; overflow-x: hidden; }
-        table { width: 100%; border-collapse: collapse; table-layout: fixed; } 
-        
-        th:nth-child(1), td:nth-child(1) { width: 33%; } 
-        th:nth-child(2), td:nth-child(2) { width: 33%; } 
-        th:nth-child(3), td:nth-child(3) { width: 17%; text-align: center; } 
-        th:nth-child(4), td:nth-child(4) { width: 17%; text-align: center; } 
+        /* 1. Left Arrow (Home) */
+        .nav-home { font-size: 24px; text-decoration: none; color: #333; width: 60px; font-weight: bold; }
 
-        th { text-align: left; border-bottom: 2px solid #d81b60; padding: 8px 2px; color: #d81b60; font-size: 0.8rem; }
-        td { padding: 10px 2px; border-bottom: 1px solid #eee; color: #333; font-size: 0.85rem; word-wrap: break-word; vertical-align: middle; }
-        tr:nth-child(even) { background: #fafafa; }
+        /* 2. Turning Disc (Center) */
+        @keyframes slowSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .logo-center { width: 75px; height: 75px; object-fit: cover; border-radius: 50%; border: 2px solid #333; animation: slowSpin 5s linear infinite; }
+
+        /* 3. Static QR (Right) */
+        .qr-static { width: 60px; height: 60px; border: 1px solid #ddd; border-radius: 4px; }
+
+        /* 4. Studio Name Section */
+        .studio-title { text-align: center; margin-top: 5px; }
+        .studio-title h1 { font-size: 1.2rem; margin: 0; color: #333; letter-spacing: 1px; }
         
-        .btn-link { text-decoration: none; color: white !important; padding: 6px 0; border-radius: 4px; font-size: 0.6rem; font-weight: bold; display: block; width: 95%; margin: 0 auto; text-align: center; }
-        .btn-orig { background: #3498db; }
-        .btn-kara { background: #8e44ad; }
+        /* 5. Horizontal Divider */
+        .divider { height: 2px; background-color: var(--secondary); margin: 15px 0; width: 100%; }
+
+        #search-box { width: 100%; padding: 12px; font-size: 16px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 12px; box-sizing: border-box; outline: none; }
+
+        /* Song Card Layout */
+        .song-card { background: white; margin-bottom: 8px; padding: 10px 15px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .details { flex: 1; margin-right: 10px; }
+        .artist { font-size: 0.75rem; font-weight: bold; color: var(--secondary); text-transform: uppercase; display: block; }
+        .song-name { font-size: 1rem; font-weight: 600; color: #333; }
+
+        .actions { display: flex; gap: 8px; }
+        .btn { text-decoration: none; padding: 8px 12px; border-radius: 6px; font-size: 11px; font-weight: bold; color: white; min-width: 65px; text-align: center; }
+        .btn-orig { background-color: #3498db; } /* Blue for Song */
+        .btn-kara { background-color: #d81b60; } /* Pink for Lady Sing */
+
+        #loading { text-align: center; font-style: italic; color: #888; margin-top: 20px; }
     </style>
 </head>
 <body>
 
-    <div class="nav-bar">
-        <a href="index.html" class="back-btn">← Back</a>
+    <div class="master-header-container">
+        <a href="index.html" class="nav-home">←</a>
+        
+        <img src="turntable-Icon.jpg" alt="Spinning Disc" class="logo-center">
+        
+        <img src="qr-code.png" alt="QR Code" class="qr-static">
     </div>
 
-    <div class="container">
-        <h1>Chinese Lady Songs</h1>
-        <input type="text" id="searchBox" placeholder="Search singer or song..." onkeyup="filterTable()">
-
-        <div id="loadingMsg" style="text-align:center; padding: 30px; color: #d81b60; font-size: 0.8rem; font-weight: bold;">Syncing Studio Library...</div>
-
-        <div class="table-wrapper">
-            <table id="songTable" style="display:none;">
-                <thead>
-                    <tr>
-                        <th>ARTIST</th>
-                        <th>SONG</th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody id="tableBody"></tbody>
-            </table>
-        </div>
+    <div class="studio-title">
+        <h1>William H Chan Music Studio</h1>
     </div>
+
+    <div class="divider"></div>
+
+    <input type="text" id="search-box" placeholder="Search singer or song..." onkeyup="filterSongs()">
+
+    <div id="loading">Updating Studio Library...</div>
+    <div id="song-list-container"></div>
 
     <script>
-        const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTFKLWjxEQgV4uXB9v15Bqyoyj57BY_PvPmn70OdDKOgQwvzQ1lAOHr55KsKF5EpHQUA6ZiO5YWGVC5/pub?gid=0&single=true&output=csv&v=' + Date.now();
-
-        async function loadSongs() {
-            try {
-                const response = await fetch(csvUrl);
-                const data = await response.text();
-                const rows = data.split(/\r?\n/);
-                const tableBody = document.getElementById('tableBody');
-                tableBody.innerHTML = "";
-
-                for (let i = 1; i < rows.length; i++) {
-                    const line = rows[i].trim();
-                    if (!line) continue;
-                    const cols = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                    
-                    if (cols.length >= 2) {
-                        const tr = document.createElement('tr');
-                        const artist = cols[0].replace(/"/g, '').trim();
-                        const song = cols[1].replace(/"/g, '').trim();
-                        
-                        let origBtn = "<td>-</td>";
-                        if (cols[2] && cols[2].toLowerCase().includes('http')) {
-                            origBtn = `<td><a href="${cols[2].replace(/"/g, '')}" target="_blank" class="btn-link btn-orig">SONG</a></td>`;
-                        }
-
-                        let karaBtn = "<td>-</td>";
-                        if (cols[3] && cols[3].toLowerCase().includes('http')) {
-                            karaBtn = `<td><a href="${cols[3].replace(/"/g, '')}" target="_blank" class="btn-link btn-kara">SING</a></td>`;
-                        }
-
-                        tr.innerHTML = `<td>${artist}</td><td>${song}</td>${origBtn}${karaBtn}`;
-                        tableBody.appendChild(tr);
-                    }
-                }
-                document.getElementById('loadingMsg').style.display = 'none';
-                document.getElementById('songTable').style.display = 'table';
-            } catch (err) {
-                document.getElementById('loadingMsg').innerText = "Sync delayed. Refresh page.";
-            }
-        }
-
-        function filterTable() {
-            const input = document.getElementById('searchBox').value.toUpperCase();
-            const rows = document.getElementById('tableBody').getElementsByTagName('tr');
-            for (let row of rows) {
-                row.style.display = row.innerText.toUpperCase().includes(input) ? "" : "none";
-            }
-        }
-        loadSongs();
-    </script>
-</body>
-</html>
+        // Lady Tab Spreadsheet URL
+        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTFKLWjxEQgV4uXB9v15Bqyoyj57BY_PvPmn70OdDKOgQwvzQ1lAOHr55KsKF5EpHQUA6ZiO5YWGVC5/pub?
