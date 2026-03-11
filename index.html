@@ -126,7 +126,12 @@
         <span id="prompt-text"></span>
         <button onclick="document.getElementById('install-prompt').style.display='none'" style="display:block; margin:15px auto 0; background:#8e44ad; border:none; color:white; border-radius:8px; padding:10px 20px; font-weight:bold;">Got it</button>
     </div>
-
+<div style="margin-top: 40px; text-align: center; padding: 20px; border-top: 1px solid rgba(255,255,255,0.2);">
+    <p style="font-size: 0.9rem; color: #ffffff; margin-bottom: 10px; text-shadow: 1px 1px 2px black;">
+        Scan to take the Songlist with you!
+    </p>
+    <img src="qr-code.png" alt="Studio QR Code" style="width: 120px; height: 120px; border-radius: 10px; border: 3px solid white; box-shadow: 0 4px 15px rgba(0,0,0,0.5);">
+</div>
     <script>
         const isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
         if (!isStandalone) {
