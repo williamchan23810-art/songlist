@@ -18,7 +18,7 @@
         
         body { font-family: sans-serif; background: var(--bg); color: var(--text); max-width: 800px; margin: 0 auto; padding: 10px; }
         
-        /* 1, 2, 3. MASTER HEADER (Arrow, Disc, QR) */
+        /* MASTER HEADER */
         .master-header-container {
             display: flex;
             justify-content: space-between;
@@ -35,7 +35,7 @@
 
         .qr-static { width: 60px; height: 60px; border: 1px solid #ddd; border-radius: 4px; }
 
-        /* 4. STUDIO NAME (Cambria Font) */
+        /* STUDIO NAME (Cambria Font) */
         .studio-title { text-align: center; margin-top: 8px; }
         .studio-title h1 { 
             font-family: 'Cambria', 'Georgia', serif; 
@@ -45,10 +45,9 @@
             font-weight: bold;
         }
         
-        /* 5. HORIZONTAL LINE */
+        /* HORIZONTAL LINE */
         .divider { height: 2px; background-color: var(--secondary); margin: 15px 0; width: 100%; }
 
-        /* Search & List Styles */
         #search-box { width: 100%; padding: 12px; font-size: 16px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 15px; box-sizing: border-box; outline: none; }
 
         .song-card { background: white; margin-bottom: 8px; padding: 12px 15px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
@@ -80,69 +79,4 @@
 
     <input type="text" id="search-box" placeholder="Search Men's singer or song..." onkeyup="filterSongs()">
 
-    <div id="loading">Updating Men's Library...</div>
-    <div id="song-list-container"></div>
-
-    <script>
-        // Men's Tab CSV URL
-        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRURv3BhrTaAjayuts-7v61qTznVRxe-0hyvgevw8wIj3OHTvQLnGiLOc8TdwD0CvKNrRS_U3qj2o33/pub?output=csv&v=' + Date.now();
-
-        function renderSongs(data) {
-            const container = document.getElementById('song-list-container');
-            container.innerHTML = '';
-            
-            // i = 1 skips the header row
-            for (let i = 1; i < data.length; i++) {
-                const row = data[i];
-                
-                // Index-based: A=0, B=1, C=2, D=3
-                const artistName = row[0] ? row[0].trim() : "";
-                const songTitle = row[1] ? row[1].trim() : "";
-                const origLink = row[2] ? row[2].trim() : "";
-                const karaLink = row[3] ? row[3].trim() : "";
-
-                if (!songTitle) continue;
-
-                const div = document.createElement('div');
-                div.className = 'song-card';
-                
-                let buttonsHtml = '';
-                if (origLink && origLink.toLowerCase().includes('http')) {
-                    buttonsHtml += `<a href="${origLink}" target="_blank" class="btn btn-orig">SONG</a>`;
-                }
-                if (karaLink && karaLink.toLowerCase().includes('http')) {
-                    buttonsHtml += `<a href="${karaLink}" target="_blank" class="btn btn-kara">SING</a>`;
-                }
-
-                div.innerHTML = `
-                    <div class="details">
-                        <span class="artist">${artistName || 'CHINESE MEN'}</span>
-                        <span class="song-name">${songTitle}</span>
-                    </div>
-                    <div class="actions">
-                        ${buttonsHtml}
-                    </div>`;
-                container.appendChild(div);
-            }
-            document.getElementById('loading').style.display = 'none';
-        }
-
-        Papa.parse(CSV_URL, {
-            download: true,
-            header: false, 
-            skipEmptyLines: true,
-            complete: function(results) {
-                renderSongs(results.data);
-            }
-        });
-
-        function filterSongs() {
-            const term = document.getElementById('search-box').value.toLowerCase();
-            const cards = document.getElementsByClassName('song-card');
-            for (let card of cards) {
-                card.style.display = card.innerText.toLowerCase().includes(term) ? 'flex' : 'none';
-            }
-        }
-    </script>
-</body>
-</html>
+    <div id="loading">Updating
