@@ -6,7 +6,7 @@
     <title>Chinese Lady Songs - William H Chan Studio</title>
     <style>
         body { 
-            font-family: 'Segoe UI', sans-serif; 
+            font-family: 'Segoe UI', Tahoma, sans-serif; 
             background-color: #f0f2f5; 
             margin: 0; 
             padding: 20px;
@@ -15,16 +15,15 @@
             align-items: center;
         }
 
-        .nav-bar { width: 100%; max-width: 600px; margin-bottom: 10px; }
+        .nav-bar { width: 100%; max-width: 600px; margin-bottom: 15px; }
         
         .back-btn {
             text-decoration: none;
             color: #d81b60;
             font-weight: bold;
-            font-size: 1rem;
+            font-size: 1.1rem;
         }
 
-        /* Restored White Background Container */
         .container { 
             background: white; 
             padding: 30px; 
@@ -32,40 +31,37 @@
             box-shadow: 0 4px 20px rgba(0,0,0,0.1); 
             width: 95%; 
             max-width: 600px;
-            position: relative; /* Needed for top-right placement */
+            position: relative; 
         }
 
-        /* QR Code positioned in Top Right */
+        /* QR Code Top Right */
         .qr-header {
             position: absolute;
             top: 20px;
             right: 20px;
             text-align: center;
-            width: 80px;
         }
 
         .qr-header img {
-            width: 70px;
-            height: 70px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            cursor: pointer;
+            width: 65px;
+            height: 65px;
+            border: 1px solid #eee;
+            border-radius: 4px;
         }
 
         .qr-header p {
             font-size: 0.6rem;
-            margin: 5px 0 0 0;
-            color: #666;
+            margin: 3px 0 0 0;
+            color: #d81b60;
             font-weight: bold;
-            line-height: 1;
         }
 
-        h1 { color: #d81b60; margin-top: 0; padding-right: 90px; } /* Space for QR */
+        h1 { color: #d81b60; margin-top: 0; padding-right: 80px; font-size: 1.5rem; }
 
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         th { text-align: left; border-bottom: 2px solid #d81b60; padding: 10px; color: #d81b60; }
-        td { padding: 12px 10px; border-bottom: 1px solid #eee; color: #333; }
-        tr:nth-child(even) { background: #f9f9f9; }
+        td { padding: 12px 10px; border-bottom: 1px solid #f0f0f0; color: #333; font-size: 1rem; }
+        tr:nth-child(even) { background: #fafafa; }
     </style>
 </head>
 <body>
@@ -76,9 +72,9 @@
 
     <div class="container">
         <div class="qr-header">
-            <a href="javascript:void(0);" onclick="alert('To Install:\n1. Tap Share\n2. Add to Home Screen')">
-                <img src="qr-code.png" alt="Tap to Install">
-                <p>Tap to Install</p>
+            <a href="javascript:void(0);" onclick="alert('To Install:\n1. Tap the Share icon\n2. Select \'Add to Home Screen\'')">
+                <img src="qr-code.png" alt="Install">
+                <p>INSTALL</p>
             </a>
         </div>
 
@@ -92,14 +88,12 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>Winnie Hsin 辛曉琪</td>
-                    <td>Understanding (領悟)</td>
-                </tr>
-                <tr>
-                    <td>Faye Wong 王菲</td>
-                    <td>Red Beans (紅豆)</td>
-                </tr>
+                <tr><td>辛曉琪</td><td>領悟</td></tr>
+                <tr><td>王菲</td><td>紅豆</td></tr>
+                <tr><td>葉蒨文</td><td>祝福</td></tr>
+                <tr><td>陳慧嫻</td><td>千千闕歌</td></tr>
+                <tr><td>梅艷芳</td><td>夕陽之歌</td></tr>
+                <tr><td>林憶蓮</td><td>至少還有你</td></tr>
                 </tbody>
         </table>
     </div>
