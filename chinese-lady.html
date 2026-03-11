@@ -9,42 +9,33 @@
         .nav-bar { width: 100%; max-width: 600px; margin-bottom: 10px; }
         .back-btn { text-decoration: none; color: #d81b60; font-weight: bold; font-size: 1rem; }
         
-        .container { background: white; padding: 12px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 600px; box-sizing: border-box; overflow: hidden; }
+        .container { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 600px; box-sizing: border-box; position: relative; min-height: 450px; }
         
-        h1 { color: #d81b60; margin: 0 0 10px 0; border-bottom: 2px solid #fce4ec; padding-bottom: 8px; font-size: 1.2rem; }
+        /* Branding Stamp */
+        .qr-header { position: absolute; top: 15px; right: 15px; text-align: center; }
+        .qr-header img { width: 45px; height: 45px; border: 1px solid #eee; border-radius: 4px; }
+        .qr-header p { font-size: 0.5rem; margin: 2px 0 0 0; color: #d81b60; font-weight: bold; text-transform: uppercase; }
+
+        h1 { color: #d81b60; margin: 0 0 10px 0; border-bottom: 2px solid #fce4ec; padding-bottom: 8px; font-size: 1.2rem; padding-right: 60px; }
         #searchBox { width: 100%; padding: 10px; margin-bottom: 12px; border: 2px solid #fce4ec; border-radius: 8px; font-size: 1rem; box-sizing: border-box; outline: none; }
 
-        /* Forces everything to fit on the screen */
         .table-wrapper { width: 100%; overflow-x: hidden; }
         table { width: 100%; border-collapse: collapse; table-layout: fixed; } 
         
-        /* Specific widths to ensure D (Karaoke) is visible */
-        th:nth-child(1), td:nth-child(1) { width: 30%; } /* Artist */
-        th:nth-child(2), td:nth-child(2) { width: 30%; } /* Song */
-        th:nth-child(3), td:nth-child(3) { width: 20%; text-align: center; } /* Original */
-        th:nth-child(4), td:nth-child(4) { width: 20%; text-align: center; } /* Karaoke */
+        /* Optimized Widths for SONG and SING */
+        th:nth-child(1), td:nth-child(1) { width: 33%; } /* Artist */
+        th:nth-child(2), td:nth-child(2) { width: 33%; } /* Song Title */
+        th:nth-child(3), td:nth-child(3) { width: 17%; text-align: center; } /* Song Button */
+        th:nth-child(4), td:nth-child(4) { width: 17%; text-align: center; } /* Sing Button */
 
-        th { text-align: left; border-bottom: 2px solid #d81b60; padding: 8px 2px; color: #d81b60; font-size: 0.7rem; text-transform: uppercase; }
-        td { padding: 8px 2px; border-bottom: 1px solid #eee; color: #333; font-size: 0.8rem; word-wrap: break-word; vertical-align: middle; }
+        th { text-align: left; border-bottom: 2px solid #d81b60; padding: 8px 2px; color: #d81b60; font-size: 0.8rem; }
+        td { padding: 10px 2px; border-bottom: 1px solid #eee; color: #333; font-size: 0.85rem; word-wrap: break-word; vertical-align: middle; }
         tr:nth-child(even) { background: #fafafa; }
         
-        /* Buttons redesigned to be very narrow */
-        .btn-link { 
-            text-decoration: none; 
-            color: white !important; 
-            padding: 4px 0; 
-            border-radius: 4px; 
-            font-size: 0.6rem; 
-            font-weight: bold; 
-            display: block; 
-            width: 90%; 
-            margin: 0 auto;
-            text-align: center;
-        }
-        .btn-orig { background: #3498db; margin-bottom: 2px; }
+        /* Narrow Buttons */
+        .btn-link { text-decoration: none; color: white !important; padding: 6px 0; border-radius: 4px; font-size: 0.6rem; font-weight: bold; display: block; width: 95%; margin: 0 auto; text-align: center; }
+        .btn-orig { background: #3498db; }
         .btn-kara { background: #8e44ad; }
-        
-        .install-hint { font-size: 0.7rem; color: #999; margin-top: 15px; text-align: center; }
     </style>
 </head>
 <body>
@@ -54,25 +45,29 @@
     </div>
 
     <div class="container">
-        <h1>Chinese Lady Songs</h1>
-        <input type="text" id="searchBox" placeholder="Search..." onkeyup="filterTable()">
+        <div class="qr-header">
+            <img src="qr-code.png" alt="Studio">
+            <p>Studio</p>
+        </div>
 
-        <div id="loadingMsg" style="text-align:center; padding: 20px; color: #d81b60; font-size: 0.8rem;">Syncing...</div>
+        <h1>Chinese Lady Songs</h1>
+        <input type="text" id="searchBox" placeholder="Search singer or song..." onkeyup="filterTable()">
+
+        <div id="loadingMsg" style="text-align:center; padding: 30px; color: #d81b60; font-size: 0.8rem; font-weight: bold;">Syncing Studio Library...</div>
 
         <div class="table-wrapper">
             <table id="songTable" style="display:none;">
                 <thead>
                     <tr>
-                        <th>Artist</th>
-                        <th>Song</th>
-                        <th>Orig</th>
-                        <th>Kara</th>
+                        <th>ARTIST</th>
+                        <th>SONG</th>
+                        <th></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody id="tableBody"></tbody>
             </table>
         </div>
-        <div class="install-hint">Tap Share > Add to Home Screen</div>
     </div>
 
     <script>
@@ -96,24 +91,24 @@
                         const artist = cols[0].replace(/"/g, '').trim();
                         const song = cols[1].replace(/"/g, '').trim();
                         
-                        let origBtn = "-";
+                        let origBtn = "<td>-</td>";
                         if (cols[2] && cols[2].toLowerCase().includes('http')) {
-                            origBtn = `<a href="${cols[2].replace(/"/g, '')}" target="_blank" class="btn-link btn-orig">PLAY</a>`;
+                            origBtn = `<td><a href="${cols[2].replace(/"/g, '')}" target="_blank" class="btn-link btn-orig">SONG</a></td>`;
                         }
 
-                        let karaBtn = "-";
+                        let karaBtn = "<td>-</td>";
                         if (cols[3] && cols[3].toLowerCase().includes('http')) {
-                            karaBtn = `<a href="${cols[3].replace(/"/g, '')}" target="_blank" class="btn-link btn-kara">SING</a>`;
+                            karaBtn = `<td><a href="${cols[3].replace(/"/g, '')}" target="_blank" class="btn-link btn-kara">SING</a></td>`;
                         }
 
-                        tr.innerHTML = `<td>${artist}</td><td>${song}</td><td>${origBtn}</td><td>${karaBtn}</td>`;
+                        tr.innerHTML = `<td>${artist}</td><td>${song}</td>${origBtn}${karaBtn}`;
                         tableBody.appendChild(tr);
                     }
                 }
                 document.getElementById('loadingMsg').style.display = 'none';
                 document.getElementById('songTable').style.display = 'table';
             } catch (err) {
-                document.getElementById('loadingMsg').innerText = "Refresh to sync.";
+                document.getElementById('loadingMsg').innerText = "Sync delayed. Refresh page.";
             }
         }
 
