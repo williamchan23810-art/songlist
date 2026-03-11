@@ -9,30 +9,23 @@
         .nav-bar { width: 100%; max-width: 600px; margin-bottom: 10px; }
         .back-btn { text-decoration: none; color: #d81b60; font-weight: bold; font-size: 1rem; }
         
-        .container { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 600px; box-sizing: border-box; position: relative; min-height: 450px; }
+        .container { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 600px; box-sizing: border-box; min-height: 450px; }
         
-        /* Branding Stamp */
-        .qr-header { position: absolute; top: 15px; right: 15px; text-align: center; }
-        .qr-header img { width: 45px; height: 45px; border: 1px solid #eee; border-radius: 4px; }
-        .qr-header p { font-size: 0.5rem; margin: 2px 0 0 0; color: #d81b60; font-weight: bold; text-transform: uppercase; }
-
-        h1 { color: #d81b60; margin: 0 0 10px 0; border-bottom: 2px solid #fce4ec; padding-bottom: 8px; font-size: 1.2rem; padding-right: 60px; }
+        h1 { color: #d81b60; margin: 0 0 10px 0; border-bottom: 2px solid #fce4ec; padding-bottom: 8px; font-size: 1.2rem; }
         #searchBox { width: 100%; padding: 10px; margin-bottom: 12px; border: 2px solid #fce4ec; border-radius: 8px; font-size: 1rem; box-sizing: border-box; outline: none; }
 
         .table-wrapper { width: 100%; overflow-x: hidden; }
         table { width: 100%; border-collapse: collapse; table-layout: fixed; } 
         
-        /* Optimized Widths for SONG and SING */
-        th:nth-child(1), td:nth-child(1) { width: 33%; } /* Artist */
-        th:nth-child(2), td:nth-child(2) { width: 33%; } /* Song Title */
-        th:nth-child(3), td:nth-child(3) { width: 17%; text-align: center; } /* Song Button */
-        th:nth-child(4), td:nth-child(4) { width: 17%; text-align: center; } /* Sing Button */
+        th:nth-child(1), td:nth-child(1) { width: 33%; } 
+        th:nth-child(2), td:nth-child(2) { width: 33%; } 
+        th:nth-child(3), td:nth-child(3) { width: 17%; text-align: center; } 
+        th:nth-child(4), td:nth-child(4) { width: 17%; text-align: center; } 
 
         th { text-align: left; border-bottom: 2px solid #d81b60; padding: 8px 2px; color: #d81b60; font-size: 0.8rem; }
         td { padding: 10px 2px; border-bottom: 1px solid #eee; color: #333; font-size: 0.85rem; word-wrap: break-word; vertical-align: middle; }
         tr:nth-child(even) { background: #fafafa; }
         
-        /* Narrow Buttons */
         .btn-link { text-decoration: none; color: white !important; padding: 6px 0; border-radius: 4px; font-size: 0.6rem; font-weight: bold; display: block; width: 95%; margin: 0 auto; text-align: center; }
         .btn-orig { background: #3498db; }
         .btn-kara { background: #8e44ad; }
@@ -45,11 +38,6 @@
     </div>
 
     <div class="container">
-        <div class="qr-header">
-            <img src="qr-code.png" alt="Studio">
-            <p>Studio</p>
-        </div>
-
         <h1>Chinese Lady Songs</h1>
         <input type="text" id="searchBox" placeholder="Search singer or song..." onkeyup="filterTable()">
 
