@@ -7,33 +7,42 @@
     <style>
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            margin: 0;
+            background-color: #f0f2f5; 
             display: flex; 
             flex-direction: column; 
             align-items: center; 
             justify-content: center; 
-            min-height: 100vh;
-            
-            /* BACKGROUND SETTINGS */
-            /* This creates the 10% opacity look by layering a 90% white tint OVER the image */
-            background: linear-gradient(rgba(240, 242, 245, 0.9), rgba(240, 242, 245, 0.9)), 
-                        url("JimmyPage (2).jpg"); /* Double quotes are required for spaces */
-            
+            height: 100vh; 
+            margin: 0; 
+            position: relative; /* Necessary for the background layer */
+        }
+
+        /* The Background Image Layer */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('JP.png'); /* Updated to the new filename and extension */
             background-size: cover;
             background-position: center;
-            background-attachment: fixed;
-            background-repeat: no-repeat;
-            background-color: #f0f2f5; /* Fallback color if image is missing */
+            opacity: 0.1; /* This gives you exactly 10% opacity */
+            z-index: -1; /* Places it behind your content */
+            pointer-events: none; /* Ensures hyperlinks stay clickable */
         }
 
         .container { 
             text-align: center; 
-            background: rgba(255, 255, 255, 0.95); /* Slightly transparent white */
+            background: rgba(255, 255, 255, 0.9); /* Slightly translucent white */
             padding: 30px; 
             border-radius: 15px; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
             width: 90%; 
-            max-width: 400px;
+            max-width: 400px; 
+            position: relative;
+            z-index: 1; /* Sits above the background image */
         }
 
         h1 { color: #333; margin-bottom: 25px; font-size: 1.5rem; }
@@ -50,7 +59,9 @@
             transition: transform 0.2s;
             font-size: 1.1rem;
         }
+        .menu-btn:active { transform: scale(0.98); }
 
+        /* Color Coding for consistency */
         .btn-lady { background-color: #d81b60; } 
         .btn-men  { background-color: #27ae60; } 
         .btn-duet { background-color: #8e44ad; } 
