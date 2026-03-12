@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>William H Chan Music Studio</title>
     <style>
+        /* Immersive background logic */
         body { 
             font-family: -apple-system, sans-serif; 
             background-color: #f0f2f5; 
@@ -12,40 +13,40 @@
             display: flex; 
             flex-direction: column; 
             align-items: center; 
-            justify-content: center; 
-            min-height: 100vh; 
-            padding: 20px 0;
+            min-height: 100vh;
         }
         
-        .menu-container { 
-            background: white; 
-            padding: 20px; 
-            border-radius: 20px; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
-            width: 90%; 
-            max-width: 450px; 
-            text-align: center; 
-        }
-        
-        /* IMMERSIVE IMAGE FORMAT: Shows the full photo naturally */
-        .hero-img { 
+        /* 1. The Immersive Image - Unconstrained */
+        .immersive-hero { 
             width: 100%; 
-            height: auto; /* This prevents the "cropping" or "boxing" effect */
-            border-radius: 12px; 
-            margin-bottom: 20px; 
+            max-width: 500px; /* Limits size on large screens but fills mobile */
+            height: auto;
             display: block;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            margin: 0 auto;
         }
 
+        /* 2. The Menu Container - Overlapping slightly for a modern look */
+        .menu-container { 
+            background: white; 
+            padding: 30px 20px; 
+            border-radius: 25px 25px 0 0; /* Rounded only at top */
+            box-shadow: 0 -10px 25px rgba(0,0,0,0.1); 
+            width: 100%; 
+            max-width: 500px; 
+            text-align: center;
+            margin-top: -20px; /* Pulls the menu up over the photo slightly */
+            flex-grow: 1; /* Ensures white area fills the rest of the screen */
+        }
+        
         h1 { 
             font-family: 'Cambria', 'Georgia', serif !important; 
             color: #333 !important; 
-            margin: 15px 0 5px 0 !important; 
-            font-size: 1.7rem !important; 
+            margin: 10px 0 5px 0 !important; 
+            font-size: 1.6rem !important; 
             font-weight: bold !important;
         }
         
-        p { color: #666; margin-bottom: 25px; font-size: 1rem; }
+        p { color: #666; margin-bottom: 25px; font-size: 0.95rem; letter-spacing: 1px; }
 
         .btn-menu { 
             display: block; 
@@ -56,22 +57,24 @@
             border-radius: 12px; 
             font-weight: bold; 
             font-size: 1.1rem; 
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: 0.2s;
         }
         
         .btn-lady { background: #d81b60; }
         .btn-men { background: #2e7d32; }
         .btn-duet { background: #8e44ad; }
         .btn-eng { background: #3498db; }
+        
+        .btn-menu:active { transform: scale(0.97); opacity: 0.9; }
     </style>
 </head>
 <body>
 
+    <img src="JP.jpg" alt="William H Chan Music Studio" class="immersive-hero">
+
     <div class="menu-container">
-        <img src="JP.jpg" alt="William H Chan Music Studio" class="hero-img">
-        
         <h1>William H Chan Music Studio</h1>
-        <p>Select a Category</p>
+        <p>CHOOSE A CATEGORY</p>
 
         <a href="chinese-lady.html" class="btn-lady btn-menu">CHINESE LADY</a>
         <a href="chinese-men.html" class="btn-men btn-menu">CHINESE MEN</a>
