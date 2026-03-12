@@ -2,25 +2,37 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>William H Chan Music Studio - Chinese Men Songs</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>William H Chan Music Studio - Chinese Men</title>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     
     <style>
-        :root { --primary-green: #2e7d32; --primary-blue: #3498db; --secondary: #457b9d; --bg: #f8f9fa; --text: #1d3557; }
+        :root { 
+            --primary-blue: #3498db; 
+            --primary-men: #2e7d32; /* Professional Green for Men's Category */
+            --secondary: #457b9d; 
+            --bg: #f8f9fa; 
+            --text: #1d3557; 
+        }
+        
         body { font-family: sans-serif; background: var(--bg); color: var(--text); max-width: 800px; margin: 0 auto; padding: 10px; }
         
-        /* Master Header (Arrow, Disc, QR) */
         .master-header-container { display: flex; justify-content: space-between; align-items: center; padding: 10px 5px; width: 100%; box-sizing: border-box; }
-        .nav-home { font-size: 28px; text-decoration: none; color: #333; width: 60px; font-weight: bold; }
+        .nav-home { font-size: 32px; text-decoration: none; color: #333; width: 60px; font-weight: bold; }
+        
         @keyframes slowSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        .logo-center { width: 75px; height: 75px; object-fit: cover; border-radius: 50%; border: 2px solid #333; animation: slowSpin 5s linear infinite; }
-        .qr-static { width: 60px; height: 60px; border: 1px solid #ddd; border-radius: 4px; }
+        .logo-center { width: 80px; height: 80px; object-fit: cover; border-radius: 50%; border: 2px solid #333; animation: slowSpin 5s linear infinite; }
+        .qr-static { width: 65px; height: 65px; border: 1px solid #ddd; border-radius: 4px; }
 
-        /* Studio Title (Cambria Font) */
-        .studio-title { text-align: center; margin-top: 8px; }
-        .studio-title h1 { font-family: 'Cambria', 'Georgia', serif; font-size: 1.4rem; margin: 0; color: #333; font-weight: bold; }
+        .studio-title { text-align: center; margin-top: 10px; }
+        .studio-title h1 { 
+            font-family: 'Cambria', 'Georgia', serif !important; 
+            font-size: 1.5rem; 
+            margin: 0; 
+            color: #333; 
+            font-weight: bold; 
+        }
         
         .divider { height: 2px; background-color: var(--secondary); margin: 15px 0; width: 100%; }
         #search-box { width: 100%; padding: 12px; font-size: 16px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 15px; box-sizing: border-box; outline: none; }
@@ -33,7 +45,7 @@
         .actions { display: flex; gap: 8px; }
         .btn { text-decoration: none; padding: 8px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; color: white; min-width: 65px; text-align: center; }
         .btn-orig { background-color: var(--primary-blue); }
-        .btn-kara { background-color: var(--primary-green); }
+        .btn-kara { background-color: var(--primary-men); }
 
         #status { text-align: center; font-style: italic; color: #888; margin-top: 40px; }
     </style>
@@ -43,4 +55,79 @@
     <div class="master-header-container">
         <a href="index.html" class="nav-home">←</a>
         <img src="turntable-Icon.jpg" alt="Logo" class="logo-center">
-        <img src="
+        <img src="qr-code.png" alt="QR" class="qr-static">
+    </div>
+
+    <div class="studio-title">
+        <h1>William H Chan Music Studio</h1>
+    </div>
+
+    <div class="divider"></div>
+
+    <input type="text" id="search-box" placeholder="Search Men's singer or song..." onkeyup="filterSongs()">
+
+    <div id="status">Syncing Men's Library...</div>
+    <div id="song-list-container"></div>
+
+    <script>
+        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSeK0hJoqyYLa5BQLl42QIAHMlbT_0tAa0FxhoBBebSUqV98bwac7ACwQc1y2yA6SLOd1nGvJYD-zLB/pub?gid=0&single=true&output=csv';
+
+        function renderSongs(data) {
+            const container = document.getElementById('song-list-container');
+            container.innerHTML = '';
+            
+            for (let i = 1; i < data.length; i++) {
+                const row = data[i];
+                const artistName = row[0] ? row[0].trim() : "";
+                const songTitle = row[1] ? row[1].trim() : "";
+                const origLink = row[2] ? row[2].trim() : "";
+                const karaLink = row[3] ? row[3].trim() : "";
+
+                if (!songTitle) continue;
+
+                const div = document.createElement('div');
+                div.className = 'song-card';
+                
+                let buttonsHtml = '';
+                if (origLink && origLink.toLowerCase().includes('http')) {
+                    buttonsHtml += `<a href="${origLink}" target="_blank" class="btn btn-orig">SONG</a>`;
+                }
+                if (karaLink && karaLink.toLowerCase().includes('http')) {
+                    buttonsHtml += `<a href="${karaLink}" target="_blank" class="btn btn-kara">SING</a>`;
+                }
+
+                div.innerHTML = `
+                    <div class="details">
+                        <span class="artist">${artistName || 'Artist'}</span>
+                        <span class="song-name">${songTitle}</span>
+                    </div>
+                    <div class="actions">
+                        ${buttonsHtml}
+                    </div>`;
+                container.appendChild(div);
+            }
+            document.getElementById('status').style.display = 'none';
+        }
+
+        Papa.parse(CSV_URL + '&t=' + Date.now(), {
+            download: true,
+            header: false, 
+            skipEmptyLines: true,
+            complete: function(results) {
+                renderSongs(results.data);
+            },
+            error: function() {
+                document.getElementById('status').innerText = "Connection issue. Please refresh.";
+            }
+        });
+
+        function filterSongs() {
+            const term = document.getElementById('search-box').value.toLowerCase();
+            const cards = document.getElementsByClassName('song-card');
+            for (let card of cards) {
+                card.style.display = card.innerText.toLowerCase().includes(term) ? 'flex' : 'none';
+            }
+        }
+    </script>
+</body>
+</html>
