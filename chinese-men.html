@@ -7,7 +7,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <style>
         :root { --primary-men: #2e7d32; --bg: #f8f9fa; --text: #1d3557; }
-        body { font-family: sans-serif; background: var(--bg); color: var(--text); max-width: 800px; margin: 0 auto; padding: 10px; }
+        body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); max-width: 800px; margin: 0 auto; padding: 10px; }
         
         .master-header-container { display: flex; justify-content: space-between; align-items: center; padding: 10px 5px; }
         .nav-home { font-size: 32px; text-decoration: none; color: #333; width: 60px; font-weight: bold; }
@@ -19,7 +19,7 @@
         .studio-title h1 { font-family: 'Cambria', serif !important; font-size: 1.5rem; margin: 0; color: #333; }
         .divider { height: 2px; background-color: #457b9d; margin: 15px 0; }
 
-        #search-box { width: 100%; padding: 12px; font-size: 16px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 15px; box-sizing: border-box; }
+        #search-box { width: 100%; padding: 12px; font-size: 16px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 15px; box-sizing: border-box; outline: none; }
         .song-card { background: white; margin-bottom: 8px; padding: 12px 15px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .details { flex: 1; margin-right: 10px; }
         .artist { font-size: 0.75rem; font-weight: bold; color: #457b9d; text-transform: uppercase; display: block; }
@@ -29,8 +29,7 @@
         .btn-orig { background-color: #3498db; }
         .btn-kara { background-color: var(--primary-men); }
         
-        #status { text-align: center; font-style: italic; color: #d81b60; margin-top: 20px; font-weight: bold; }
-        #debug-log { background: #eee; padding: 10px; font-family: monospace; font-size: 10px; margin-top: 20px; border-radius: 5px; border: 1px solid #ccc; }
+        #status { text-align: center; font-style: italic; color: #888; margin-top: 40px; }
     </style>
 </head>
 <body>
@@ -43,37 +42,26 @@
     <div class="divider"></div>
     <input type="text" id="search-box" placeholder="Search Men's singer or song..." onkeyup="filterSongs()">
     
-    <div id="status">Connecting to Men's Library...</div>
+    <div id="status">Syncing Men's Library...</div>
     <div id="song-list-container"></div>
-    
-    <div id="debug-log">Debug: Waiting for data...</div>
 
     <script>
-        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSeK0hJoqyYLa5BQLl42QIAHMlbT_0tAa0FxhoBBebSUqV98bwac7ACwQc1y2yA6SLOd1nGvJYD-zLB/pub?gid=0&single=true&output=csv';
+        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSeK0hJoqyYLa5BQLl42QIAHMlbT_0tAa0FxhoBBebSUqV98bwac7ACwQc1y2yA6SLOd1nGvJYD-zLB/pub?gid=0&single=true&output=csv&cache=' + new Date().getTime();
 
         function renderSongs(data) {
             const container = document.getElementById('song-list-container');
-            const debug = document.getElementById('debug-log');
             container.innerHTML = '';
             
-            if (!data || data.length === 0) {
-                document.getElementById('status').innerText = "ERROR: Sheet returned NO data.";
-                return;
-            }
-
-            // Show raw data in the debug box for troubleshooting
-            debug.innerText = "RAW DATA SAMPLE: " + JSON.stringify(data.slice(0, 2));
-
-            let songCount = 0;
-            for (let i = 0; i < data.length; i++) {
+            // --- FIXED: Start loop at i = 1 to skip the header row entirely ---
+            for (let i = 1; i < data.length; i++) {
                 const row = data[i];
+                if (!row || row.length < 2) continue; // Skip empty rows
+
                 const artist = row[0] ? row[0].trim() : "";
                 const song = row[1] ? row[1].trim() : "";
                 
-                // Skip header or empty rows
-                if (!song || song.toLowerCase().includes("song")) continue;
+                if (!song) continue; // Only show rows that actually have a song name
 
-                songCount++;
                 const div = document.createElement('div');
                 div.className = 'song-card';
                 
@@ -81,27 +69,18 @@
                 if (row[2] && row[2].includes('http')) btns += `<a href="${row[2].trim()}" target="_blank" class="btn btn-orig">SONG</a>`;
                 if (row[3] && row[3].includes('http')) btns += `<a href="${row[3].trim()}" target="_blank" class="btn btn-kara">SING</a>`;
 
-                div.innerHTML = `<div class="details"><span class="artist">${artist || 'ARTIST'}</span><span class="song-name">${song}</span></div><div class="actions">${btns}</div>`;
+                div.innerHTML = `<div class="details"><span class="artist">${artist || 'CHINESE MEN'}</span><span class="song-name">${song}</span></div><div class="actions">${btns}</div>`;
                 container.appendChild(div);
             }
             
-            if (songCount === 0) {
-                document.getElementById('status').innerText = "Sheet connected, but no songs found. Check Column B.";
-            } else {
-                document.getElementById('status').style.display = 'none';
-                debug.style.display = 'none'; // Hide debug if it works
-            }
+            document.getElementById('status').style.display = 'none';
         }
 
-        Papa.parse(CSV_URL + "&cb=" + Date.now(), {
+        Papa.parse(CSV_URL, {
             download: true,
             header: false,
             complete: function(results) {
                 renderSongs(results.data);
-            },
-            error: function(err) {
-                document.getElementById('status').innerText = "FATAL ERROR: Could not load the CSV link.";
-                document.getElementById('debug-log').innerText = "Error details: " + JSON.stringify(err);
             }
         });
 
