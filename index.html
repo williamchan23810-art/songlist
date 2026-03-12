@@ -2,12 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>William H Chan Music Studio</title>
+
+    <link rel="apple-touch-icon" href="icon-192.jpg">
+    <link rel="icon" type="image/jpeg" sizes="192x192" href="icon-192.jpg">
+    <link rel="icon" type="image/jpeg" sizes="512x512" href="icon-192.jpg">
+    
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#f0f2f5">
+
     <style>
-        /* Immersive background logic */
+        /* Reset and Base Styles */
         body { 
-            font-family: -apple-system, sans-serif; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
             background-color: #f0f2f5; 
             margin: 0; 
             display: flex; 
@@ -15,39 +24,49 @@
             align-items: center; 
             min-height: 100vh;
         }
-        
-        /* 1. The Immersive Image - Unconstrained */
+
+        /* 1. IMMERSIVE HERO IMAGE (Jimmy Page) */
         .immersive-hero { 
             width: 100%; 
-            max-width: 500px; /* Limits size on large screens but fills mobile */
+            max-width: 500px; /* Keeps it sharp on tablets */
             height: auto;
             display: block;
             margin: 0 auto;
         }
 
-        /* 2. The Menu Container - Overlapping slightly for a modern look */
+        /* 2. MENU CONTAINER (The White Card) */
         .menu-container { 
             background: white; 
             padding: 30px 20px; 
-            border-radius: 25px 25px 0 0; /* Rounded only at top */
+            border-radius: 25px 25px 0 0; /* Rounded top corners */
             box-shadow: 0 -10px 25px rgba(0,0,0,0.1); 
             width: 100%; 
             max-width: 500px; 
             text-align: center;
-            margin-top: -20px; /* Pulls the menu up over the photo slightly */
-            flex-grow: 1; /* Ensures white area fills the rest of the screen */
+            margin-top: -25px; /* Pulls menu up slightly over the photo */
+            flex-grow: 1; /* Fills the rest of the screen */
+            box-sizing: border-box;
         }
         
+        /* BRANDING (Cambria Font) */
         h1 { 
-            font-family: 'Cambria', 'Georgia', serif !important; 
+            font-family: 'Cambria', 'Georgia', 'Times New Roman', serif !important; 
             color: #333 !important; 
             margin: 10px 0 5px 0 !important; 
-            font-size: 1.6rem !important; 
+            font-size: 1.7rem !important; 
             font-weight: bold !important;
+            letter-spacing: 0.5px;
         }
         
-        p { color: #666; margin-bottom: 25px; font-size: 0.95rem; letter-spacing: 1px; }
+        p { 
+            color: #666; 
+            margin-bottom: 25px; 
+            font-size: 0.9rem; 
+            text-transform: uppercase; 
+            letter-spacing: 2px;
+        }
 
+        /* CATEGORY BUTTONS */
         .btn-menu { 
             display: block; 
             text-decoration: none; 
@@ -57,15 +76,21 @@
             border-radius: 12px; 
             font-weight: bold; 
             font-size: 1.1rem; 
-            transition: 0.2s;
+            transition: transform 0.1s, opacity 0.1s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
         
-        .btn-lady { background: #d81b60; }
-        .btn-men { background: #2e7d32; }
-        .btn-duet { background: #8e44ad; }
-        .btn-eng { background: #3498db; }
+        /* Color Coding */
+        .btn-lady { background: #d81b60; } /* Pink */
+        .btn-men  { background: #2e7d32; } /* Green */
+        .btn-duet { background: #8e44ad; } /* Purple */
+        .btn-eng  { background: #3498db; } /* Blue */
         
-        .btn-menu:active { transform: scale(0.97); opacity: 0.9; }
+        /* Click Effect */
+        .btn-menu:active { 
+            transform: scale(0.96); 
+            opacity: 0.9; 
+        }
     </style>
 </head>
 <body>
@@ -74,7 +99,7 @@
 
     <div class="menu-container">
         <h1>William H Chan Music Studio</h1>
-        <p>CHOOSE A CATEGORY</p>
+        <p>Choose a Category</p>
 
         <a href="chinese-lady.html" class="btn-lady btn-menu">CHINESE LADY</a>
         <a href="chinese-men.html" class="btn-men btn-menu">CHINESE MEN</a>
