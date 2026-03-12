@@ -7,97 +7,85 @@
 
     <link rel="apple-touch-icon" href="icon-192.jpg">
     <link rel="icon" type="image/jpeg" sizes="192x192" href="icon-192.jpg">
-    <link rel="icon" type="image/jpeg" sizes="512x512" href="icon-192.jpg">
     
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#f0f2f5">
-
     <style>
-        /* Reset and Base Styles */
+        /* 1. Global Setup */
         body { 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
-            background-color: #f0f2f5; 
+            font-family: -apple-system, sans-serif; 
+            background-color: #ffffff; /* White background for seamless blend */
             margin: 0; 
+            padding: 0;
             display: flex; 
             flex-direction: column; 
             align-items: center; 
             min-height: 100vh;
         }
 
-        /* 1. IMMERSIVE HERO IMAGE (Jimmy Page) */
+        /* 2. THE IMMERSIVE IMAGE: No borders, full width */
         .immersive-hero { 
             width: 100%; 
-            max-width: 500px; /* Keeps it sharp on tablets */
             height: auto;
             display: block;
-            margin: 0 auto;
+            margin: 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2); /* Adds depth to the photo */
         }
 
-        /* 2. MENU CONTAINER (The White Card) */
-        .menu-container { 
+        /* 3. THE MENU SECTION: Slides up slightly to meet the photo */
+        .menu-section { 
             background: white; 
-            padding: 30px 20px; 
-            border-radius: 25px 25px 0 0; /* Rounded top corners */
-            box-shadow: 0 -10px 25px rgba(0,0,0,0.1); 
             width: 100%; 
             max-width: 500px; 
+            margin-top: -20px; /* The "overlap" trick for immersive design */
+            border-radius: 25px 25px 0 0; 
+            padding: 30px 20px;
             text-align: center;
-            margin-top: -25px; /* Pulls menu up slightly over the photo */
-            flex-grow: 1; /* Fills the rest of the screen */
             box-sizing: border-box;
+            z-index: 10;
         }
         
-        /* BRANDING (Cambria Font) */
         h1 { 
-            font-family: 'Cambria', 'Georgia', 'Times New Roman', serif !important; 
-            color: #333 !important; 
-            margin: 10px 0 5px 0 !important; 
-            font-size: 1.7rem !important; 
-            font-weight: bold !important;
-            letter-spacing: 0.5px;
+            font-family: 'Cambria', 'Georgia', serif !important; 
+            color: #333; 
+            margin: 0 0 10px 0; 
+            font-size: 1.8rem; 
+            font-weight: bold;
         }
         
         p { 
-            color: #666; 
-            margin-bottom: 25px; 
+            color: #888; 
+            margin-bottom: 30px; 
             font-size: 0.9rem; 
-            text-transform: uppercase; 
             letter-spacing: 2px;
+            text-transform: uppercase;
         }
 
-        /* CATEGORY BUTTONS */
+        /* 4. BUTTONS */
         .btn-menu { 
             display: block; 
             text-decoration: none; 
             color: white; 
-            padding: 16px; 
-            margin: 12px 0; 
-            border-radius: 12px; 
+            padding: 18px; 
+            margin: 15px 0; 
+            border-radius: 15px; 
             font-weight: bold; 
             font-size: 1.1rem; 
-            transition: transform 0.1s, opacity 0.1s;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: transform 0.1s;
         }
         
-        /* Color Coding */
-        .btn-lady { background: #d81b60; } /* Pink */
-        .btn-men  { background: #2e7d32; } /* Green */
-        .btn-duet { background: #8e44ad; } /* Purple */
-        .btn-eng  { background: #3498db; } /* Blue */
+        .btn-lady { background: #d81b60; }
+        .btn-men  { background: #2e7d32; }
+        .btn-duet { background: #8e44ad; }
+        .btn-eng  { background: #3498db; }
         
-        /* Click Effect */
-        .btn-menu:active { 
-            transform: scale(0.96); 
-            opacity: 0.9; 
-        }
+        .btn-menu:active { transform: scale(0.97); }
     </style>
 </head>
 <body>
 
     <img src="JP.jpg" alt="William H Chan Music Studio" class="immersive-hero">
 
-    <div class="menu-container">
+    <div class="menu-section">
         <h1>William H Chan Music Studio</h1>
         <p>Choose a Category</p>
 
