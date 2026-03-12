@@ -8,26 +8,18 @@
     <style>
         :root { --primary-blue: #3498db; --secondary: #457b9d; --bg: #f8f9fa; --text: #1d3557; }
         body { font-family: sans-serif; background: var(--bg); color: var(--text); max-width: 800px; margin: 0 auto; padding: 10px; }
-        .master-header-container { display: flex !important; justify-content: space-between; align-items: center; padding: 10px 5px; width: 100%; box-sizing: border-box; }
+        .master-header-container { display: flex; justify-content: space-between; align-items: center; padding: 10px 5px; }
         .nav-home { font-size: 32px; text-decoration: none; color: #333; width: 60px; font-weight: bold; }
         @keyframes slowSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         .logo-center { width: 80px; height: 80px; object-fit: cover; border-radius: 50%; border: 2px solid #333; animation: slowSpin 5s linear infinite; }
         .qr-static { width: 65px; height: 65px; border: 1px solid #ddd; border-radius: 4px; }
-        
-        /* Forced Cambria Branding */
-        .studio-title { text-align: center; margin-top: 10px; display: block !important; }
-        .studio-title h1 { 
-            font-family: 'Cambria', 'Georgia', serif !important; 
-            font-size: 1.5rem !important; 
-            color: #333 !important; 
-            font-weight: bold !important; 
-        }
-        
-        .divider { height: 2px; background-color: var(--secondary); margin: 15px 0; width: 100%; }
-        #search-box { width: 100%; padding: 12px; font-size: 16px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 15px; box-sizing: border-box; outline: none; }
+        .studio-title { text-align: center; margin-top: 10px; }
+        .studio-title h1 { font-family: 'Cambria', 'Georgia', serif !important; font-size: 1.5rem; color: #333; font-weight: bold; }
+        .divider { height: 2px; background-color: var(--secondary); margin: 15px 0; }
+        #search-box { width: 100%; padding: 12px; font-size: 16px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 15px; box-sizing: border-box; }
         .song-card { background: white; margin-bottom: 8px; padding: 12px 15px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .details { flex: 1; margin-right: 10px; }
-        .artist { font-size: 0.75rem; font-weight: bold; color: var(--secondary); text-transform: uppercase; display: block; }
+        .details { flex: 1; }
+        .artist { font-size: 0.75rem; font-weight: bold; color: var(--secondary); display: block; }
         .song-name { font-size: 1rem; font-weight: 600; color: #333; }
         .actions { display: flex; gap: 8px; }
         .btn { text-decoration: none; padding: 8px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; color: white; min-width: 65px; text-align: center; }
@@ -47,12 +39,14 @@
     <input type="text" id="search-box" placeholder="Search English Songs..." onkeyup="filterSongs()">
     <div id="status">Syncing English Library...</div>
     <div id="song-list-container"></div>
+
     <script>
-        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRURv3BhrTaAjayuts-7v61qTznVRxe-0hyvgevw8wIj3OHTvQLnGiLOc8TdwD0CvKNrRS_U3qj2o33/pub?gid=0&single=true&output=csv';
+        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRURv3BhrTaAjayuts-7v61qTznVRxe-0hyvgevw8wIj3OHTvQLnGiLOc8TdwD0CvKNrRS_U3qj2o33/pub?output=csv';
 
         function renderSongs(data) {
             const container = document.getElementById('song-list-container');
             container.innerHTML = '';
+            if (!data || data.length < 2) return;
             for (let i = 1; i < data.length; i++) {
                 const row = data[i];
                 if (!row[1]) continue;
@@ -67,16 +61,18 @@
             document.getElementById('status').style.display = 'none';
         }
 
-        // Force reload from Google
-        function loadData() {
-            Papa.parse(CSV_URL + '&cb=' + Date.now(), {
-                download: true,
-                header: false,
-                complete: function(results) { renderSongs(results.data); },
-                error: function() { document.getElementById('status').innerText = "Trouble connecting. Refreshing..."; setTimeout(loadData, 3000); }
-            });
-        }
-        loadData();
+        // Added a cache-buster & better error handling
+        Papa.parse(CSV_URL + '&t=' + Date.now(), {
+            download: true,
+            header: false,
+            complete: function(results) { 
+                console.log("English Data Loaded");
+                renderSongs(results.data); 
+            },
+            error: function() { 
+                document.getElementById('status').innerText = "Load failed. Please check internet connection."; 
+            }
+        });
 
         function filterSongs() {
             const term = document.getElementById('search-box').value.toLowerCase();
