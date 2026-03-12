@@ -10,7 +10,7 @@
     <style>
         :root { 
             --primary-blue: #3498db; 
-            --primary-men: #2e7d32; /* Professional Green for Men's Category */
+            --primary-men: #2e7d32; 
             --secondary: #457b9d; 
             --bg: #f8f9fa; 
             --text: #1d3557; 
@@ -18,12 +18,22 @@
         
         body { font-family: sans-serif; background: var(--bg); color: var(--text); max-width: 800px; margin: 0 auto; padding: 10px; }
         
-        .master-header-container { display: flex; justify-content: space-between; align-items: center; padding: 10px 5px; width: 100%; box-sizing: border-box; }
-        .nav-home { font-size: 32px; text-decoration: none; color: #333; width: 60px; font-weight: bold; }
+        /* HEADER FIX: Ensures Arrow (Left), Disc (Center), QR (Right) */
+        .master-header-container { 
+            display: flex !important; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 10px 5px; 
+            width: 100%; 
+            box-sizing: border-box; 
+        }
+        
+        .nav-home { font-size: 32px; text-decoration: none; color: #333; width: 60px; font-weight: bold; display: block; }
         
         @keyframes slowSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        .logo-center { width: 80px; height: 80px; object-fit: cover; border-radius: 50%; border: 2px solid #333; animation: slowSpin 5s linear infinite; }
-        .qr-static { width: 65px; height: 65px; border: 1px solid #ddd; border-radius: 4px; }
+        .logo-center { width: 80px; height: 80px; object-fit: cover; border-radius: 50%; border: 2px solid #333; animation: slowSpin 5s linear infinite; display: block; }
+        
+        .qr-static { width: 65px; height: 65px; border: 1px solid #ddd; border-radius: 4px; display: block; }
 
         .studio-title { text-align: center; margin-top: 10px; }
         .studio-title h1 { 
@@ -35,6 +45,7 @@
         }
         
         .divider { height: 2px; background-color: var(--secondary); margin: 15px 0; width: 100%; }
+        
         #search-box { width: 100%; padding: 12px; font-size: 16px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 15px; box-sizing: border-box; outline: none; }
 
         .song-card { background: white; margin-bottom: 8px; padding: 12px 15px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
@@ -70,15 +81,19 @@
     <div id="song-list-container"></div>
 
     <script>
+        // Your NEW Men's CSV Link
         const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSeK0hJoqyYLa5BQLl42QIAHMlbT_0tAa0FxhoBBebSUqV98bwac7ACwQc1y2yA6SLOd1nGvJYD-zLB/pub?gid=0&single=true&output=csv';
 
         function renderSongs(data) {
             const container = document.getElementById('song-list-container');
             container.innerHTML = '';
             
+            // Loop starts at 1 to skip the header row of your sheet
             for (let i = 1; i < data.length; i++) {
                 const row = data[i];
-                const artistName = row[0] ? row[0].trim() : "";
+                if (!row || row.length < 2) continue;
+
+                const artistName = row[0] ? row[0].trim() : "Artist";
                 const songTitle = row[1] ? row[1].trim() : "";
                 const origLink = row[2] ? row[2].trim() : "";
                 const karaLink = row[3] ? row[3].trim() : "";
@@ -98,7 +113,7 @@
 
                 div.innerHTML = `
                     <div class="details">
-                        <span class="artist">${artistName || 'Artist'}</span>
+                        <span class="artist">${artistName}</span>
                         <span class="song-name">${songTitle}</span>
                     </div>
                     <div class="actions">
@@ -109,25 +124,4 @@
             document.getElementById('status').style.display = 'none';
         }
 
-        Papa.parse(CSV_URL + '&t=' + Date.now(), {
-            download: true,
-            header: false, 
-            skipEmptyLines: true,
-            complete: function(results) {
-                renderSongs(results.data);
-            },
-            error: function() {
-                document.getElementById('status').innerText = "Connection issue. Please refresh.";
-            }
-        });
-
-        function filterSongs() {
-            const term = document.getElementById('search-box').value.toLowerCase();
-            const cards = document.getElementsByClassName('song-card');
-            for (let card of cards) {
-                card.style.display = card.innerText.toLowerCase().includes(term) ? 'flex' : 'none';
-            }
-        }
-    </script>
-</body>
-</html>
+        // Fetch with Cache-Buster to ensure it
