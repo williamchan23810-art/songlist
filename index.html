@@ -9,10 +9,9 @@
     <link rel="icon" type="image/jpeg" sizes="192x192" href="icon-192.jpg">
     
     <style>
-        /* 1. Global Setup */
         body { 
-            font-family: -apple-system, sans-serif; 
-            background-color: #ffffff; /* White background for seamless blend */
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            background-color: #ffffff; 
             margin: 0; 
             padding: 0;
             display: flex; 
@@ -21,55 +20,58 @@
             min-height: 100vh;
         }
 
-        /* 2. THE IMMERSIVE IMAGE: No borders, full width */
+        /* FULL-BLEED IMMERSIVE HERO */
         .immersive-hero { 
             width: 100%; 
             height: auto;
             display: block;
             margin: 0;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2); /* Adds depth to the photo */
+            /* Remove any potential borders or spacing */
+            border: none;
         }
 
-        /* 3. THE MENU SECTION: Slides up slightly to meet the photo */
+        /* OVERLAPPING MENU SECTION */
         .menu-section { 
             background: white; 
             width: 100%; 
             max-width: 500px; 
-            margin-top: -20px; /* The "overlap" trick for immersive design */
-            border-radius: 25px 25px 0 0; 
-            padding: 30px 20px;
+            margin-top: -30px; /* Pulls the menu UP over the photo */
+            border-radius: 30px 30px 0 0; 
+            padding: 35px 20px;
             text-align: center;
             box-sizing: border-box;
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.15);
             z-index: 10;
+            flex-grow: 1;
         }
         
         h1 { 
             font-family: 'Cambria', 'Georgia', serif !important; 
-            color: #333; 
-            margin: 0 0 10px 0; 
+            color: #222; 
+            margin: 0 0 8px 0; 
             font-size: 1.8rem; 
             font-weight: bold;
         }
         
         p { 
-            color: #888; 
+            color: #999; 
             margin-bottom: 30px; 
-            font-size: 0.9rem; 
-            letter-spacing: 2px;
+            font-size: 0.85rem; 
+            letter-spacing: 2.5px;
             text-transform: uppercase;
         }
 
-        /* 4. BUTTONS */
+        /* BUTTONS */
         .btn-menu { 
             display: block; 
             text-decoration: none; 
             color: white; 
             padding: 18px; 
             margin: 15px 0; 
-            border-radius: 15px; 
+            border-radius: 16px; 
             font-weight: bold; 
             font-size: 1.1rem; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
             transition: transform 0.1s;
         }
         
@@ -78,7 +80,7 @@
         .btn-duet { background: #8e44ad; }
         .btn-eng  { background: #3498db; }
         
-        .btn-menu:active { transform: scale(0.97); }
+        .btn-menu:active { transform: scale(0.96); opacity: 0.9; }
     </style>
 </head>
 <body>
