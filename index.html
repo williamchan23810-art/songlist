@@ -1,77 +1,59 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>William H Chan Music Studio</title>
     <style>
-        /* Container for the Jimmy Page image and the floating CTA */
+        body { background-color: #1a1a1a; color: white; font-family: sans-serif; text-align: center; }
+        
         .hero-container {
             position: relative;
             display: inline-block;
-            max-width: 100%; /* Ensures it fits on mobile screens */
-            margin: 20px auto;
+            margin-top: 50px;
         }
 
-        /* The background picture of Jimmy Page */
         .hero-image {
-            display: block;
             width: 100%;
-            max-width: 800px; /* Adjust this based on your image size */
+            max-width: 900px;
             height: auto;
-            border-radius: 8px;
-            box-shadow: 0px 4px 15px rgba(0,0,0,0.3);
+            border: 2px solid #444;
         }
 
-        /* The clickable CTA icon positioning */
         .floating-cta {
             position: absolute;
-            right: 8%;      /* Adjust this to move it left/right relative to Jimmy */
-            top: 50%;       /* Centers it vertically in the middle */
+            right: 5%;
+            top: 50%;
             transform: translateY(-50%);
-            z-index: 10;
-            text-decoration: none; /* Removes underline if any */
+            text-decoration: none;
         }
 
-        /* Styling the specific icon image */
         .floating-cta img {
-            width: 90px;    /* Slightly larger to be easily clickable */
+            width: 120px; /* Made it larger so you can't miss it */
             height: auto;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            filter: drop-shadow(2px 4px 8px rgba(0,0,0,0.6));
+            display: block;
         }
 
-        /* Hover animation: the record pops and glows slightly */
-        .floating-cta img:hover {
-            transform: scale(1.15) rotate(5deg);
-            filter: drop-shadow(0px 0px 12px rgba(255, 255, 255, 0.4));
-        }
-
-        /* Optional: Text label under the icon */
         .cta-label {
             display: block;
-            color: white;
-            background: rgba(0, 0, 0, 0.6);
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
+            background: gold;
+            color: black;
+            padding: 5px;
+            font-weight: bold;
+            border-radius: 5px;
             margin-top: 5px;
-            text-align: center;
-            font-family: sans-serif;
         }
     </style>
 </head>
 <body>
 
-    <div class="hero-container">
-    <img src="jimmy-page.jpg" alt="Jimmy Page" class="hero-image">
+    <h1>William H Chan Music Studio</h1>
 
-    <a href="download.html" class="floating-cta">
-        <img src="icon-download-cta.jpg" alt="Download Music Studio App">
-        <span class="cta-label">DOWNLOAD APP</span>
-    </a>
-</div>
+    <div class="hero-container">
+        <img src="jimmy-page.jpg" alt="Jimmy Page Background" class="hero-image">
+
+        <a href="download.html" class="floating-cta">
+            <img src="icon-download-cta.jpg" alt="Click to Download">
+            <span class="cta-label">DOWNLOAD APP</span>
+        </a>
+    </div>
 
 </body>
 </html>
