@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>William H Chan Music Studio</title>
+    
+    <link rel="apple-touch-icon" href="icon-download-cta.jpg">
+    <meta name="mobile-web-app-capable" content="yes">
+
     <style>
-        /* General Page Styling */
         body { 
             background-color: #000; 
             color: #fff; 
@@ -14,18 +17,17 @@
             flex-direction: column; 
             align-items: center; 
             margin: 0; 
-            padding: 40px 15px;
+            padding: 20px 10px;
         }
 
-        h1 { margin-bottom: 20px; font-weight: 300; letter-spacing: 2px; }
+        h1 { margin: 10px 0 20px 0; font-weight: 300; letter-spacing: 2px; font-size: 24px; }
 
-        /* 1. HERO SECTION (Jimmy Page + Download Icon) */
+        /* HERO SECTION: Jimmy Page + Download Icon */
         .hero-container {
             position: relative;
             display: inline-block;
-            max-width: 900px;
-            margin-bottom: 30px;
-            box-shadow: 0px 10px 30px rgba(0,0,0,0.5);
+            max-width: 850px;
+            margin-bottom: 20px;
         }
 
         .hero-image {
@@ -36,11 +38,11 @@
             border: 1px solid #333;
         }
 
-        /* The Clickable Download Icon Positioning */
+        /* The Download Record Icon */
         .floating-cta {
             position: absolute;
-            right: 5%;      /* Aligned to the right side of the photo */
-            top: 50%;       /* Vertically centered */
+            right: 4%;      
+            top: 50%;       
             transform: translateY(-50%);
             z-index: 100;
             text-decoration: none;
@@ -48,29 +50,61 @@
         }
 
         .floating-cta img {
-            width: 100px;    /* Size of your record icon */
-            height: auto;
-            transition: transform 0.3s ease;
+            width: 90px;
+            transition: 0.3s ease;
             filter: drop-shadow(0px 4px 15px rgba(0,0,0,0.8));
         }
 
-        .floating-cta img:hover {
-            transform: scale(1.1) rotate(5deg);
-        }
+        .floating-cta img:hover { transform: scale(1.1); }
 
         .cta-label {
             display: block;
-            background: #ffcc00; /* Gold color */
+            background: #ffcc00;
             color: #000;
-            padding: 5px 10px;
+            padding: 4px 8px;
             border-radius: 4px;
             font-weight: bold;
-            margin-top: 10px;
-            font-size: 13px;
-            box-shadow: 0px 4px 10px rgba(0,0,0,0.3);
+            margin-top: 8px;
+            font-size: 11px;
         }
 
-        /* 2. NAVIGATION GRID (The 4 Boxes) */
+        /* NAVIGATION GRID (The 4 Boxes) */
         .nav-grid {
             display: grid;
-            grid-template-
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            width: 100%;
+            max-width: 850px;
+        }
+
+        .nav-box {
+            background-color: #1a1a1a;
+            border: 1px solid #444;
+            padding: 20px 5px;
+            text-align: center;
+            text-decoration: none;
+            color: white;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+
+        .nav-box:hover {
+            border-color: #ffcc00;
+            background-color: #222;
+            transform: translateY(-3px);
+        }
+
+        .nav-box h3 { margin: 0; font-size: 16px; color: #ffcc00; }
+        .nav-box p { margin: 5px 0 0 0; font-size: 12px; color: #bbb; }
+
+        /* Version Footer */
+        .footer {
+            margin-top: 40px;
+            color: #444;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        /* Mobile Layout */
+        @media (max-width: 600px) {
+            .nav-grid { grid-template-columns: 1fr 1fr
