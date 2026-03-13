@@ -2,86 +2,138 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>William H Chan Music Studio</title>
+    
+    <link rel="apple-touch-icon" href="icon-download-cta.jpg">
+    <meta name="mobile-web-app-capable" content="yes">
+
     <style>
-        /* This CSS is designed to be impossible to hide */
         body { 
-            background-color: #000 !important; 
-            color: #fff !important; 
-            font-family: sans-serif; 
-            text-align: center; 
+            background-color: #000; 
+            color: #fff; 
+            font-family: 'Segoe UI', Arial, sans-serif; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
             margin: 0; 
-            padding: 20px;
+            padding: 20px 10px;
         }
 
-        .main-container {
-            border: 2px solid yellow; /* This will show us the box exists */
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
+        h1 { margin: 10px 0 20px 0; font-weight: 300; letter-spacing: 2px; font-size: 22px; }
 
-        .hero {
+        /* HERO SECTION: Jimmy Page + Download Icon */
+        .hero-container {
             position: relative;
-            background-color: #222;
-            min-height: 300px;
+            display: inline-block;
+            max-width: 850px;
             margin-bottom: 20px;
         }
 
-        .hero img {
+        .hero-image {
+            display: block;
             width: 100%;
             height: auto;
-            display: block;
+            border-radius: 8px;
+            border: 1px solid #333;
         }
 
-        .cta-icon {
+        /* The Clickable Record Icon */
+        .floating-cta {
             position: absolute;
-            right: 10px;
-            top: 50%;
+            right: 4%;      
+            top: 50%;       
             transform: translateY(-50%);
-            width: 80px;
-            z-index: 99;
+            z-index: 100;
+            text-decoration: none;
+            text-align: center;
         }
 
+        .floating-cta img {
+            width: 90px;
+            transition: 0.3s ease;
+            filter: drop-shadow(0px 4px 15px rgba(0,0,0,0.8));
+        }
+
+        .floating-cta img:hover { transform: scale(1.1); }
+
+        .cta-label {
+            display: block;
+            background: #ffcc00;
+            color: #000;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-top: 8px;
+            font-size: 11px;
+        }
+
+        /* THE 4 SONG CATEGORY BOXES */
         .grid {
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-            gap: 10px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            width: 100%;
+            max-width: 850px;
         }
 
         .box {
-            border: 1px solid #fff;
-            padding: 20px;
-            flex: 1;
-            min-width: 120px;
+            background-color: #1a1a1a;
+            border: 1px solid #444;
+            padding: 25px 5px;
+            text-align: center;
             text-decoration: none;
-            color: #fff;
-            background: #111;
+            color: #ffcc00;
+            border-radius: 10px;
+            transition: 0.3s;
+            font-weight: bold;
+        }
+
+        .box span {
+            display: block;
+            color: #bbb;
+            font-size: 11px;
+            font-weight: normal;
+            margin-top: 8px;
+            text-transform: uppercase;
+        }
+
+        .box:hover {
+            border-color: #ffcc00;
+            background-color: #222;
+            transform: translateY(-3px);
+        }
+
+        /* Mobile Layout Adjustment */
+        @media (max-width: 600px) {
+            .grid { grid-template-columns: 1fr 1fr; }
+            .floating-cta img { width: 75px; }
         }
     </style>
 </head>
 <body>
 
-    <div class="main-container">
-        <h1>WILLIAM H CHAN MUSIC STUDIO</h1>
-        <p>If you see this text, the code is working!</p>
+    <h1>WILLIAM H CHAN MUSIC STUDIO</h1>
 
-        <div class="hero">
-            <img src="JP.jpg" alt="[Jimmy Page Photo Loading...]">
-            
-            <a href="download.html" class="cta-icon">
-                <img src="icon-download-cta.jpg" alt="Download">
-            </a>
-        </div>
+    <div class="hero-container">
+        <img src="JP.jpg" alt="Jimmy Page" class="hero-image">
 
-        <div class="grid">
-            <a href="https://youtube.com" class="box">Canto-pop</a>
-            <a href="https://youtube.com" class="box">Mando-pop</a>
-            <a href="https://youtube.com" class="box">Latest</a>
-            <a href="library.html" class="box">Library</a>
-        </div>
+        <a href="download.html" class="floating-cta">
+            <img src="icon-download-cta.jpg" alt="Install App">
+            <span class="cta-label">INSTALL APP</span>
+        </a>
     </div>
+
+    <div class="grid">
+        <a href="chinese-men.html" class="box">Chinese Men<span>Solo Songs</span></a>
+        <a href="chinese-lady.html" class="box">Chinese Lady<span>Solo Songs</span></a>
+        <a href="chinese-duet.html" class="box">Chinese Duet<span>Chorus</span></a>
+        <a href="english.html" class="box">English Songs<span>Classics</span></a>
+    </div>
+
+    <footer style="margin-top: 40px; color: #444; font-size: 12px;">
+        Studio App v1.0 | © 2026 William H Chan
+    </footer>
 
 </body>
 </html>
