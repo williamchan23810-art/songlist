@@ -2,93 +2,85 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>William H Chan Music Studio</title>
     <style>
-        /* Force background to black and text to white */
+        /* This CSS is designed to be impossible to hide */
         body { 
-            background-color: #000000 !important; 
-            color: #ffffff !important; 
-            font-family: Arial, sans-serif; 
+            background-color: #000 !important; 
+            color: #fff !important; 
+            font-family: sans-serif; 
+            text-align: center; 
             margin: 0; 
             padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
         }
 
-        h1 { display: block !important; margin-bottom: 20px; }
-
-        .hero-container {
-            position: relative;
-            width: 100%;
+        .main-container {
+            border: 2px solid yellow; /* This will show us the box exists */
             max-width: 800px;
-            min-height: 200px; /* Ensures space exists even if image fails */
-            border: 1px solid #333;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .hero {
+            position: relative;
+            background-color: #222;
+            min-height: 300px;
             margin-bottom: 20px;
         }
 
-        .hero-image {
+        .hero img {
             width: 100%;
             height: auto;
             display: block;
         }
 
-        .floating-cta {
+        .cta-icon {
             position: absolute;
             right: 10px;
             top: 50%;
             transform: translateY(-50%);
-            z-index: 999;
-            text-decoration: none;
-        }
-
-        .floating-cta img {
             width: 80px;
-            display: block;
+            z-index: 99;
         }
 
-        /* Forced visibility for the boxes */
-        .nav-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
+        .grid {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
             gap: 10px;
-            width: 100%;
-            max-width: 800px;
         }
 
-        .nav-box {
-            border: 1px solid #fff; /* White border to ensure visibility */
-            padding: 15px 5px;
-            text-align: center;
+        .box {
+            border: 1px solid #fff;
+            padding: 20px;
+            flex: 1;
+            min-width: 120px;
             text-decoration: none;
             color: #fff;
             background: #111;
-        }
-
-        @media (max-width: 600px) {
-            .nav-grid { grid-template-columns: 1fr 1fr; }
         }
     </style>
 </head>
 <body>
 
-    <h1>WILLIAM H CHAN MUSIC STUDIO</h1>
+    <div class="main-container">
+        <h1>WILLIAM H CHAN MUSIC STUDIO</h1>
+        <p>If you see this text, the code is working!</p>
 
-    <div class="hero-container">
-        <img src="JP.jpg" alt="[Background Image]" class="hero-image">
+        <div class="hero">
+            <img src="JP.jpg" alt="[Jimmy Page Photo Loading...]">
+            
+            <a href="download.html" class="cta-icon">
+                <img src="icon-download-cta.jpg" alt="Download">
+            </a>
+        </div>
 
-        <a href="download.html" class="floating-cta">
-            <img src="icon-download-cta.jpg" alt="Download">
-            <div style="background:gold; color:black; font-size:10px; font-weight:bold; padding:2px;">INSTALL</div>
-        </a>
-    </div>
-
-    <div class="nav-grid">
-        <a href="https://www.youtube.com/@WilliamHChanMusicStudio" class="nav-box">Canto-pop</a>
-        <a href="https://www.youtube.com/@WilliamHChanMusicStudio" class="nav-box">Mando-pop</a>
-        <a href="https://www.youtube.com/@WilliamHChanMusicStudio/videos" class="nav-box">Latest</a>
-        <a href="library.html" class="nav-box">Library</a>
+        <div class="grid">
+            <a href="https://youtube.com" class="box">Canto-pop</a>
+            <a href="https://youtube.com" class="box">Mando-pop</a>
+            <a href="https://youtube.com" class="box">Latest</a>
+            <a href="library.html" class="box">Library</a>
+        </div>
     </div>
 
 </body>
