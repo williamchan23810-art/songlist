@@ -2,57 +2,76 @@
 <html>
 <head>
     <style>
-        body { background-color: #1a1a1a; color: white; font-family: sans-serif; text-align: center; }
+        body { background-color: #000; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
         
+        .main-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
         .hero-container {
             position: relative;
             display: inline-block;
-            margin-top: 50px;
+            border: 1px solid #333; /* Shows you the box even if image is missing */
+            min-width: 300px;
+            min-height: 200px;
         }
 
         .hero-image {
+            display: block;
             width: 100%;
-            max-width: 900px;
+            max-width: 1000px;
             height: auto;
-            border: 2px solid #444;
         }
 
+        /* Positioning your Download Icon */
         .floating-cta {
             position: absolute;
-            right: 5%;
-            top: 50%;
+            right: 10%; /* Adjust this to move it left/right */
+            top: 50%;   /* Adjust this to move it up/down */
             transform: translateY(-50%);
             text-decoration: none;
+            z-index: 100;
         }
 
         .floating-cta img {
-            width: 120px; /* Made it larger so you can't miss it */
+            width: 100px;
             height: auto;
-            display: block;
+            transition: 0.3s;
+        }
+
+        .floating-cta img:hover {
+            transform: scale(1.1);
         }
 
         .cta-label {
             display: block;
-            background: gold;
-            color: black;
-            padding: 5px;
+            background: #2196F3; /* Bright blue for visibility */
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
             font-weight: bold;
-            border-radius: 5px;
-            margin-top: 5px;
+            margin-top: 8px;
+            text-align: center;
         }
     </style>
 </head>
 <body>
 
-    <h1>William H Chan Music Studio</h1>
+    <div class="main-wrapper">
+        <h1>William H Chan Music Studio</h1>
 
-    <div class="hero-container">
-        <img src="jimmy-page.jpg" alt="Jimmy Page Background" class="hero-image">
+        <div class="hero-container">
+            <img src="jimmy-page.jpg" alt="" class="hero-image">
 
-        <a href="download.html" class="floating-cta">
-            <img src="icon-download-cta.jpg" alt="Click to Download">
-            <span class="cta-label">DOWNLOAD APP</span>
-        </a>
+            <a href="download.html" class="floating-cta">
+                <img src="icon-download-cta.jpg" alt="Download Icon">
+                <span class="cta-label">DOWNLOAD APP</span>
+            </a>
+        </div>
     </div>
 
 </body>
