@@ -138,7 +138,7 @@
     Studio App v1.0 | © 2026 William H Chan
 </footer>
 
-<!-- ⭐ INSTALL MODAL (Centered) -->
+<!-- Install App Modal -->
 <div id="installModal" style="
     display:none;
     position: fixed;
@@ -154,25 +154,50 @@
         background: #111;
         color: #fff;
         padding: 25px;
-        width: 85%;
-        max-width: 350px;
+        width: 90%;
+        max-width: 420px;
         border-radius: 12px;
         text-align: center;
         border: 1px solid #444;
     ">
         <h2 style="margin-top:0; font-size:20px;">Install This App</h2>
-        <p style="font-size:14px; line-height:1.5;">
-            To install this app on your iPhone:
-            <br><br>
-            <strong>1.</strong> Tap the <strong>Share</strong> icon  
-            <br>
-            <strong>2.</strong> Choose <strong>Add to Home Screen</strong>  
-            <br>
-            <strong>3.</strong> Tap <strong>Add</strong>
-        </p>
+
+        <div style="
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            margin-top: 15px;
+        ">
+            <!-- iPhone Column -->
+            <div style="flex: 1; text-align: left;">
+                <h3 style="font-size:16px; margin-bottom:8px;">For iPhone</h3>
+                <p style="font-size:13px; line-height:1.4;">
+                    1. Tap the <strong>Share</strong> icon<br>
+                    2. Select <strong>Add to Home Screen</strong><br>
+                    3. Tap <strong>Add</strong>
+                </p>
+            </div>
+
+            <!-- Divider -->
+            <div style="
+                width: 1px;
+                background: #444;
+                margin: 0 5px;
+            "></div>
+
+            <!-- Android Column -->
+            <div style="flex: 1; text-align: left;">
+                <h3 style="font-size:16px; margin-bottom:8px;">For Android</h3>
+                <p style="font-size:13px; line-height:1.4;">
+                    1. Tap the <strong>⋮</strong> menu (top right)<br>
+                    2. Choose <strong>Install App</strong><br>
+                    3. Confirm <strong>Install</strong>
+                </p>
+            </div>
+        </div>
 
         <button onclick="closeInstallModal()" style="
-            margin-top: 15px;
+            margin-top: 20px;
             padding: 10px 20px;
             background: #ffcc00;
             color: #000;
@@ -183,6 +208,7 @@
         ">OK</button>
     </div>
 </div>
+
 
 <!-- ⭐ INSTALL MODAL SCRIPT -->
 <script>
