@@ -117,25 +117,94 @@
 
     <h1>WILLIAM H CHAN MUSIC STUDIO</h1>
 
-    <div class="hero-container">
-        <img src="JP.jpg" alt="Jimmy Page" class="hero-image">
+<div class="hero-container">
+    <img src="JP.jpg" alt="Jimmy Page" class="hero-image">
 
-        <a href="download.html" class="floating-cta">
-            <img src="icon-download-cta.jpg" alt="Install App">
-            <span class="cta-label">INSTALL APP</span>
-        </a>
+    <!-- UPDATED CTA BUTTON -->
+    <a id="installButton" onclick="showInstallOverlay()" class="floating-cta">
+        <img src="icon-download-cta.jpg" alt="Install App">
+        <span class="cta-label">INSTALL APP</span>
+    </a>
+</div>
+
+<div class="grid">
+    <a href="chinese-men.html" class="box">Chinese Men<span>Solo Songs</span></a>
+    <a href="chinese-lady.html" class="box">Chinese Lady<span>Solo Songs</span></a>
+    <a href="chinese-duet.html" class="box">Chinese Duet<span>Chorus</span></a>
+    <a href="english.html" class="box">English Songs<span>Classics</span></a>
+</div>
+
+<footer style="margin-top: 40px; color: #444; font-size: 12px;">
+    Studio App v1.0 | © 2026 William H Chan
+</footer>
+
+<!-- ⭐ INSTALL MODAL (Centered) -->
+<div id="installModal" style="
+    display:none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(4px);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+">
+    <div style="
+        background: #111;
+        color: #fff;
+        padding: 25px;
+        width: 85%;
+        max-width: 350px;
+        border-radius: 12px;
+        text-align: center;
+        border: 1px solid #444;
+    ">
+        <h2 style="margin-top:0; font-size:20px;">Install This App</h2>
+        <p style="font-size:14px; line-height:1.5;">
+            To install this app on your iPhone:
+            <br><br>
+            <strong>1.</strong> Tap the <strong>Share</strong> icon  
+            <br>
+            <strong>2.</strong> Choose <strong>Add to Home Screen</strong>  
+            <br>
+            <strong>3.</strong> Tap <strong>Add</strong>
+        </p>
+
+        <button onclick="closeInstallModal()" style="
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: #ffcc00;
+            color: #000;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        ">OK</button>
     </div>
+</div>
 
-    <div class="grid">
-        <a href="chinese-men.html" class="box">Chinese Men<span>Solo Songs</span></a>
-        <a href="chinese-lady.html" class="box">Chinese Lady<span>Solo Songs</span></a>
-        <a href="chinese-duet.html" class="box">Chinese Duet<span>Chorus</span></a>
-        <a href="english.html" class="box">English Songs<span>Classics</span></a>
-    </div>
+<!-- ⭐ INSTALL MODAL SCRIPT -->
+<script>
+function showInstallOverlay() {
+    document.getElementById('installModal').style.display = 'flex';
+}
 
-    <footer style="margin-top: 40px; color: #444; font-size: 12px;">
-        Studio App v1.0 | © 2026 William H Chan
-    </footer>
+function closeInstallModal() {
+    document.getElementById('installModal').style.display = 'none';
+}
+
+// Auto-hide Install button if already installed
+window.addEventListener('DOMContentLoaded', () => {
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+                      || window.navigator.standalone === true;
+
+    if (isStandalone) {
+        const cta = document.getElementById('installButton');
+        if (cta) cta.style.display = 'none';
+    }
+});
+</script>
 
 </body>
 </html>
