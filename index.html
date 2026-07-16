@@ -14,14 +14,15 @@
     <meta property="og:title" content="William H Chan Music Studio">
     <meta property="og:description" content="Cantonese and Mandarin Karaoke & Music Appreciation Studio.">
   
-    <!-- Points directly to your new, dedicated og-icon.jpg -->
+    <!-- Absolute Path pointing strictly to your custom share icon (Forces FB to bypass jimmy.jpg) -->
     <meta property="og:image" content="https://williamhchanstudiosonglist.netlify.app/og-icon.jpg">
+    <meta property="og:image:secure_url" content="https://williamhchanstudiosonglist.netlify.app/og-icon.jpg">
     <meta property="og:image:width" content="1024">
     <meta property="og:image:height" content="1024">
     <meta property="og:image:type" content="image/jpeg">
 
-    <!-- Twitter Card Meta Tags -->
-    <meta name="twitter:card" content="summary_large_image">
+    <!-- Twitter Card Meta Tags (Using square summary block) -->
+    <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="William H Chan Music Studio">
     <meta name="twitter:description" content="Cantonese and Mandarin Karaoke & Music Appreciation Studio.">
     <meta name="twitter:image" content="https://williamhchanstudiosonglist.netlify.app/og-icon.jpg">
@@ -138,9 +139,10 @@
     <h1>WILLIAM H CHAN MUSIC STUDIO</h1>
 
 <div class="hero-container">
-    <img src="JP.jpg" alt="Jimmy Page" class="hero-image">
+    <!-- ⚠️ SWAPPED JP.jpg FOR THE NEW GORGEOUS jimmy.jpg -->
+    <img src="jimmy.jpg" alt="William H Chan Music Studio - Jimmy Page" class="hero-image">
 
-    <!-- UPDATED CTA BUTTON -->
+    <!-- Clickable Record Icon to Install App -->
     <a id="installButton" onclick="showInstallOverlay()" class="floating-cta">
         <img src="icon-download-cta.jpg" alt="Install App">
         <span class="cta-label">INSTALL APP</span>
@@ -180,7 +182,6 @@
         text-align: center;
         border: 1px solid #444;
     ">
-        <!-- Light Blue Title -->
         <h2 style="margin-top:0; font-size:20px; color:#4db8ff;">
             Install This App
         </h2>
@@ -246,7 +247,7 @@
     </div>
 </div>
 
-<!-- ⭐ INSTALL MODAL SCRIPT -->
+<!-- INSTALL MODAL SCRIPT -->
 <script>
 function showInstallOverlay() {
     document.getElementById('installModal').style.display = 'flex';
