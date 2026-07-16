@@ -1,20 +1,21 @@
 {
+  "short_name": "Studio App",
   "name": "William H Chan Music Studio",
-  "short_name": "WHC Music",
-  "start_url": "index.html",
-  "display": "standalone",
-  "background_color": "#f0f2f5",
-  "theme_color": "#8e44ad",
   "icons": [
     {
       "src": "icon-192.jpg",
-      "sizes": "192x192",
-      "type": "image/jpeg"
+      "type": "image/jpeg",
+      "sizes": "192x192"
     },
     {
       "src": "icon-512.jpg",
-      "sizes": "512x512",
-      "type": "image/jpeg"
+      "type": "image/jpeg",
+      "sizes": "512x512"
     }
-  ]
+  ],
+  "start_url": "/index.html",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "display": "standalone",
+  "orientation": "portrait"
 }
